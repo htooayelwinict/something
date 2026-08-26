@@ -7,6 +7,7 @@ import { d1Sign, d9Sign, d10Sign } from "./divisional";
 import { calculatePanchanga } from "./panchanga";
 import { localBirthToUtc } from "./time";
 import { CALCULATION_VERSION, zodiacSigns, type ChartSnapshot, type PlanetName, type PlanetPosition } from "./types";
+import { calculateNumerology } from "@/lib/numerology/calculate";
 
 const bodies: Array<[PlanetName, Body]> = [
   ["Sun", Body.Sun], ["Moon", Body.Moon], ["Mercury", Body.Mercury], ["Venus", Body.Venus], ["Mars", Body.Mars],
@@ -61,6 +62,7 @@ export function calculateChart(input: BirthProfileInput, asOf = new Date()): Cha
 
   return {
     version: CALCULATION_VERSION,
+    numerology: calculateNumerology(input.birthDate),
     input,
     instant: birth.toISOString(),
     asOf: asOf.toISOString(),

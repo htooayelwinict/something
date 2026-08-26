@@ -1,4 +1,5 @@
 import type { BirthProfileInput } from "@/lib/schemas/profile";
+import type { NumerologySnapshot } from "@/lib/numerology/calculate";
 
 export const CALCULATION_VERSION = "suriya-vedic-1";
 
@@ -38,6 +39,7 @@ export type DashaPeriod = { lord: string; start: string; end: string };
 
 export type ChartSnapshot = {
   version: typeof CALCULATION_VERSION;
+  numerology: NumerologySnapshot;
   input: BirthProfileInput;
   instant: string;
   asOf: string;
