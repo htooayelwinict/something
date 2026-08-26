@@ -59,6 +59,7 @@ test("server-renders the designed public product routes", async () => {
     ["/daily", /DAILY ENERGY[\s\S]*LUCKY WINDOW/],
     ["/daily/details", /D1 · RASI[\s\S]*D9 · NAVAMSA[\s\S]*D10 · DASAMSA/],
     ["/ask", /သုရိယကို မေးပါ[\s\S]*သင့်ဇာတာနှင့် ချိတ်ဆက်ထားသည်[\s\S]*အဖြေတွက်ချက်ပုံ/],
+    ["/profile", /YOUR COSMIC IDENTITY[\s\S]*ChatGPT ဖြင့် ဝင်ရောက်မည်/],
     ["/tarot", /Tarot တိုက်ရိုက်ဆွေးနွေး/],
     ["/login", /ပြန်လည်ကြိုဆိုပါတယ်/],
   ];
@@ -66,6 +67,8 @@ test("server-renders the designed public product routes", async () => {
   for (const [pathname, copy] of expectations) {
     const response = await render(pathname);
     assert.equal(response.status, 200, pathname);
-    assert.match(await response.text(), copy, pathname);
+    const html = await response.text();
+    assert.match(html, copy, pathname);
+    if (pathname === "/login") assert.doesNotMatch(html, /ChatGPT စကားဝိုင်း/, pathname);
   }
 });

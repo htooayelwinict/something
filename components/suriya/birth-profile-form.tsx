@@ -55,7 +55,10 @@ export function BirthProfileForm({ initialName = "", onboarding = false }: { ini
   }
 
   return (
-    <form className="form-grid" onSubmit={save}>
+    <form className="form-grid birth-profile-form" data-onboarding={onboarding ? "true" : "false"} onSubmit={save}>
+      <div className="form-section-heading">
+        <span>01</span><div><strong>မွေးဖွားမှု အချက်အလက်</strong><p>ဇာတာတွက်ချက်ရန်လိုအပ်သော အချက်များကို အတိအကျ ထည့်ပါ။</p></div>
+      </div>
       <div className="field-group">
         <label className="field-label" htmlFor="profile-name">ခေါ်ဝေါ်လိုသော အမည်</label>
         <input className="text-field" id="profile-name" value={values.name} onChange={(e) => update("name", e.target.value)} required maxLength={80} autoComplete="name" />
@@ -71,6 +74,9 @@ export function BirthProfileForm({ initialName = "", onboarding = false }: { ini
         </div>
       </div>
       <p className="field-meta">မွေးချိန်က လဂ်နှင့် အိမ်တည်နေရာများကို ပြောင်းလဲစေသောကြောင့် ဖြစ်နိုင်သမျှ အတိအကျ ထည့်ပါ။</p>
+      <div className="form-section-heading">
+        <span>02</span><div><strong>မွေးဖွားရာ နေရာ</strong><p>အချိန်ဇုန်နှင့် ကောင်းကင်အနေအထားကို တွက်ရန် အသုံးပြုသည်။</p></div>
+      </div>
       <div className="field-group">
         <label className="field-label" htmlFor="birth-city">မွေးဖွားရာမြို့</label>
         <input className="text-field" id="birth-city" value={values.birthCity} onChange={(e) => update("birthCity", e.target.value)} required />

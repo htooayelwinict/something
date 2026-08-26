@@ -14,12 +14,12 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       <section className="login-card">
         <span className="login-orbit"><Sun size={36} strokeWidth={1.25} aria-hidden="true" /></span>
         <div>
-          <p className="eyebrow">Your private sky</p>
+          <p className="eyebrow">YOUR PRIVATE COSMIC IDENTITY</p>
           <h1>ပြန်လည်ကြိုဆိုပါတယ်</h1>
           <p>သင့်မွေးဇာတာနှင့် ဖတ်ကြားမှုမှတ်တမ်းကို လုံခြုံစွာ သိမ်းဆည်းပြီး မည်သည့်စက်မှမဆို ဆက်လက်ဖတ်ရှုနိုင်ပါတယ်။</p>
         </div>
         <a className="primary-button" href={chatGPTSignInPath(returnTo)}>ChatGPT ဖြင့် ဝင်ရောက်မည် <ArrowRight size={17} aria-hidden="true" /></a>
-        <div className="privacy-note"><ShieldCheck size={17} aria-hidden="true" /><span>OpenAI ၏ လုံခြုံသော ဝင်ရောက်မှုကို အသုံးပြုပါတယ်။ သင့်စကားဝှက်ကို သုရိယက မမြင်ရ၊ မသိမ်းဆည်းပါ။</span></div>
+        <div className="privacy-note"><ShieldCheck size={17} aria-hidden="true" /><span>OpenAI ၏ လုံခြုံသော အကောင့်ဝင်ခြင်းကို အသုံးပြုပါတယ်။ သင့်စကားဝှက်ကို သုရိယက မမြင်ရ၊ မသိမ်းဆည်းပါ။</span></div>
       </section>
       <p className="login-foot">ဆက်လက်ဝင်ရောက်ခြင်းဖြင့် သုရိယ၏ ကိုယ်ရေးအချက်အလက် မူဝါဒကို သဘောတူပါသည်။</p>
     </main>
