@@ -40,5 +40,21 @@ export function buildDailyPresentation(snapshot: ChartSnapshot, insight: DailyIn
     energy: copy.energy,
     focus: insight.factors[0],
     factors: insight.factors,
+    powerNumber: snapshot.numerology.lifePath,
+    combinedMethodCount: 2,
+    sources: [
+      {
+        id: "vedic" as const,
+        label: "Vedic Astrology",
+        value: `${snapshot.ascendant.sign} ASC · ${moon.sign} MOON`,
+        status: "calculated" as const,
+      },
+      {
+        id: "numerology" as const,
+        label: "Numerology",
+        value: `LIFE PATH ${snapshot.numerology.lifePath}`,
+        status: "calculated" as const,
+      },
+    ],
   };
 }

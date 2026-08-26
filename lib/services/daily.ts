@@ -29,5 +29,16 @@ export async function getDailyExperience() {
   }
   const chart = calculateChart(input, now);
   const insight = calculateDailyInsight(chart, now);
-  return { user, personalized, chart, insight, presentation: buildDailyPresentation(chart, insight) };
+  return {
+    user,
+    personalized,
+    chart,
+    insight,
+    identity: {
+      name: personalized ? input.name : "Suriya Guest",
+      birthLabel: `${input.birthDate} · ${input.birthCity}`,
+      numerology: chart.numerology,
+    },
+    presentation: buildDailyPresentation(chart, insight),
+  };
 }

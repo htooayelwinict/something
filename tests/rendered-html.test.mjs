@@ -35,6 +35,7 @@ test("server-renders the Suriya home experience", async () => {
   assert.match(html, /နေ့စဉ်ဖတ်စာ/);
   assert.match(html, /နည်းလမ်းများ/);
   assert.match(html, /မင်္ဂလာပါ/);
+  assert.match(html, /TODAY’S POWER NUMBER/);
   assert.match(html, /ယနေ့၏ မင်္ဂလာလမ်းညွှန်/);
   assert.match(html, /manifest\.webmanifest/);
   assert.match(html, /property=["']og:image["'][^>]*og\.png/i);
@@ -55,7 +56,8 @@ test("serves an installable Burmese manifest", async () => {
 
 test("server-renders the designed public product routes", async () => {
   const expectations = [
-    ["/daily", /ယနေ့အတွက် သင့်အမြင်/],
+    ["/daily", /DAILY ENERGY[\s\S]*LUCKY WINDOW/],
+    ["/daily/details", /D1 · RASI[\s\S]*D9 · NAVAMSA[\s\S]*D10 · DASAMSA/],
     ["/ask", /သင့်မေးခွန်းကို ရေးပါ/],
     ["/tarot", /Tarot တိုက်ရိုက်ဆွေးနွေး/],
     ["/login", /ပြန်လည်ကြိုဆိုပါတယ်/],

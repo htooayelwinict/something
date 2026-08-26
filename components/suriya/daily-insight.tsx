@@ -10,6 +10,7 @@ export type DailyInsightView = {
   energy: string;
   focus: string;
   factors?: string[];
+  powerNumber?: number;
 };
 
 export function DailyInsight({ expanded = false, data }: { expanded?: boolean; data?: DailyInsightView }) {
@@ -18,7 +19,7 @@ export function DailyInsight({ expanded = false, data }: { expanded?: boolean; d
     <>
       <article className="dark-card hero-insight">
         <div>
-          <p className="eyebrow">ယနေ့၏ မင်္ဂလာလမ်းညွှန်</p>
+          <p className="eyebrow">ယနေ့၏ မင်္ဂလာလမ်းညွှန် · DAILY ENERGY</p>
           <h2>{insight.title}</h2>
           <p>{insight.summary}</p>
         </div>

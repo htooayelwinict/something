@@ -151,6 +151,31 @@ h1, h2, h3 { line-height: 1.38; }
 .cosmic-metric p, .cosmic-metric span { margin: 0; color: var(--cosmic-muted); font-size: .55rem; }
 .cosmic-metric strong { font-size: .9rem; }
 
+.home-heading { display: grid; gap: 18px; align-items: end; }
+.power-number { display: grid; grid-template-columns: 1fr auto; gap: 0 14px; align-items: center; border-radius: 14px; background: var(--cosmic-plum); padding: 16px 18px; color: white; box-shadow: 0 14px 34px rgb(58 36 60 / 14%); }
+.power-number span, .power-number small { color: #cdbed0; font-size: .54rem; font-weight: 700; letter-spacing: .08em; }
+.power-number strong { grid-row: span 2; font-family: Georgia, serif; font-size: 3rem; font-weight: 500; line-height: 1; }
+.method-summary { display: grid; gap: 14px; border-top: 1px solid var(--cosmic-line); padding-top: 20px; }
+.method-summary h2 { margin: 3px 0 0; font-family: var(--font-latin), var(--font-ui); font-size: .9rem; letter-spacing: .08em; }
+.source-chip-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ritual-card { display: grid; grid-template-columns: auto 1fr; gap: 14px; border: 1px solid var(--cosmic-line); border-radius: 14px; background: #e7eee2; padding: 18px; }
+.ritual-card h2 { margin: 4px 0 6px; font-size: 1rem; }
+.ritual-card p { margin: 0; color: var(--cosmic-muted); font-size: .72rem; }
+.ritual-symbol { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: var(--cosmic-green); color: white; }
+.home-ask-button { justify-self: start; }
+.daily-metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.lucky-window { display: grid; gap: 16px; border: 1px solid var(--cosmic-line); border-radius: 14px; background: var(--cosmic-paper); padding: 18px; }
+.lucky-window-heading { display: flex; gap: 11px; align-items: center; }
+.lucky-window-heading h2 { margin: 2px 0 0; font-size: .96rem; }
+.lucky-window-track { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; color: var(--cosmic-muted); font-size: .56rem; }
+.lucky-window-track strong { display: grid; min-height: 42px; place-items: center; border: 1px solid var(--cosmic-gold); border-radius: 999px; background: #efe1c6; color: var(--cosmic-ink); font-size: .78rem; }
+.lucky-window > p { margin: 0; color: var(--cosmic-muted); font-size: .68rem; }
+.daily-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.back-link { display: inline-flex; align-items: center; gap: 6px; justify-self: start; color: var(--cosmic-muted); font-size: .68rem; font-weight: 700; }
+.safety-note { border-left: 3px solid var(--cosmic-gold); background: rgb(248 242 232 / 70%); padding: 14px 16px; }
+.safety-note strong { font-size: .76rem; }
+.safety-note p { margin: 5px 0 0; color: var(--cosmic-muted); font-size: .66rem; }
+
 .prose-card { padding: 24px; }
 .prose-card h2, .prose-card h3 { margin-bottom: 10px; }
 .prose-card p:last-child { margin-bottom: 0; }
@@ -222,6 +247,7 @@ h1, h2, h3 { line-height: 1.38; }
   .page-main { padding-top: 34px; }
   .home-grid, .daily-layout, .profile-layout { grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr); }
   .metrics-grid, .form-grid-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-heading { grid-template-columns: minmax(0, 1fr) minmax(220px, .42fr); }
   .tarot-grid, .history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .technique-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .technique-card { grid-template-columns: auto 1fr; }
