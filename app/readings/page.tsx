@@ -13,7 +13,7 @@ export default async function ReadingsPage() {
   return (
     <AppShell>
       <header className="page-heading">
-        <p className="eyebrow">Private library</p>
+        <p className="eyebrow">PRIVATE COSMIC LIBRARY</p>
         <h1 className="page-title">ဖတ်ကြားမှုမှတ်တမ်း</h1>
         <p className="page-lede">ပြီးခဲ့သောမေးခွန်းများ၊ အသုံးပြုခဲ့သည့်နည်းလမ်းနှင့် သုရိယ၏ အမြင်များကို ပြန်လည်ဖတ်ရှုပါ။</p>
       </header>
@@ -24,7 +24,7 @@ export default async function ReadingsPage() {
       ) : (
         <section className="history-grid" aria-label="သိမ်းထားသော ဖတ်ကြားမှုများ">
           {readings.map((reading) => (
-            <article className="surface prose-card" key={reading.id}>
+            <article className="surface prose-card reading-history-card" data-status={reading.status} key={reading.id}>
               <p className="eyebrow">{reading.kind} · {new Intl.DateTimeFormat("my-MM", { dateStyle: "medium" }).format(new Date(reading.createdAt))}</p>
               <h2>{reading.question}</h2>
               <p className="page-lede">{reading.status === "complete" ? "ဖတ်ကြားပြီး" : reading.status === "failed" ? "ပြန်စမ်းရန်လို" : "ရေးသားနေဆဲ"}</p>

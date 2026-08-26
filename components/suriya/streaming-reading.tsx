@@ -3,13 +3,37 @@
 import { useEffect, useState } from "react";
 import { RefreshCw, Sparkles } from "lucide-react";
 
-export function StreamingReading({ id, initialText }: { id: string; initialText?: string | null; initialStatus: string }) {
-  const [text, setText] = useState(initialText ?? "");
-  const [status, setStatus] = useState(initialText ? "complete" : "generating");
+type ReadingState = "generating" | "complete" | "failed";
+
+export function getInitialReadingState(initialStatus: string, initialText?: string | null): { text: string; status: ReadingState } {
+  if (initialText) return { text: initialText, status: "complete" };
+  if (initialStatus === "failed") return { text: "", status: "failed" };
+  return { text: "", status: "generating" };
+}
+
+export function shouldStartReadingStream(initialStatus: string, initialText: string | null | undefined, attempt: number) {
+  if (initialText) return false;
+  return initialStatus !== "failed" || attempt > 0;
+}
+
+export function StreamingReading({
+  id,
+  initialText,
+  initialStatus,
+  interpretationMode = "deterministic",
+}: {
+  id: string;
+  initialText?: string | null;
+  initialStatus: string;
+  interpretationMode?: "deterministic" | "model";
+}) {
+  const initial = getInitialReadingState(initialStatus, initialText);
+  const [text, setText] = useState(initial.text);
+  const [status, setStatus] = useState<ReadingState>(initial.status);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    if (initialText) return;
+    if (!shouldStartReadingStream(initialStatus, initialText, attempt)) return;
     const controller = new AbortController();
     void (async () => {
       try {
@@ -28,13 +52,15 @@ export function StreamingReading({ id, initialText }: { id: string; initialText?
       }
     })();
     return () => controller.abort();
-  }, [attempt, id, initialText]);
+  }, [attempt, id, initialStatus, initialText]);
 
   return (
     <section className="surface prose-card" aria-labelledby="reading-answer">
       <div className="section-title">
         <h2 id="reading-answer">သုရိယ၏ အမြင်</h2>
-        {status === "generating" && <span className="tag"><Sparkles size={12} aria-hidden="true" /> ရေးသားနေသည်</span>}
+        {status === "generating" ? <span className="tag"><Sparkles size={12} aria-hidden="true" /> ရေးသားနေသည်</span> : (
+          <span className="tag">{interpretationMode === "model" ? "AI အဓိပ္ပာယ်ဖွင့်" : "စက်တွင်းတွက်ချက်အဖြေ"}</span>
+        )}
       </div>
       {text ? <div className="reading-copy" aria-live="polite">{text}</div> : status === "generating" ? (
         <p className="page-lede" role="status">တွက်ချက်ထားသော ဇာတာအချက်အလက်ကို အဓိပ္ပာယ်ဖွင့်နေပါတယ်…</p>

@@ -7,8 +7,8 @@ import { TechniqueCard } from "./technique-card";
 
 const MAX_QUESTION_LENGTH = 500;
 
-export function QuestionComposer() {
-  const [question, setQuestion] = useState("");
+export function QuestionComposer({ initialQuestion = "" }: { initialQuestion?: string }) {
+  const [question, setQuestion] = useState(initialQuestion.slice(0, MAX_QUESTION_LENGTH));
   const [technique, setTechnique] = useState<ReadingTechnique["id"]>("janma");
   const [status, setStatus] = useState("");
   const [pending, setPending] = useState(false);
@@ -43,6 +43,10 @@ export function QuestionComposer() {
 
   return (
     <form className="composer" onSubmit={submit}>
+      <div className="composer-welcome">
+        <span aria-hidden="true">✦</span>
+        <div><strong>သင့်ဇာတာနှင့် ချိတ်ဆက်ထားသည်</strong><p>မွေးဇာတာနှင့် ဂဏန်းဗေဒင်တွက်ချက်မှုကို အခြေခံပြီး အဖြေပေးပါမယ်။</p></div>
+      </div>
       <div className="field-group">
         <label className="field-label" htmlFor="question">သင့်မေးခွန်းကို ရေးပါ</label>
         <textarea
@@ -64,7 +68,7 @@ export function QuestionComposer() {
         </div>
       </fieldset>
       <button className="primary-button" type="submit" disabled={!question.trim() || pending}>
-        {pending ? "တွက်ချက်နေပါတယ်…" : "ဖတ်ကြားမှု စတင်မည်"}
+        {pending ? "တွက်ချက်နေပါတယ်…" : "သုရိယကို မေးမည်"}
         {!pending && <ArrowRight size={17} aria-hidden="true" />}
       </button>
       {status && <p className="form-message" role="status">{status}</p>}

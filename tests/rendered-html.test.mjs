@@ -58,7 +58,7 @@ test("server-renders the designed public product routes", async () => {
   const expectations = [
     ["/daily", /DAILY ENERGY[\s\S]*LUCKY WINDOW/],
     ["/daily/details", /D1 · RASI[\s\S]*D9 · NAVAMSA[\s\S]*D10 · DASAMSA/],
-    ["/ask", /သင့်မေးခွန်းကို ရေးပါ/],
+    ["/ask", /သုရိယကို မေးပါ[\s\S]*သင့်ဇာတာနှင့် ချိတ်ဆက်ထားသည်[\s\S]*အဖြေတွက်ချက်ပုံ/],
     ["/tarot", /Tarot တိုက်ရိုက်ဆွေးနွေး/],
     ["/login", /ပြန်လည်ကြိုဆိုပါတယ်/],
   ];

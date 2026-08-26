@@ -175,6 +175,43 @@ h1, h2, h3 { line-height: 1.38; }
 .safety-note { border-left: 3px solid var(--cosmic-gold); background: rgb(248 242 232 / 70%); padding: 14px 16px; }
 .safety-note strong { font-size: .76rem; }
 .safety-note p { margin: 5px 0 0; color: var(--cosmic-muted); font-size: .66rem; }
+.composer-welcome { display: grid; grid-template-columns: auto 1fr; gap: 12px; border: 1px solid var(--cosmic-line); border-radius: 12px; background: #ede4ef; padding: 14px; }
+.composer-welcome > span { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: var(--cosmic-plum); color: #f6dc93; }
+.composer-welcome strong { display: block; font-size: .76rem; }
+.composer-welcome p { margin: 3px 0 0; color: var(--cosmic-muted); font-size: .62rem; }
+.ask-explainer { display: grid; gap: 10px; border: 1px solid var(--cosmic-line); border-radius: 14px; background: var(--cosmic-paper); padding: 18px; }
+.ask-explainer-icon { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: #efe1c6; color: var(--cosmic-gold); }
+.ask-explainer h2 { margin: 0; font-size: 1rem; }
+.ask-explainer ol { display: grid; gap: 12px; margin: 3px 0; padding: 0; list-style: none; }
+.ask-explainer li { display: grid; grid-template-columns: 20px 1fr; gap: 5px; color: var(--cosmic-muted); font-size: .58rem; }
+.ask-explainer li strong { display: block; color: var(--cosmic-ink); font-size: .64rem; }
+.ask-explainer > p:last-child { margin: 0; border-top: 1px solid var(--cosmic-line); padding-top: 10px; color: var(--cosmic-muted); font-size: .57rem; }
+.recent-readings-rail { display: grid; gap: 14px; }
+.recent-rail-heading { display: flex; gap: 8px; align-items: center; }
+.recent-rail-heading h2 { margin: 0; font-size: .8rem; }
+.recent-readings-rail > p { margin: 0; color: var(--cosmic-muted); font-size: .64rem; }
+.recent-readings-rail ol { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.recent-readings-rail li a { display: grid; gap: 4px; border: 1px solid var(--cosmic-line); border-radius: 10px; background: var(--cosmic-paper); padding: 11px; }
+.recent-readings-rail li strong { overflow: hidden; font-size: .65rem; text-overflow: ellipsis; white-space: nowrap; }
+.recent-readings-rail li span { display: flex; gap: 4px; align-items: center; color: var(--cosmic-muted); font-size: .54rem; }
+.reading-sources { display: grid; gap: 14px; border: 1px solid var(--cosmic-line); border-radius: 14px; background: var(--cosmic-paper); padding: 18px; }
+.reading-sources h2, .follow-up-panel h2, .reading-feedback h2 { margin: 3px 0 0; font-size: 1rem; }
+.reading-source-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.reading-source-grid article { display: grid; gap: 5px; border-radius: 9px; background: #ede4ef; padding: 11px; }
+.reading-source-grid span { color: var(--cosmic-muted); font-size: .5rem; }
+.reading-source-grid strong { font-size: .68rem; }
+.follow-up-panel { display: grid; gap: 12px; border-block: 1px solid var(--cosmic-line); padding-block: 18px; }
+.follow-up-panel > div { display: grid; gap: 7px; }
+.follow-up-panel a { border: 1px solid var(--cosmic-line); border-radius: 10px; background: var(--cosmic-paper); padding: 10px 12px; font-size: .66rem; }
+.reading-feedback { display: grid; gap: 12px; border-radius: 14px; background: #e7eee2; padding: 18px; }
+.feedback-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.feedback-actions button { display: inline-flex; min-height: 42px; align-items: center; gap: 6px; border: 1px solid var(--cosmic-line); border-radius: 999px; background: var(--cosmic-paper); padding: 8px 12px; font: inherit; font-size: .64rem; cursor: pointer; }
+.feedback-actions button[aria-pressed="true"] { border-color: var(--cosmic-plum); background: var(--cosmic-plum); color: white; }
+.feedback-status { min-height: 1em; margin: 0; color: var(--cosmic-muted); font-size: .58rem; }
+.reading-history-card { position: relative; overflow: hidden; }
+.reading-history-card::before { position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--cosmic-gold); content: ""; }
+.reading-history-card[data-status="failed"]::before { background: var(--danger); }
+.reading-history-card[data-status="complete"]::before { background: var(--cosmic-green); }
 
 .prose-card { padding: 24px; }
 .prose-card h2, .prose-card h3 { margin-bottom: 10px; }
