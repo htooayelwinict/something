@@ -14,7 +14,7 @@ The first release includes real authentication, saved birth profiles, daily guid
 1. Give a new user a clear path from sign-in to a personalized daily insight in under five minutes.
 2. Produce repeatable astrology data from the same birth inputs; AI is used only to interpret calculations, never to invent the chart.
 3. Deliver the visual character of the Pencil designs at 390×844 while remaining accessible and usable on larger viewports.
-4. Keep personal birth data private through authenticated storage, row-level database policies, server-only AI credentials, and explicit deletion controls.
+4. Keep personal birth data private through platform authentication, server-side ownership checks, server-only AI credentials, and explicit deletion controls.
 5. Establish modular boundaries so the calculation provider, AI provider, database, or Tarot commerce implementation can be replaced without rewriting the interface.
 
 ## Non-Goals
@@ -33,7 +33,7 @@ The first release includes real authentication, saved birth profiles, daily guid
 
 ### New user
 
-1. Open the installable PWA and sign in using email/password or Google.
+1. Open the installable PWA and sign in through the platform-owned ChatGPT identity flow.
 2. Complete birth onboarding with name, birth date, exact birth time, city, coordinates, and IANA timezone.
 3. Land on the home screen and see a calculated daily insight.
 4. Open Ask, enter a question, choose a reading technique, and receive a streamed Burmese response.
@@ -56,7 +56,7 @@ The first release includes real authentication, saved birth profiles, daily guid
 
 | Route | Purpose | Pencil source |
 | --- | --- | --- |
-| `/login` | Email/password and Google authentication | `သုရိယ — ဝင်ရောက်ရန်` |
+| `/login` | Branded entry point for platform-owned ChatGPT sign-in | `သုရိယ — ဝင်ရောက်ရန်` |
 | `/onboarding` | Birth profile creation | New screen derived from the visual system |
 | `/` | Personalized home dashboard | `သုရိယ — ပင်မ` |
 | `/daily` | Expanded daily guidance | `သုရိယ — နေ့စဉ်လမ်းညွှန်` |
@@ -90,21 +90,21 @@ The implementation will preserve the warm editorial tone, fine borders, gold det
 
 ### Application
 
-- Next.js 16 App Router
+- Vinext App Router with the Next.js 16-compatible API surface supplied by the Sites starter
 - React and TypeScript in strict mode
 - Server Components by default; Client Components only for interactive forms, streaming state, and install prompts
 - Route Handlers for AI streaming and authenticated mutations that need an HTTP boundary
-- Server Actions for straightforward account and profile forms
+- Route Handlers for authenticated form mutations and streaming boundaries
 - CSS variables plus Tailwind utility composition for the design system
 - Zod schemas shared by forms, server boundaries, and stored chart snapshots
 
 ### Persistence and authentication
 
-- Supabase Auth for email/password and Google OAuth
-- Supabase Postgres for profiles, birth profiles, readings, and seeded Tarot specialists
-- `@supabase/ssr` cookie-based browser/server clients
-- Row-level security on every user-owned table
-- Service-role credentials restricted to server-only administrative scripts
+- OpenAI Sites dispatch-owned Sign in with ChatGPT (SIWC)
+- Stable `oai-authenticated-user-id` as the ownership key; email and full name are display-only
+- Cloudflare D1 SQLite for profiles, birth profiles, readings, and seeded Tarot specialists
+- Server-side ownership predicates on every user-owned query and mutation
+- A small D1 repository layer so route handlers never access the runtime binding directly
 
 ### AI
 
@@ -130,7 +130,7 @@ Application services
    |        |        |
 Auth    Astrology    Readings
    |        |        |
-Supabase  Calculation core  AI provider
+D1 repositories  Calculation core  AI provider
 ```
 
 ## Vedic Calculation Scope
@@ -187,15 +187,15 @@ Raw model output is treated as untrusted text. The MVP renders plain streamed te
 
 ### `profiles`
 
-- `id uuid primary key references auth.users`
+- `id text primary key` containing the stable authenticated Sites user ID
 - `display_name text`
 - `locale text default 'my'`
 - timestamps
 
 ### `birth_profiles`
 
-- `id uuid primary key`
-- `user_id uuid references profiles`
+- `id text primary key`
+- `user_id text references profiles`
 - `name text`
 - `birth_date date`
 - `birth_time time`
@@ -208,9 +208,9 @@ Raw model output is treated as untrusted text. The MVP renders plain streamed te
 
 ### `readings`
 
-- `id uuid primary key`
-- `user_id uuid references profiles`
-- `birth_profile_id uuid references birth_profiles`
+- `id text primary key`
+- `user_id text references profiles`
+- `birth_profile_id text references birth_profiles`
 - `kind text` (`daily`, `janma`, `prashna`, `muhurta`)
 - `question text nullable`
 - `period_start date`
@@ -225,18 +225,18 @@ Raw model output is treated as untrusted text. The MVP renders plain streamed te
 
 ### `tarot_specialists`
 
-- `id uuid primary key`
+- `id text primary key`
 - name, initials, specialty, experience, display rate, availability label, and sort order
 - seeded read-only content for the MVP
 
-RLS grants users access only to their own profile, birth profile, and readings. Tarot specialist rows are publicly readable.
+Every user-owned database operation includes the authenticated user ID in its predicate. Tarot specialist rows are publicly readable. D1 schema and indexes are managed through checked-in Drizzle migrations.
 
 ## Server Boundaries
 
 - `POST /api/readings` validates input, calculates the chart, creates a pending reading, and returns its ID.
 - `GET /api/readings/[id]/stream` verifies ownership, streams Gemini text, updates the reading on completion, and records a safe error code on failure.
-- Server Actions create/update the birth profile and handle account settings.
-- Daily insights are generated from a deterministic chart summary and cached per user/local date only in Postgres; private responses are never placed in shared CDN caches.
+- Authenticated Route Handlers create/update the birth profile and handle account settings.
+- Daily insights are generated from a deterministic chart summary and cached per user/local date only in D1; private responses are never placed in shared CDN caches.
 
 The separate create and stream operations make retry behavior explicit. A failed AI call reuses the existing chart snapshot and does not create another reading.
 
@@ -248,14 +248,14 @@ The separate create and stream operations make retry behavior explicit. A failed
 - Calculation failures produce a traceable internal code and never invoke AI.
 - AI timeout, quota, and provider errors preserve the reading and expose a retry action.
 - Streaming disconnects can resume by reopening the saved reading; completed chunks are persisted only after a successful final response in the MVP.
-- Auth expiry redirects to Login while preserving a safe return URL.
+- Missing identity redirects through dispatch-owned SIWC while preserving a same-origin return URL.
 - Empty history and unavailable Tarot commerce use designed empty states rather than dead controls.
 
 ## Privacy and Security
 
 - API keys and service credentials remain server-only.
 - User identity is verified at each server boundary; client-supplied `user_id` values are ignored.
-- RLS is enabled before any user-owned table is used.
+- Every database repository requires an authenticated user ID and includes it in ownership-sensitive reads, updates, and deletes.
 - Questions are length-limited and delimited in prompts to reduce prompt injection.
 - Rate limits apply per authenticated user and IP to reading creation and AI streaming.
 - Logs exclude birth data, questions, chart snapshots, and model responses.
@@ -283,8 +283,8 @@ The separate create and stream operations make retry behavior explicit. A failed
 
 ### Integration tests
 
-- Supabase server clients and authorization helpers
-- RLS policies using two distinct test users
+- D1 repositories and authorization helpers
+- Ownership isolation using two distinct test users
 - Reading state transitions
 - Fake AI streaming, retry, timeout, and failure behavior
 
@@ -310,18 +310,18 @@ Gemini is mocked in the normal suite. A manually enabled live smoke test validat
 
 ## Deployment
 
-- Vercel hosts the Next.js application and route handlers.
-- Supabase hosts Auth and Postgres.
+- OpenAI Sites hosts the Vinext/Next.js-compatible Cloudflare Worker application.
+- Sites provisions and binds Cloudflare D1 as `DB`.
 - Google AI Studio or Vertex AI supplies Gemini credentials.
 - Environment validation fails fast during build/start when required server variables are missing.
 - Database migrations and seed data live in the repository.
-- Preview deployments use a separate Supabase project or local Supabase instance.
+- Local development uses the starter's simulated binding; hosted environments receive Sites-owned D1 resources.
 
 ## Delivery Sequence
 
 1. Foundation: Next.js, design tokens, quality tooling, PWA manifest, and static application shell.
 2. Pixel-accurate implementation of the five Pencil screens using seeded data.
-3. Supabase schema, RLS, authentication, onboarding, and profile management.
+3. D1 schema, ownership-safe repositories, SIWC authentication, onboarding, and profile management.
 4. Pure calculation engine with fixtures and SVG charts.
 5. Daily guidance and deterministic daily scoring.
 6. Ask flow, Gemini adapter, streaming result, retry, and history.
@@ -335,7 +335,7 @@ Each sequence ends with passing tests and a browser verification checkpoint.
 - A user can authenticate, create a birth profile, view a daily insight, request an AI reading, and reopen it from history.
 - The same birth input and calculation version always produce the same structured chart.
 - D1, D9, D10, Panchanga, Nakshatra, and Dasha fixtures pass within documented tolerances.
-- All user-owned data is covered by verified RLS policies.
+- All user-owned data is covered by verified server-side ownership checks.
 - AI output streams, errors safely, retries without duplicate calculations, and persists only for its owner.
 - Tarot content is clearly a preview and never suggests that payment or a live consultation occurred.
 - Keyboard navigation, accessible names, contrast, reduced motion, and mobile/desktop Playwright checks pass.
@@ -346,7 +346,7 @@ Each sequence ends with passing tests and a browser verification checkpoint.
 - The product is a responsive Next.js PWA rather than a native application.
 - The MVP uses an all-TypeScript modular monolith.
 - Astronomy Engine plus a tested Vedic domain layer is preferred over Swiss Ephemeris for the MVP. Astronomy Engine is MIT-licensed and reports ±1 arcminute accuracy; Swiss Ephemeris requires either an AGPL-compatible project or a professional license for a public service.
-- Supabase provides authentication, Postgres, and row-level security.
+- Sites dispatch-owned SIWC provides authentication, and Sites-owned D1 provides durable SQLite storage.
 - Gemini is isolated behind an AI provider interface and streams through a server Route Handler.
 - Burmese is the only launch language, with translation-ready message organization.
 - Tarot commerce and communication are deferred, not simulated as working transactions.
@@ -356,7 +356,7 @@ Each sequence ends with passing tests and a browser verification checkpoint.
 - [Pencil source design](../../../untitled.pen)
 - [Next.js PWA guide](https://nextjs.org/docs/app/guides/progressive-web-apps)
 - [Next.js streaming guide](https://nextjs.org/docs/app/guides/streaming)
-- [Supabase SSR](https://github.com/supabase/ssr)
+- OpenAI Sites platform authentication and persistence guidance
 - [Google Gen AI JavaScript SDK](https://googleapis.github.io/js-genai/release_docs/)
 - [Astronomy Engine](https://github.com/cosinekitty/astronomy)
 - [Swiss Ephemeris licensing](https://www.astro.com/swisseph/sweph_e.htm)
