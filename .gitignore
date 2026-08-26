@@ -13,7 +13,12 @@
 /out/
 
 # production
-/build
+/build/*
+!/build/sites-vite-plugin.ts
+/dist
+/.vinext
+/.wrangler
+/.playwright-mcp
 
 # misc
 .DS_Store
@@ -27,6 +32,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+.dev.vars
 
 # vercel
 .vercel
