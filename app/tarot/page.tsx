@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AppShell } from "@/components/suriya/app-shell";
-import { TarotSpecialistCard } from "@/components/suriya/tarot-specialist-card";
+import { ConsultantDirectory } from "@/components/suriya/consultant-directory";
 import { listSpecialists } from "@/db/repositories/specialists";
 import { demoSpecialists } from "@/lib/content/demo";
 
@@ -25,15 +25,10 @@ export default async function TarotPage() {
         <h1 className="page-title">လူသားအကြံပေး ရှာဖွေပါ</h1>
         <p className="page-lede">လူသားအမြင်တစ်ခု လိုအပ်သည့်အခါ ဆက်သွယ်နိုင်မည့် Tarot ပညာရှင်များ၏ profile ကို လေ့လာပါ။ ဆွေးနွေးမှုရက်ချိန်းကို မဖွင့်ရသေးပါ။</p>
       </header>
-      <nav className="consultant-categories" aria-label="အကြံပေး အမျိုးအစားများ">
-        <a href="#consultants" aria-current="page">အားလုံး</a><a href="#consultants">ချစ်ရေး</a><a href="#consultants">အလုပ်အကိုင်</a><a href="#consultants">ဘဝလမ်းကြောင်း</a>
-      </nav>
       <section className="consultant-intro" aria-label="Preview အခြေအနေ">
         <span>PREVIEW DIRECTORY</span><p>အကြံပေးများ၏ အချက်အလက်ကို ကြည့်ရှုရန်သာ ဖြစ်ပြီး ယခုစာမျက်နှာမှ ငွေပေးချေမှု သို့မဟုတ် ရက်ချိန်း မပြုလုပ်ပါ။</p>
       </section>
-      <section className="tarot-grid" id="consultants" aria-label="Tarot ပညာရှင်များ">
-        {specialists.map((specialist) => <TarotSpecialistCard key={specialist.id} specialist={specialist} />)}
-      </section>
+      <ConsultantDirectory specialists={specialists} />
     </AppShell>
   );
 }

@@ -7,7 +7,11 @@ import { TechniqueCard } from "./technique-card";
 
 const MAX_QUESTION_LENGTH = 500;
 
-export function QuestionComposer({ initialQuestion = "" }: { initialQuestion?: string }) {
+export function unauthenticatedAskTarget(authenticated: boolean) {
+  return authenticated ? null : "/login?return_to=/ask";
+}
+
+export function QuestionComposer({ initialQuestion = "", authenticated }: { initialQuestion?: string; authenticated: boolean }) {
   const [question, setQuestion] = useState(initialQuestion.slice(0, MAX_QUESTION_LENGTH));
   const [technique, setTechnique] = useState<ReadingTechnique["id"]>("janma");
   const [status, setStatus] = useState("");
@@ -16,6 +20,11 @@ export function QuestionComposer({ initialQuestion = "" }: { initialQuestion?: s
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!question.trim() || pending) return;
+    const signInTarget = unauthenticatedAskTarget(authenticated);
+    if (signInTarget) {
+      window.location.assign(signInTarget);
+      return;
+    }
     setPending(true);
     setStatus("သင့်ဇာတာအချက်အလက်များကို စစ်ဆေးနေပါတယ်…");
     try {
