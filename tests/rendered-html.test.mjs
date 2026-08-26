@@ -31,6 +31,9 @@ test("server-renders the Suriya home experience", async () => {
   assert.match(html, /<html[^>]*lang=["']my["']/i);
   assert.match(html, /<title>[^<]*သုရိယ[^<]*<\/title>/i);
   assert.match(html, /<main\b/i);
+  assert.match(html, /SURIYA/);
+  assert.match(html, /နေ့စဉ်ဖတ်စာ/);
+  assert.match(html, /နည်းလမ်းများ/);
   assert.match(html, /မင်္ဂလာပါ/);
   assert.match(html, /ယနေ့၏ မင်္ဂလာလမ်းညွှန်/);
   assert.match(html, /manifest\.webmanifest/);

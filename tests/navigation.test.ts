@@ -12,6 +12,10 @@ const navigationFiles = [
   "components/suriya/bottom-nav.tsx",
   "components/suriya/brand.tsx",
   "components/suriya/daily-insight.tsx",
+  "components/suriya/top-nav.tsx",
+  "components/suriya/identity-rail.tsx",
+  "components/suriya/source-chip.tsx",
+  "components/suriya/cosmic-metric.tsx",
 ];
 
 describe("navigation compatibility", () => {

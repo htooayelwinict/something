@@ -1,16 +1,28 @@
-import { History } from "lucide-react";
 import { BottomNav } from "./bottom-nav";
-import { Brand } from "./brand";
+import { TopNav } from "./top-nav";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({
+  children,
+  rail,
+  aside,
+}: {
+  children: React.ReactNode;
+  rail?: React.ReactNode;
+  aside?: React.ReactNode;
+}) {
   return (
-    <div className="app-frame">
-      <header className="site-header">
-        <Brand />
-        <a className="header-action" href="/readings"><History size={15} aria-hidden="true" /> မှတ်တမ်း</a>
-      </header>
+    <div className="cosmic-shell">
+      <TopNav />
       <BottomNav />
-      <main className="page-main" id="main-content">{children}</main>
+      <div
+        className="cosmic-layout"
+        data-with-rail={rail ? "true" : "false"}
+        data-with-aside={aside ? "true" : "false"}
+      >
+        {rail && <aside className="cosmic-rail">{rail}</aside>}
+        <main className="page-main cosmic-content" id="main-content">{children}</main>
+        {aside && <aside className="cosmic-aside">{aside}</aside>}
+      </div>
     </div>
   );
 }
