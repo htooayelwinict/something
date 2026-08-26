@@ -60,7 +60,8 @@ test("server-renders the designed public product routes", async () => {
     ["/daily/details", /D1 · RASI[\s\S]*D9 · NAVAMSA[\s\S]*D10 · DASAMSA/],
     ["/ask", /သုရိယကို မေးပါ[\s\S]*သင့်ဇာတာနှင့် ချိတ်ဆက်ထားသည်[\s\S]*အဖြေတွက်ချက်ပုံ/],
     ["/profile", /YOUR COSMIC IDENTITY[\s\S]*ChatGPT ဖြင့် ဝင်ရောက်မည်/],
-    ["/tarot", /Tarot တိုက်ရိုက်ဆွေးနွေး/],
+    ["/tarot", /လူသားအကြံပေး[\s\S]*Preview[\s\S]*သီရိလမင်း/],
+    ["/tarot/thiri", /သီရိလမင်း[\s\S]*booking မဖွင့်ရသေးပါ/],
     ["/login", /ပြန်လည်ကြိုဆိုပါတယ်/],
   ];
 

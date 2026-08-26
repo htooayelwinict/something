@@ -1,11 +1,11 @@
-import { Headphones, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import type { TarotSpecialist } from "@/lib/content/demo";
 
 export function TarotSpecialistCard({ specialist }: { specialist: TarotSpecialist }) {
   return (
     <article className="surface specialist-card">
       <div className="specialist-visual">
-        <span className="availability">{specialist.availability}</span>
+        <span className="availability">Preview · {specialist.availability}</span>
         <span className="specialist-monogram" aria-hidden="true">{specialist.initials}</span>
       </div>
       <div className="specialist-body">
@@ -13,10 +13,8 @@ export function TarotSpecialistCard({ specialist }: { specialist: TarotSpecialis
         <p className="specialist-meta">{specialist.specialty} · {specialist.experience}</p>
         <div className="tag-row">{specialist.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
         <p className="metric-value">{specialist.rate}</p>
-        <details className="preview-details">
-          <summary><Headphones size={16} aria-hidden="true" /> ဆွေးနွေးမှု အစမ်းကြည့်ရန်</summary>
-          <p className="preview-note"><Star size={13} aria-hidden="true" /> တိုက်ရိုက်ဆွေးနွေးခြင်းနှင့် ငွေပေးချေမှုကို မကြာမီ ထည့်သွင်းပေးပါမည်။ ယခုနှိပ်ခြင်းဖြင့် booking မပြုလုပ်ပါ။</p>
-        </details>
+        <p className="preview-note"><Star size={13} aria-hidden="true" /> အကြံပေး၏ profile ကို ကြည့်နိုင်ပါပြီ။ တိုက်ရိုက်ဆွေးနွေးမှုကို မဖွင့်ရသေးပါ။</p>
+        <a className="secondary-button specialist-link" href={`/tarot/${specialist.id}`}>Profile ကြည့်ရန် <ArrowRight size={15} aria-hidden="true" /></a>
       </div>
     </article>
   );
