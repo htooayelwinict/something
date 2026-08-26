@@ -1,9 +1,19 @@
 import type { AiProvider } from "./provider";
-import { FakeAiProvider } from "./fake";
+import { DeterministicAiProvider } from "./fake";
 import { GeminiProvider } from "./gemini";
 
-export function getAiProvider(): AiProvider {
+export type AiProviderSelection = {
+  provider: AiProvider;
+  mode: "deterministic" | "model";
+};
+
+export function getAiProvider(fallbackText: string): AiProviderSelection {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return new FakeAiProvider();
-  return new GeminiProvider(apiKey, process.env.GEMINI_MODEL ?? "gemini-2.5-flash");
+  if (!apiKey) {
+    return { provider: new DeterministicAiProvider(fallbackText), mode: "deterministic" };
+  }
+  return {
+    provider: new GeminiProvider(apiKey, process.env.GEMINI_MODEL ?? "gemini-2.5-flash"),
+    mode: "model",
+  };
 }

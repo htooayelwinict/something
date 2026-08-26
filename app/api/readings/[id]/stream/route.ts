@@ -2,6 +2,7 @@ import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { completeReading, failReading, getReading } from "@/db/repositories/readings";
 import { getAiProvider } from "@/lib/ai";
 import { buildReadingPrompt } from "@/lib/ai/prompt";
+import { buildDeterministicReading } from "@/lib/readings/deterministic";
 import type { ChartSnapshot } from "@/lib/astrology/types";
 import { readingRequestSchema } from "@/lib/schemas/reading";
 
@@ -19,8 +20,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
   const input = readingRequestSchema.safeParse({ kind: reading.kind, question: reading.question });
   if (!input.success) return new Response("invalid reading", { status: 422 });
-  const prompt = buildReadingPrompt(reading.chartSnapshot as unknown as ChartSnapshot, input.data);
-  const provider = getAiProvider();
+  const snapshot = reading.chartSnapshot as unknown as ChartSnapshot;
+  const prompt = buildReadingPrompt(snapshot, input.data);
+  const fallback = buildDeterministicReading(snapshot, input.data);
+  const { provider } = getAiProvider(fallback.text);
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
   const writer = writable.getWriter();
   const encoder = new TextEncoder();
