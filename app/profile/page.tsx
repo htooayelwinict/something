@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { LogIn, LogOut } from "lucide-react";
 import { chatGPTSignInPath, chatGPTSignOutPath, getChatGPTUser } from "@/app/chatgpt-auth";
 import { AppShell } from "@/components/suriya/app-shell";
@@ -21,11 +20,11 @@ export default async function ProfilePage() {
           <section className="surface form-card"><BirthProfileForm initialName={user.fullName ?? ""} /></section>
           <aside className="surface prose-card">
             <p className="eyebrow">အကောင့်</p><h2>{user.displayName}</h2><p className="page-lede">သင့်ပရိုဖိုင်နှင့် ဖတ်ကြားမှုများကို အကောင့် ID ဖြင့် သီးခြားပိုင်ဆိုင်မှု စစ်ဆေးထားပါတယ်။</p>
-            <Link className="ghost-button" href={chatGPTSignOutPath("/")}><LogOut size={16} aria-hidden="true" /> ထွက်မည်</Link>
+            <a className="ghost-button" href={chatGPTSignOutPath("/")}><LogOut size={16} aria-hidden="true" /> ထွက်မည်</a>
           </aside>
         </div>
       ) : (
-        <section className="surface empty-state"><LogIn size={34} aria-hidden="true" /><h2>အကောင့်နှင့် ချိတ်ဆက်ပါ</h2><p>မွေးဖွားမှုအချက်အလက်နှင့် ဖတ်ကြားမှုများကို လုံခြုံစွာ သိမ်းရန် ဝင်ရောက်ပါ။</p><Link className="primary-button" href={chatGPTSignInPath("/profile")}>ChatGPT ဖြင့် ဝင်ရောက်မည်</Link></section>
+        <section className="surface empty-state"><LogIn size={34} aria-hidden="true" /><h2>အကောင့်နှင့် ချိတ်ဆက်ပါ</h2><p>မွေးဖွားမှုအချက်အလက်နှင့် ဖတ်ကြားမှုများကို လုံခြုံစွာ သိမ်းရန် ဝင်ရောက်ပါ။</p><a className="primary-button" href={chatGPTSignInPath("/profile")}>ChatGPT ဖြင့် ဝင်ရောက်မည်</a></section>
       )}
     </AppShell>
   );

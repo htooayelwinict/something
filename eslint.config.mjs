@@ -35,6 +35,11 @@ const eslintConfig = defineConfig([
         version: "detect",
       },
     },
+    rules: {
+      // Vinext beta's Link prefetch handler currently intercepts clicks with a
+      // runtime error. Native anchors keep navigation reliable on deployed Sites.
+      "@next/next/no-html-link-for-pages": "off",
+    },
   },
 ]);
 

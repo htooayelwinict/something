@@ -1,11 +1,10 @@
-import Link from "next/link";
 import { Sun } from "lucide-react";
 
 export function Brand() {
   return (
-    <Link className="brand" href="/" aria-label="သုရိယ ပင်မစာမျက်နှာ">
+    <a className="brand" href="/" aria-label="သုရိယ ပင်မစာမျက်နှာ">
       <span className="brand-mark" aria-hidden="true"><Sun size={20} strokeWidth={1.6} /></span>
       <span>သုရိယ</span>
-    </Link>
+    </a>
   );
 }

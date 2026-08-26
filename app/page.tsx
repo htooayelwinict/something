@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowRight, MessageCircleMore } from "lucide-react";
 import { AppShell } from "@/components/suriya/app-shell";
 import { DailyInsight } from "@/components/suriya/daily-insight";
@@ -22,7 +21,7 @@ export default async function HomePage() {
         <aside className="soft-card oracle-card">
           <span className="metric-icon"><MessageCircleMore size={19} aria-hidden="true" /></span>
           <div><h3>မေးချင်တာရှိပါသလား။</h3><p>မွေးဇာတာ၊ မေးခွန်းအချိန်နှင့် မင်္ဂလာအချိန်ရွေးချယ်မှုတို့မှ တစ်ခုရွေးပြီး မေးနိုင်ပါတယ်။</p></div>
-          <Link className="secondary-button" href="/ask">မေးမြန်းရန် <ArrowRight size={16} aria-hidden="true" /></Link>
+          <a className="secondary-button" href="/ask">မေးမြန်းရန် <ArrowRight size={16} aria-hidden="true" /></a>
         </aside>
       </div>
     </AppShell>

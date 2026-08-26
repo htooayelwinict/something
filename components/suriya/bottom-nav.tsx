@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { CircleUserRound, House, MessageCircleMore, MoonStar, Sparkles } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { navigationItems } from "@/lib/content/navigation";
@@ -15,7 +14,7 @@ export function BottomNav() {
         const Icon = icons[item.icon];
         const current = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
         return (
-          <Link
+          <a
             className={`nav-item${item.featured ? " nav-item-ask" : ""}`}
             href={item.href}
             key={item.href}
@@ -24,7 +23,7 @@ export function BottomNav() {
           >
             <Icon size={item.featured ? 23 : 20} strokeWidth={1.7} aria-hidden="true" />
             <span>{item.label}</span>
-          </Link>
+          </a>
         );
       })}
     </nav>

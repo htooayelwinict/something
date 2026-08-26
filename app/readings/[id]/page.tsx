@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireChatGPTUser } from "@/app/chatgpt-auth";
@@ -20,7 +19,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ id: st
   const chart = reading.chartSnapshot as unknown as ChartSnapshot;
   return (
     <AppShell>
-      <Link className="text-link" href="/readings"><ArrowLeft size={15} aria-hidden="true" /> မှတ်တမ်းသို့</Link>
+      <a className="text-link" href="/readings"><ArrowLeft size={15} aria-hidden="true" /> မှတ်တမ်းသို့</a>
       <header className="page-heading">
         <p className="eyebrow">{reading.kind} · {reading.calculationVersion}</p>
         <h1 className="page-title">{reading.question}</h1>

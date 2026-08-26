@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowRight, Clock3, Compass, MoonStar } from "lucide-react";
 import { demoDailyInsight } from "@/lib/content/demo";
 
@@ -56,7 +55,7 @@ export function DailyInsight({ expanded = false, data }: { expanded?: boolean; d
           </ul>
         </section>
       ) : (
-        <Link className="text-link" href="/daily">အသေးစိတ်ဖတ်ရန် <ArrowRight size={15} aria-hidden="true" /></Link>
+        <a className="text-link" href="/daily">အသေးစိတ်ဖတ်ရန် <ArrowRight size={15} aria-hidden="true" /></a>
       )}
     </>
   );

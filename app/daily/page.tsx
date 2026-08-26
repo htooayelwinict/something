@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { AppShell } from "@/components/suriya/app-shell";
 import { DailyInsight } from "@/components/suriya/daily-insight";
@@ -24,7 +23,7 @@ export default async function DailyPage() {
           <p className="eyebrow">သတိပြုရန်</p>
           <h2>လမ်းညွှန်၊ အမိန့်မဟုတ်ပါ</h2>
           <p className="page-lede">ကြယ်တာရာအမြင်ကို ကိုယ့်ဆုံးဖြတ်ချက်ကို ပြန်လည်စဉ်းစားရန် အသုံးချပါ။ ကျန်းမာရေး၊ ဥပဒေ သို့မဟုတ် ငွေကြေးကိစ္စများအတွက် ပညာရှင်နှင့် တိုင်ပင်ပါ။</p>
-          <Link className="text-link" href="/ask">ကိုယ်ပိုင်မေးခွန်း မေးရန် <ArrowRight size={15} aria-hidden="true" /></Link>
+          <a className="text-link" href="/ask">ကိုယ်ပိုင်မေးခွန်း မေးရန် <ArrowRight size={15} aria-hidden="true" /></a>
         </aside>
       </div>
       <ChartGrid chart={daily.chart} />
