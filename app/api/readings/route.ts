@@ -37,6 +37,8 @@ export async function POST(request: Request) {
       calculationVersion: CALCULATION_VERSION,
       promptVersion: PROMPT_VERSION,
       responseText: null,
+      interpretationMode: "deterministic",
+      feedback: null,
       status: "generating",
       errorCode: null,
     });

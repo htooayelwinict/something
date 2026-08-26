@@ -23,7 +23,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const snapshot = reading.chartSnapshot as unknown as ChartSnapshot;
   const prompt = buildReadingPrompt(snapshot, input.data);
   const fallback = buildDeterministicReading(snapshot, input.data);
-  const { provider } = getAiProvider(fallback.text);
+  const { provider, mode } = getAiProvider(fallback.text);
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
   const writer = writable.getWriter();
   const encoder = new TextEncoder();
@@ -37,7 +37,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         finalText += chunk;
         await writer.write(encoder.encode(chunk));
       }
-      if (finalText.trim()) await completeReading(user.userId, id, finalText);
+      if (finalText.trim()) await completeReading(user.userId, id, finalText, mode);
       await writer.close();
     } catch (error) {
       const code = error instanceof Error ? error.message.slice(0, 40) : "provider_error";

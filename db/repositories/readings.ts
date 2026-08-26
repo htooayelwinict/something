@@ -2,6 +2,7 @@ import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { readings } from "@/db/schema";
 import { newId } from "@/lib/ids";
+import type { ReadingFeedback } from "@/lib/schemas/feedback";
 
 export type CreateReadingInput = Omit<typeof readings.$inferInsert, "id" | "userId" | "createdAt" | "updatedAt">;
 
@@ -21,9 +22,21 @@ export async function listReadings(userId: string) {
   return db.select().from(readings).where(eq(readings.userId, userId)).orderBy(desc(readings.createdAt)).limit(40);
 }
 
-export async function completeReading(userId: string, id: string, responseText: string) {
+export async function completeReading(
+  userId: string,
+  id: string,
+  responseText: string,
+  interpretationMode: "deterministic" | "model",
+) {
   const db = await getDb();
-  const [row] = await db.update(readings).set({ status: "complete", responseText, errorCode: null, updatedAt: new Date().toISOString() })
+  const [row] = await db.update(readings).set({ status: "complete", responseText, interpretationMode, errorCode: null, updatedAt: new Date().toISOString() })
+    .where(and(eq(readings.userId, userId), eq(readings.id, id))).returning();
+  return row;
+}
+
+export async function setReadingFeedback(userId: string, id: string, feedback: ReadingFeedback) {
+  const db = await getDb();
+  const [row] = await db.update(readings).set({ feedback, updatedAt: new Date().toISOString() })
     .where(and(eq(readings.userId, userId), eq(readings.id, id))).returning();
   return row;
 }

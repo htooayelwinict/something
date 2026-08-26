@@ -40,6 +40,8 @@ export const readings = sqliteTable("readings", {
   calculationVersion: text("calculation_version").notNull(),
   promptVersion: text("prompt_version").notNull(),
   responseText: text("response_text"),
+  interpretationMode: text("interpretation_mode", { enum: ["deterministic", "model"] }).notNull().default("deterministic"),
+  feedback: text("feedback", { enum: ["useful", "not_useful"] }),
   status: text("status", { enum: ["calculating", "generating", "complete", "failed"] }).notNull(),
   errorCode: text("error_code"),
   ...timestamps,
