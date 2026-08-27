@@ -1,7 +1,7 @@
 import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { getBirthProfile, upsertProfile } from "@/db/repositories/profiles";
 import { createReading, listReadings } from "@/db/repositories/readings";
-import { calculateChart } from "@/lib/astrology/calculate-chart";
+import { calculateReadingSnapshot, readingPeriod } from "@/lib/readings/calculate-reading";
 import { CALCULATION_VERSION } from "@/lib/astrology/types";
 import { PROMPT_VERSION } from "@/lib/ai/prompt";
 import { birthProfileSchema } from "@/lib/schemas/profile";
@@ -25,15 +25,15 @@ export async function POST(request: Request) {
     const birthProfile = birthProfileSchema.safeParse(storedProfile);
     if (!birthProfile.success || !storedProfile) return Response.json({ error: "birth_profile_required" }, { status: 409 });
     const now = new Date();
-    const chart = calculateChart(birthProfile.data, now);
-    const date = now.toISOString().slice(0, 10);
+    const snapshot = calculateReadingSnapshot(birthProfile.data, parsed.data, now);
+    const period = readingPeriod(snapshot);
     const reading = await createReading(user.userId, {
       birthProfileId: storedProfile.id,
       kind: parsed.data.kind,
       question: parsed.data.question,
-      periodStart: date,
-      periodEnd: date,
-      chartSnapshot: chart as unknown as Record<string, unknown>,
+      periodStart: period.start,
+      periodEnd: period.end,
+      chartSnapshot: snapshot as unknown as Record<string, unknown>,
       calculationVersion: CALCULATION_VERSION,
       promptVersion: PROMPT_VERSION,
       responseText: null,
@@ -43,7 +43,8 @@ export async function POST(request: Request) {
       errorCode: null,
     });
     return Response.json({ id: reading.id }, { status: 201, headers: { "cache-control": "private, no-store" } });
-  } catch {
+  } catch (error) {
+    if (error instanceof RangeError) return Response.json({ error: error.message }, { status: 400 });
     return Response.json({ error: "reading_service_unavailable" }, { status: 503 });
   }
 }

@@ -22,8 +22,8 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
       <p className="eyebrow">TRANSPARENT BY DESIGN</p>
       <h2 id="answer-method-title">အဖြေတွက်ချက်ပုံ</h2>
       <ol>
-        <li><Sparkles size={14} aria-hidden="true" /><span><strong>ဇာတာတွက်ချက်မှု</strong>Ascendant၊ Moon နှင့် နေ့စဉ်ဂြိုဟ်တည်နေရာ</span></li>
-        <li><span aria-hidden="true">#</span><span><strong>ဂဏန်းဗေဒင်</strong>မွေးရက်မှ Life Path တွက်ချက်မှု</span></li>
+        <li><Sparkles size={14} aria-hidden="true" /><span><strong>မွေးဇာတာ</strong>မွေးချိန်၊ လဂ်နှင့် လက်ရှိဒဿာကာလ</span></li>
+        <li><span aria-hidden="true">◉</span><span><strong>မေးချိန်နှင့် အချိန်ရွေးမှု</strong>မေးသည့်အချိန် သို့မဟုတ် နေထွက်၊ Hora နှင့် Panchanga</span></li>
         <li><LockKeyhole size={14} aria-hidden="true" /><span><strong>ကိုယ်ပိုင်အချက်အလက်</strong>သင့်အကောင့်ပိုင် ဖတ်စာတွင်သာ အသုံးပြုသည်</span></li>
       </ol>
       <p>Model key မချိတ်ထားချိန်တွင် စက်တွင်း deterministic အဖြေကို ပြသပါမယ်။</p>
@@ -34,7 +34,7 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
       <header className="page-heading">
         <p className="eyebrow">ASK SURIYA · PERSONAL READING</p>
         <h1 className="page-title">သုရိယကို မေးပါ</h1>
-        <p className="page-lede">အရေးကြီးဆုံးမေးခွန်းတစ်ခုကို ရှင်းရှင်းလင်းလင်း ရေးပါ။ တွက်ချက်ထားသော ဇာတာအချက်အလက်ကို မြန်မာဘာသာဖြင့် အဓိပ္ပာယ်ဖွင့်ပေးပါမယ်။</p>
+        <p className="page-lede">အရေးကြီးဆုံးမေးခွန်းတစ်ခုကို ရှင်းရှင်းလင်းလင်း ရေးပြီး သင့်လိုအပ်ချက်နှင့် ကိုက်ညီသော တွက်ချက်နည်းကို ရွေးပါ။</p>
       </header>
       <section className="surface form-card ask-composer-card" aria-label="ဗေဒင် မေးခွန်းရေးရန်"><QuestionComposer initialQuestion={q} authenticated={Boolean(daily.user)} /></section>
     </AppShell>

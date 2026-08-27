@@ -298,6 +298,7 @@ h1, h2, h3 { line-height: 1.38; }
 .text-area { min-height: 152px; resize: vertical; }
 .text-field:focus, .text-area:focus, .select-field:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgb(56 79 132 / 10%); outline: none; }
 .field-meta { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-family: var(--font-latin), var(--font-ui); font-size: .66rem; }
+.muhurta-location-note { grid-column: 1 / -1; }
 .technique-grid { display: grid; gap: 10px; }
 .technique-card { position: relative; display: grid; grid-template-columns: auto 1fr auto; gap: 13px; align-items: center; min-height: 84px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); padding: 14px; cursor: pointer; }
 .technique-card[data-selected="true"] { border-color: var(--gold-deep); background: #f4ede2; }

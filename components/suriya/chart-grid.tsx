@@ -1,7 +1,7 @@
-import type { ChartSnapshot } from "@/lib/astrology/types";
+import type { CelestialChart } from "@/lib/astrology/types";
 import { SouthIndianChart } from "./south-indian-chart";
 
-export function ChartGrid({ chart }: { chart: ChartSnapshot }) {
+export function ChartGrid({ chart }: { chart: CelestialChart }) {
   return (
     <section className="surface prose-card" aria-labelledby="chart-title">
       <div className="section-title"><h2 id="chart-title">သင့်ဇာတာ အကျဉ်း</h2></div>

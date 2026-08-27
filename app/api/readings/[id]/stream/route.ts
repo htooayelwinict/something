@@ -3,8 +3,8 @@ import { completeReading, failReading, getReading } from "@/db/repositories/read
 import { getAiProvider } from "@/lib/ai";
 import { buildReadingPrompt } from "@/lib/ai/prompt";
 import { buildDeterministicReading } from "@/lib/readings/deterministic";
-import type { ChartSnapshot } from "@/lib/astrology/types";
-import { readingRequestSchema } from "@/lib/schemas/reading";
+import type { ReadingSnapshotLike } from "@/lib/readings/snapshot";
+import { readingInterpretationSchema } from "@/lib/schemas/reading";
 
 export const dynamic = "force-dynamic";
 
@@ -18,9 +18,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     return new Response(reading.responseText, { headers: streamHeaders() });
   }
 
-  const input = readingRequestSchema.safeParse({ kind: reading.kind, question: reading.question });
+  const input = readingInterpretationSchema.safeParse({ kind: reading.kind, question: reading.question });
   if (!input.success) return new Response("invalid reading", { status: 422 });
-  const snapshot = reading.chartSnapshot as unknown as ChartSnapshot;
+  const snapshot = reading.chartSnapshot as unknown as ReadingSnapshotLike;
   const prompt = buildReadingPrompt(snapshot, input.data);
   const fallback = buildDeterministicReading(snapshot, input.data);
   const { provider, mode } = getAiProvider(fallback.text);

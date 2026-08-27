@@ -8,7 +8,7 @@ import { ReadingFeedback } from "@/components/suriya/reading-feedback";
 import { ReadingSources } from "@/components/suriya/reading-sources";
 import { StreamingReading } from "@/components/suriya/streaming-reading";
 import { getReading } from "@/db/repositories/readings";
-import type { ChartSnapshot } from "@/lib/astrology/types";
+import { readingChart, readingTechnique, type ReadingSnapshotLike } from "@/lib/readings/snapshot";
 
 export const metadata: Metadata = { title: "ကိုယ်ပိုင် ဖတ်ကြားမှု" };
 export const dynamic = "force-dynamic";
@@ -18,14 +18,22 @@ export default async function ReadingPage({ params }: { params: Promise<{ id: st
   const { id } = await params;
   const reading = await getReading(user.userId, id).catch(() => null);
   if (!reading) notFound();
-  const chart = reading.chartSnapshot as unknown as ChartSnapshot;
+  const snapshot = reading.chartSnapshot as unknown as ReadingSnapshotLike;
+  const fallbackTechnique = reading.kind === "prashna" || reading.kind === "muhurta" ? reading.kind : "janma";
+  const technique = readingTechnique(snapshot, fallbackTechnique);
+  const chart = readingChart(snapshot);
+  const lede = technique === "prashna"
+    ? "မေးခွန်းပေးပို့သည့်အချိန်နှင့် သိမ်းထားသောနေရာမှ တွက်ချက်ထားသည့် မေးချိန်ဇာတာအမြင်။"
+    : technique === "muhurta"
+      ? "နေထွက်၊ Hora၊ Rahu Kalam နှင့် Panchanga ကို အခြေခံ၍ ရွေးထားသော ကိုယ်စားလှယ်အချိန်။"
+      : "သင့်မွေးဇာတာနှင့် လက်ရှိဒဿာကာလမှ ဖန်တီးထားသည့် ပြန်လည်စဉ်းစားရန်အမြင်။";
   return (
     <AppShell>
       <a className="text-link" href="/readings"><ArrowLeft size={15} aria-hidden="true" /> မှတ်တမ်းသို့</a>
       <header className="page-heading">
         <p className="eyebrow">{reading.kind} · {reading.calculationVersion}</p>
         <h1 className="page-title">{reading.question}</h1>
-        <p className="page-lede">ဒီအမြင်ကို သင့်မွေးဇာတာတွက်ချက်မှုမှ ဖန်တီးထားပြီး လက်တွေ့ဆုံးဖြတ်ချက်ကို ပြန်လည်စဉ်းစားရန် ရည်ရွယ်ပါတယ်။</p>
+        <p className="page-lede">{lede}</p>
       </header>
       <StreamingReading
         id={reading.id}
@@ -33,7 +41,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ id: st
         initialStatus={reading.status}
         interpretationMode={reading.interpretationMode}
       />
-      <ReadingSources chart={chart} />
+      <ReadingSources chart={snapshot} />
       <section className="follow-up-panel" aria-labelledby="follow-up-title">
         <p className="eyebrow">CONTINUE THE THREAD</p>
         <h2 id="follow-up-title">ဆက်မေးနိုင်သည့် မေးခွန်းများ</h2>
