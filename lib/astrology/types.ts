@@ -98,9 +98,29 @@ export type ChartSnapshot = CelestialChart & {
   dasha: { mahadasha: DashaPeriod; antardasha: DashaPeriod };
 };
 
+export type DailyCategoryScores = {
+  career: number;
+  relationships: number;
+  focus: number;
+  energy: number;
+  caution: number;
+};
+
+export type DailyFactor = {
+  id: string;
+  source: "transit" | "dasha" | "panchanga" | "muhurta";
+  label: string;
+  description: string;
+  impacts: Partial<Record<keyof DailyCategoryScores, number>>;
+};
+
 export type DailyInsightData = {
+  rulesetVersion: "suriya-daily-2";
   score: number;
   band: "quiet" | "steady" | "open" | "bright";
   favorableWindow: string;
-  factors: string[];
+  window: MuhurtaWindow | null;
+  categories: DailyCategoryScores;
+  confidence: "medium" | "high";
+  factors: DailyFactor[];
 };

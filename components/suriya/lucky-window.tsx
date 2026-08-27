@@ -1,16 +1,25 @@
 import { Clock3 } from "lucide-react";
 
-export function LuckyWindow({ favorableWindow }: { favorableWindow: string }) {
+export function LuckyWindow({ favorableWindow, available, horaLord, confidence }: {
+  favorableWindow: string;
+  available: boolean;
+  horaLord?: string;
+  confidence: string;
+}) {
   return (
     <section className="lucky-window" aria-labelledby="lucky-window-title">
       <div className="lucky-window-heading">
         <span className="metric-icon"><Clock3 size={18} aria-hidden="true" /></span>
-        <div><p className="eyebrow">LUCKY WINDOW</p><h2 id="lucky-window-title">အလုပ်စတင်ရန် သင့်လျော်ချိန်</h2></div>
+        <div><p className="eyebrow">CALCULATED WINDOW</p><h2 id="lucky-window-title">အလုပ်စတင်ရန် တွက်ချက်ထားသောအချိန်</h2></div>
       </div>
-      <div className="lucky-window-track" aria-label={`သင့်လျော်ချိန် ${favorableWindow}`}>
-        <span>နံနက်</span><strong>{favorableWindow}</strong><span>ညနေ</span>
-      </div>
-      <p>အရေးကြီးဆုံးလုပ်ဆောင်ချက်တစ်ခုကို ဤအချိန်အတွင်း စတင်ကြည့်ပါ။</p>
+      {available && (
+        <div className="lucky-window-track" aria-label={`တွက်ချက်ထားသော သင့်လျော်ချိန် ${favorableWindow}`}>
+          <span>နေထွက်</span><strong>{favorableWindow}</strong><span>နေဝင်</span>
+        </div>
+      )}
+      <p>{available
+        ? `${horaLord} Hora၊ Rahu Kalam နှင့် Panchanga ကို ထည့်တွက်ထားသည်။ ယုံကြည်မှုအဆင့် — ${confidence}။`
+        : favorableWindow}</p>
     </section>
   );
 }

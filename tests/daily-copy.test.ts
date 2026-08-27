@@ -30,4 +30,17 @@ describe("daily Burmese copy", () => {
     expect(presentation.combinedMethodCount).toBe(2);
     expect(presentation.sources.every((source) => source.status === "calculated")).toBe(true);
   });
+
+  it("presents the structured factors, categories, and timing metadata", () => {
+    const now = new Date("2026-08-28T00:00:00Z");
+    const chart = calculateChart(profile, now);
+    const insight = calculateDailyInsight(chart, now);
+    const presentation = buildDailyPresentation(chart, insight);
+
+    expect(presentation.categories).toEqual(insight.categories);
+    expect(presentation.factors).toEqual(insight.factors.map((factor) => factor.description));
+    expect(presentation.focus).toBe(insight.factors[0].description);
+    expect(presentation.confidence).toBe("မြင့်");
+    expect(presentation.horaLord).toBe(insight.window?.horaLord);
+  });
 });

@@ -23,6 +23,9 @@ export const demoDailyInsight = {
   moonSign: "ဝृषभ · ပြိဿရာသီ",
   energy: "တည်ငြိမ်",
   focus: "စီမံကိန်းနှင့် ဆက်သွယ်ရေး",
+  categories: { career: 72, relationships: 66, focus: 78, energy: 70, caution: 38 },
+  confidence: "မြင့်",
+  horaLord: "Mercury",
   dateLabel: "ဗုဒ္ဓဟူး · ဩဂုတ် ၂၆",
 } as const;
 

@@ -21,11 +21,18 @@ export default async function DailyPage() {
       </header>
       <section><DailyInsight data={daily.presentation} /></section>
       <div className="daily-metric-grid">
-        <CosmicMetric label="DAILY ENERGY" value={`${daily.presentation.score}/100`} description={daily.presentation.energy} tone="green" />
-        <CosmicMetric label="MOON POSITION" value={daily.presentation.moonSign} description="Vedic · တွက်ချက်ပြီး" tone="lilac" />
-        <CosmicMetric label="MYANMAR ASTROLOGY" value="မချိတ်ဆက်ရသေး" description="မကြာမီ ရရှိမည်" />
+        <CosmicMetric label="CAREER" value={`${daily.presentation.categories.career}/100`} description="အလုပ်နှင့် တည်ဆောက်မှု" tone="green" />
+        <CosmicMetric label="RELATIONSHIPS" value={`${daily.presentation.categories.relationships}/100`} description="ဆက်ဆံရေးစီးဆင်းမှု" tone="lilac" />
+        <CosmicMetric label="FOCUS" value={`${daily.presentation.categories.focus}/100`} description="အာရုံနှင့် ဆုံးဖြတ်မှု" />
+        <CosmicMetric label="ENERGY" value={`${daily.presentation.categories.energy}/100`} description="ကိုယ်စိတ်အရှိန်" tone="green" />
+        <CosmicMetric label="CAUTION" value={`${daily.presentation.categories.caution}/100`} description="ပိုမြင့်လေ ပိုသတိထားရန်" />
       </div>
-      <LuckyWindow favorableWindow={daily.presentation.favorableWindow} />
+      <LuckyWindow
+        favorableWindow={daily.presentation.favorableWindow}
+        available={daily.presentation.windowAvailable}
+        horaLord={daily.presentation.horaLord}
+        confidence={daily.presentation.confidence}
+      />
       <MethodSummary sources={daily.presentation.sources} />
       <div className="daily-actions">
         <a className="primary-button" href="/daily/details">ဇာတာအပြည့်အစုံ ကြည့်ရန် <ArrowRight size={15} aria-hidden="true" /></a>

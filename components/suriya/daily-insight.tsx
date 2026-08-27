@@ -1,5 +1,6 @@
 import { ArrowRight, Clock3, Compass, MoonStar } from "lucide-react";
 import { demoDailyInsight } from "@/lib/content/demo";
+import type { DailyCategoryScores } from "@/lib/astrology/types";
 
 export type DailyInsightView = {
   score: number;
@@ -11,6 +12,9 @@ export type DailyInsightView = {
   focus: string;
   factors?: string[];
   powerNumber?: number;
+  categories?: DailyCategoryScores;
+  confidence?: string;
+  horaLord?: string;
 };
 
 export function DailyInsight({ expanded = false, data }: { expanded?: boolean; data?: DailyInsightView }) {
@@ -39,7 +43,8 @@ export function DailyInsight({ expanded = false, data }: { expanded?: boolean; d
       <div className="metrics-grid">
         <article className="surface metric-card">
           <span className="metric-icon"><Clock3 size={19} aria-hidden="true" /></span>
-          <p className="metric-label">မင်္ဂလာအချိန်</p><p className="metric-value">{insight.favorableWindow}</p>
+          <p className="metric-label">တွက်ချက်ထားသော သင့်လျော်ချိန်</p><p className="metric-value">{insight.favorableWindow}</p>
+          {insight.horaLord && <small>{insight.horaLord} Hora · ယုံကြည်မှု {insight.confidence}</small>}
         </article>
         <article className="surface metric-card">
           <span className="metric-icon"><MoonStar size={19} aria-hidden="true" /></span>
