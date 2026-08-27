@@ -22,6 +22,8 @@ The planet list retains the existing physical planets for compatibility and adds
 
 The daily result contains five category values: career, relationships, focus, energy, and caution. Support categories start at 50; caution starts at 35. Named factors apply bounded integer impacts, and the overall score is derived from the four support categories with a caution penalty. Every factor contains a stable rule ID, source, Burmese explanation, and per-category impacts.
 
+The four presentation bands are calibrated to the score range reachable from the v2 factors, rather than the wider category clamps, so `quiet`, `steady`, `open`, and `bright` all represent attainable results. Remaining-window availability is exposed as an advisory timing factor with no category impact; opening the same civil day's guidance after the final daylight hora must not lower the headline score by itself.
+
 Version 2 uses these limited rules:
 
 - Moon transit house from the natal Moon.
@@ -34,7 +36,7 @@ The ruleset deliberately avoids mixing Western 60/90/120-degree aspects into the
 
 ## Local timing and Muhurta
 
-For a target local date, calculate sunrise and sunset at the saved latitude and longitude. Split daylight into twelve planetary horas, derive each hora ruler from the local weekday, and exclude any hora overlapping local Rahu Kalam. Score the remaining candidates with event-type hora affinity plus explicit Panchanga rules at the interval midpoint. Return the strongest candidate with its ISO boundaries, localized label, hora ruler, score, reasons, sunrise, sunset, timezone, and ruleset version.
+For a target local date, calculate sunrise and sunset at the saved latitude and longitude without requiring local midnight to exist. Split daylight into twelve planetary horas, derive each hora ruler from the local weekday at sunrise, and exclude any hora overlapping local Rahu Kalam. Panchanga `vara` likewise changes at local sunrise rather than civil midnight. Score the remaining candidates with event-type hora affinity plus explicit Panchanga rules at the interval midpoint. Return the strongest candidate with its ISO boundaries, localized label, hora ruler, score, reasons, sunrise, sunset, timezone, and ruleset version.
 
 The event types are `general`, `work`, `relationship`, and `travel`. This is a transparent general-purpose electional subset, not a claim to implement every regional Muhurta tradition. If no future daylight candidate exists, the result is `null` and the UI says that no remaining interval was found.
 
@@ -55,6 +57,7 @@ The Ask composer reveals target date and event type only for Muhurta. It explain
 ## Error handling
 
 - Invalid or past Muhurta dates and dates more than 90 days away return validation errors.
+- Nonexistent or repeated local birth times are rejected against the selected IANA timezone before storage or calculation.
 - Polar/no-sunrise cases return no interval instead of inventing a time.
 - Missing transit factors produce neutral evidence rather than non-null assertions.
 - Dasha lookups outside the generated range throw rather than silently selecting an unrelated period.

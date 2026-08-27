@@ -28,6 +28,18 @@ describe("reading prompt", () => {
       .not.toEqual(expect.arrayContaining(["Uranus", "Neptune", "Pluto"]));
   });
 
+  it("omits exact chart locations from legacy and v2 AI evidence", () => {
+    const natalPrompt = buildReadingPrompt(chart, { kind: "janma", question: "အလုပ်အကြောင်း" });
+    const natalEvidence = JSON.parse(natalPrompt.split("SNAPSHOT_JSON_BEGIN\n")[1].split("\nSNAPSHOT_JSON_END")[0]);
+    expect(natalEvidence).not.toHaveProperty("location");
+
+    const input = { kind: "prashna" as const, question: "ဒီကိစ္စကို ဆက်လုပ်သင့်သလား" };
+    const snapshot = calculateReadingSnapshot(chart.input, input, new Date("2026-08-28T03:15:00.000Z"));
+    const prompt = buildReadingPrompt(snapshot, input);
+    const evidence = JSON.parse(prompt.split("SNAPSHOT_JSON_BEGIN\n")[1].split("\nSNAPSHOT_JSON_END")[0]);
+    expect(evidence.chart).not.toHaveProperty("location");
+  });
+
   it("bounds raw question length", () => {
     const prompt = buildReadingPrompt(chart, { kind: "prashna", question: "x".repeat(900) });
     const value = prompt.split("USER_QUESTION_BEGIN\n")[1].split("\nUSER_QUESTION_END")[0];

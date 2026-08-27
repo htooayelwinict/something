@@ -34,4 +34,24 @@ describe("birthProfileSchema", () => {
     expect(birthProfileSchema.safeParse({ ...yangon, birthDate: "2026-08-29" }).success).toBe(true);
     expect(birthProfileSchema.safeParse({ ...yangon, birthDate: "2026-08-30" }).success).toBe(false);
   });
+
+  it.each([
+    { birthDate: "2024-03-10", birthTime: "02:30" },
+    { birthDate: "2024-11-03", birthTime: "01:30" },
+  ])("rejects nonexistent or repeated zoned birth time $birthDate $birthTime", ({ birthDate, birthTime }) => {
+    const result = birthProfileSchema.safeParse({
+      ...yangon,
+      birthDate,
+      birthTime,
+      birthCity: "New York",
+      latitude: 40.7128,
+      longitude: -74.006,
+      timezone: "America/New_York",
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some((issue) => issue.path[0] === "birthTime")).toBe(true);
+    }
+  });
 });

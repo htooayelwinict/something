@@ -9,6 +9,13 @@ const yangon = {
   timezone: "Asia/Yangon",
 };
 
+const santiago = {
+  label: "Santiago",
+  latitude: -33.4489,
+  longitude: -70.6693,
+  timezone: "America/Santiago",
+};
+
 function overlaps(aStart: string, aEnd: string, bStart: string, bEnd: string) {
   return Date.parse(aStart) < Date.parse(bEnd) && Date.parse(aEnd) > Date.parse(bStart);
 }
@@ -39,6 +46,21 @@ describe("local Muhurta calculation", () => {
     expect(sunsetHour).toBeGreaterThanOrEqual(17);
     expect(sunsetHour).toBeLessThanOrEqual(19);
   });
+
+  it.each(["2026-09-05", "2026-09-06"])(
+    "calculates the solar day when the adjacent local midnight is skipped on %s",
+    (targetDate) => {
+      const solarDay = calculateSolarDay(santiago, targetDate);
+
+      expect(solarDay).not.toBeNull();
+      expect(new Intl.DateTimeFormat("en-CA", {
+        timeZone: santiago.timezone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date(solarDay!.sunrise))).toBe(targetDate);
+    },
+  );
 
   it("selects a deterministic daylight hora that does not overlap Rahu Kalam", () => {
     const result = findMuhurtaWindow(yangon, "2026-08-28", "work");

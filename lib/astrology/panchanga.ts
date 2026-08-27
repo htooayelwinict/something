@@ -1,8 +1,10 @@
-import { normalizeDegrees } from "./angles";
-import type { Panchanga } from "./types";
 import { Body } from "astronomy-engine";
-import { tropicalGeocentricLongitude } from "./ephemeris";
+import { normalizeDegrees } from "./angles";
 import { toSidereal } from "./ayanamsa";
+import { tropicalGeocentricLongitude } from "./ephemeris";
+import { calculateSolarDay, type SolarDay } from "./solar-day";
+import { localDateInTimezone } from "./time";
+import type { ChartLocation, Panchanga } from "./types";
 
 export const nakshatraNames = [
   "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra", "Punarvasu", "Pushya", "Ashlesha",
@@ -45,15 +47,23 @@ export function calculateKarana(sunLongitude: number, moonLongitude: number): Pa
   return { index, name };
 }
 
-export function weekdayInTimezone(instant: Date, timezone: string): string {
-  const weekday = new Intl.DateTimeFormat("en-US", { timeZone: timezone, weekday: "short" }).format(instant);
-  const index = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(weekday);
-  return varaNames[Math.max(0, index)];
+export function varaAt(instant: Date, location: ChartLocation, knownSolarDay?: SolarDay | null): string {
+  const targetDate = localDateInTimezone(instant, location.timezone);
+  const solarDay = knownSolarDay === undefined ? calculateSolarDay(location, targetDate) : knownSolarDay;
+  let index = new Date(`${targetDate}T12:00:00.000Z`).getUTCDay();
+  if (solarDay && instant.valueOf() < Date.parse(solarDay.sunrise)) index = (index + 6) % 7;
+  return varaNames[index];
 }
 
-export function calculatePanchanga(sunLongitude: number, moonLongitude: number, instant: Date, timezone: string): Panchanga {
+export function calculatePanchanga(
+  sunLongitude: number,
+  moonLongitude: number,
+  instant: Date,
+  location: ChartLocation,
+  knownSolarDay?: SolarDay | null,
+): Panchanga {
   return {
-    vara: weekdayInTimezone(instant, timezone),
+    vara: varaAt(instant, location, knownSolarDay),
     tithi: calculateTithi(sunLongitude, moonLongitude),
     nakshatra: calculateNakshatra(moonLongitude),
     yoga: calculateYoga(sunLongitude, moonLongitude),
@@ -61,8 +71,12 @@ export function calculatePanchanga(sunLongitude: number, moonLongitude: number, 
   };
 }
 
-export function calculatePanchangaAt(instant: Date, timezone: string): Panchanga {
+export function calculatePanchangaAt(
+  instant: Date,
+  location: ChartLocation,
+  knownSolarDay?: SolarDay | null,
+): Panchanga {
   const sun = toSidereal(tropicalGeocentricLongitude(Body.Sun, instant), instant);
   const moon = toSidereal(tropicalGeocentricLongitude(Body.Moon, instant), instant);
-  return calculatePanchanga(sun, moon, instant, timezone);
+  return calculatePanchanga(sun, moon, instant, location, knownSolarDay);
 }

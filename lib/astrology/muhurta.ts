@@ -1,6 +1,5 @@
-import { Body, Observer, SearchRiseSet } from "astronomy-engine";
 import { calculatePanchangaAt } from "./panchanga";
-import { localDateTimeToUtc } from "./time";
+import { calculateSolarDay, type SolarDay } from "./solar-day";
 import type {
   ChartLocation,
   MuhurtaEventType,
@@ -10,14 +9,9 @@ import type {
   TimeInterval,
 } from "./types";
 
-export const MUHURTA_RULESET_VERSION = "suriya-muhurta-2" as const;
+export { calculateSolarDay } from "./solar-day";
 
-export type SolarDay = {
-  targetDate: string;
-  timezone: string;
-  sunrise: string;
-  sunset: string;
-};
+export const MUHURTA_RULESET_VERSION = "suriya-muhurta-2" as const;
 
 const horaSequence = ["Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon"] as const;
 type HoraLord = (typeof horaSequence)[number];
@@ -55,12 +49,6 @@ const pressurizedYogas = new Set(["Atiganda", "Shula", "Ganda", "Vyaghata", "Vaj
 const supportiveTithis = new Set(["Dwitiya", "Tritiya", "Panchami", "Saptami", "Dashami", "Ekadashi", "Trayodashi"]);
 const pressurizedTithis = new Set(["Chaturthi", "Navami", "Chaturdashi", "Amavasya"]);
 
-function addLocalDays(localDate: string, days: number): string {
-  const date = new Date(`${localDate}T12:00:00.000Z`);
-  date.setUTCDate(date.getUTCDate() + days);
-  return date.toISOString().slice(0, 10);
-}
-
 function weekdayAt(instant: Date, timezone: string): string {
   return new Intl.DateTimeFormat("en-US", { timeZone: timezone, weekday: "short" }).format(instant);
 }
@@ -92,22 +80,6 @@ function panchangaReasons(panchanga: Panchanga): MuhurtaReason[] {
   if (panchanga.karana.name === "Vishti") reasons.push({ id: "panchanga.karana.vishti", label: "Vishti Karana ဖြစ်သောကြောင့် အရေးကြီးစတင်မှုကို ရှောင်ရန်", delta: -10 });
   else reasons.push({ id: "panchanga.karana.clear", label: `${panchanga.karana.name} Karana တွင် Vishti ကန့်သတ်ချက်မရှိပါ`, delta: 2 });
   return reasons;
-}
-
-export function calculateSolarDay(location: ChartLocation, targetDate: string): SolarDay | null {
-  const start = localDateTimeToUtc(targetDate, "00:00", location.timezone);
-  const nextStart = localDateTimeToUtc(addLocalDays(targetDate, 1), "00:00", location.timezone);
-  const observer = new Observer(location.latitude, location.longitude, 0);
-  const sunrise = SearchRiseSet(Body.Sun, observer, 1, start, 1.1);
-  if (!sunrise || sunrise.date >= nextStart) return null;
-  const sunset = SearchRiseSet(Body.Sun, observer, -1, sunrise.date, 1.1);
-  if (!sunset || sunset.date >= nextStart || sunset.date <= sunrise.date) return null;
-  return {
-    targetDate,
-    timezone: location.timezone,
-    sunrise: sunrise.date.toISOString(),
-    sunset: sunset.date.toISOString(),
-  };
 }
 
 function rahuKalam(solarDay: SolarDay): TimeInterval {
@@ -162,7 +134,7 @@ export function findMuhurtaWindow(
 
     const lord = horaLordFor(dayLord, index);
     const midpoint = new Date((startMs + endMs) / 2);
-    const panchanga = calculatePanchangaAt(midpoint, location.timezone);
+    const panchanga = calculatePanchangaAt(midpoint, location, solarDay);
     const reasons = [scoreHora(lord, eventType), ...panchangaReasons(panchanga)];
     const score = Math.max(20, Math.min(95, 50 + reasons.reduce((sum, reason) => sum + reason.delta, 0)));
     candidates.push({

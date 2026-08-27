@@ -10,25 +10,31 @@ const demoProfile: BirthProfileInput = {
   latitude: 16.7967, longitude: 96.161, timezone: "Asia/Yangon",
 };
 
+function calculateDaily(input: BirthProfileInput, now: Date) {
+  const chart = calculateChart(input, now);
+  return { chart, insight: calculateDailyInsight(chart, now) };
+}
+
 export async function getDailyExperience() {
   const now = new Date();
   const user = await getChatGPTUser();
   let input = demoProfile;
   let personalized = false;
+  let calculated: ReturnType<typeof calculateDaily> | null = null;
   if (user) {
     try {
       const stored = await getBirthProfile(user.userId);
       const parsed = birthProfileSchema.safeParse(stored);
       if (parsed.success) {
+        calculated = calculateDaily(parsed.data, now);
         input = parsed.data;
         personalized = true;
       }
     } catch {
-      // The public demo remains usable while a deployment migration is still applying.
+      // Keep the public demo usable when profile loading or personalized calculation fails.
     }
   }
-  const chart = calculateChart(input, now);
-  const insight = calculateDailyInsight(chart, now);
+  const { chart, insight } = calculated ?? calculateDaily(demoProfile, now);
   return {
     user,
     personalized,

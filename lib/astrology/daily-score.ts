@@ -8,6 +8,7 @@ import { localDateInTimezone } from "./time";
 import { vimshottariAt } from "./dasha";
 import type {
   ChartSnapshot,
+  ChartLocation,
   DailyCategoryScores,
   DailyFactor,
   DailyInsightData,
@@ -151,8 +152,8 @@ function dashaFactor(snapshot: ChartSnapshot, lord: string, level: "mahadasha" |
   );
 }
 
-function panchangaFactor(instant: Date, timezone: string): DailyFactor {
-  const panchanga = calculatePanchangaAt(instant, timezone);
+function panchangaFactor(instant: Date, location: ChartLocation): DailyFactor {
+  const panchanga = calculatePanchangaAt(instant, location);
   if (panchanga.karana.name === "Vishti") {
     return factor(
       "panchanga.karana.vishti",
@@ -198,15 +199,17 @@ export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): Dail
     saturnTransitFactor(saturnHouse),
     dashaFactor(snapshot, dasha.mahadasha.lord, "mahadasha"),
     dashaFactor(snapshot, dasha.antardasha.lord, "antardasha"),
-    panchangaFactor(date, snapshot.location.timezone),
+    panchangaFactor(date, snapshot.location),
+    // Remaining-window status is advisory and must not make the headline drift intra-day.
     window
-      ? factor("muhurta.window.available", "muhurta", "တွက်ချက်ထားသောအချိန်", `${window.horaLord} Hora အတွင်း Rahu Kalam မထိသော အချိန်ကို တွေ့ရှိထားသည်။`, { focus: 2, caution: -1 })
-      : factor("muhurta.window.unavailable", "muhurta", "ယနေ့ကျန်ရှိချိန်", "ယနေ့အတွက် အနာဂတ်နေ့ခင်း Hora မကျန်တော့သဖြင့် အချိန်ကောင်းကို မခန့်မှန်းထားပါ။", { caution: 3 }),
+      ? factor("muhurta.window.available", "muhurta", "တွက်ချက်ထားသောအချိန်", `${window.horaLord} Hora အတွင်း Rahu Kalam မထိသော အချိန်ကို တွေ့ရှိထားသည်။`, {})
+      : factor("muhurta.window.unavailable", "muhurta", "ယနေ့ကျန်ရှိချိန်", "ယနေ့အတွက် အနာဂတ်နေ့ခင်း Hora မကျန်တော့သဖြင့် အချိန်ကောင်းကို မခန့်မှန်းထားပါ။", {}),
   ];
 
   const categories = applyFactors(factors);
   const score = calculateOverallScore(categories);
-  const band = score < 45 ? "quiet" : score < 65 ? "steady" : score < 82 ? "open" : "bright";
+  // These boundaries match the reachable v2 factor range rather than the wider category clamps.
+  const band = score < 48 ? "quiet" : score < 55 ? "steady" : score < 62 ? "open" : "bright";
   return {
     rulesetVersion: DAILY_RULESET_VERSION,
     score,

@@ -119,7 +119,7 @@ export function calculateCelestialChart(
     },
     planets,
     houses: Array.from({ length: 12 }, (_, index) => ({ house: index + 1, signIndex: (ascSign + index) % 12, sign: zodiacSigns[(ascSign + index) % 12] })),
-    panchanga: calculatePanchanga(sun.longitude, moon.longitude, instant, location.timezone),
+    panchanga: calculatePanchanga(sun.longitude, moon.longitude, instant, location),
     divisional: { d1: mapDivision(d1Sign), d9: mapDivision(d9Sign), d10: mapDivision(d10Sign) },
   };
 }

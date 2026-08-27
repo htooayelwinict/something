@@ -15,6 +15,7 @@ const outerPlanets = new Set<PlanetName>(["Uranus", "Neptune", "Pluto"]);
 function jyotishChartEvidence(chart: CelestialChart | ChartSnapshot) {
   const base: Record<string, unknown> = { ...chart };
   delete base.input;
+  delete base.location;
   delete base.numerology;
   const filterDivision = (division: Record<string, number>) => Object.fromEntries(
     Object.entries(division).filter(([name]) => !outerPlanets.has(name as PlanetName)),
