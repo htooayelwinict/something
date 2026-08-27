@@ -10,7 +10,7 @@ This is reflective guidance, not a scientifically validated prediction system. P
 
 Keep `astronomy-engine` as the astronomical base and add a small, explicit Vedic ruleset in TypeScript. The alternative of adopting Swiss Ephemeris now was rejected because its deployment footprint and dual-license decision are disproportionate to this release. An AI-only interpretation approach was rejected because it cannot repair incorrect or missing calculations.
 
-The v2 snapshot records the ephemeris family, Lahiri mode, mean-node mode, whole-sign house system, and ruleset version. Stored readings remain reproducible and the AI is only allowed to verbalize supplied evidence.
+The v2 snapshot records the ephemeris family, Lahiri mode, mean-node mode, whole-sign house system, Dasha year convention, and ruleset version. Stored readings remain reproducible and the AI is only allowed to verbalize supplied evidence.
 
 ## Canonical charts
 
@@ -50,7 +50,7 @@ The reading page, source cards, deterministic fallback, and AI prompt use the pr
 
 ## User interface
 
-The Ask composer reveals target date and event type only for Muhurta. It explains that Prashna uses the submission time and saved location and that Muhurta uses the saved location. Daily cards keep the familiar overall score but add category scores, calculation confidence, and the selected hora ruler. Copy changes from “lucky” certainty to “calculated suitable window.”
+The Ask composer reveals target date and event type only for Muhurta. It explains that Prashna uses the submission time and saved location and that Muhurta uses the saved location. Daily cards keep the familiar overall score but add category scores, a factual timing status, and the selected hora ruler. Copy changes from “lucky” certainty to “calculated suitable window.”
 
 ## Error handling
 

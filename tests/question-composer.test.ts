@@ -8,7 +8,8 @@ describe("Ask authentication routing", () => {
   });
 
   it("builds Muhurta requests with the selected date and event type", () => {
-    expect(defaultMuhurtaTargetDate(new Date("2026-08-28T00:00:00.000Z"))).toBe("2026-08-29");
+    expect(defaultMuhurtaTargetDate(new Date("2026-08-28T00:00:00.000Z"), "Asia/Yangon")).toBe("2026-08-29");
+    expect(defaultMuhurtaTargetDate(new Date("2026-08-28T20:00:00.000Z"), "Asia/Yangon")).toBe("2026-08-30");
     expect(buildReadingPayload("  အလုပ်စဖို့ ဘယ်အချိန်ကောင်းမလဲ  ", "muhurta", "2026-08-29", "work"))
       .toEqual({ kind: "muhurta", question: "အလုပ်စဖို့ ဘယ်အချိန်ကောင်းမလဲ", targetDate: "2026-08-29", eventType: "work" });
   });

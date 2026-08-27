@@ -8,7 +8,7 @@ export function CosmicFingerprint({
   numerology: NumerologySnapshot;
   connectedMethods: string[];
 }) {
-  const methods = ["Vedic Astrology", "Numerology", "Myanmar Astrology", "Tarot"];
+  const methods = ["Jyotish · Lahiri", "Numerology"];
   return (
     <section className="cosmic-fingerprint" aria-labelledby="fingerprint-title">
       <div><p className="eyebrow">COSMIC FINGERPRINT</p><h2 id="fingerprint-title">တွက်ချက်ထားသော သင့်ဂဏန်းများ</h2></div>

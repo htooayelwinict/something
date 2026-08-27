@@ -2,13 +2,13 @@ import type { ChartSnapshot } from "@/lib/astrology/types";
 import { isReadingSnapshot, readingChart, type ReadingSnapshotLike } from "@/lib/readings/snapshot";
 
 export type ReadingSource = {
-  id: "ascendant" | "moon" | "numerology" | "question_time" | "window" | "hora" | "panchanga";
+  id: "ascendant" | "moon" | "dasha" | "question_time" | "window" | "hora" | "panchanga";
   label: string;
   value: string;
 };
 
 function isNatalChart(chart: ReturnType<typeof readingChart>): chart is ChartSnapshot {
-  return chart.role === "natal" && "numerology" in chart;
+  return "numerology" in chart && "input" in chart;
 }
 
 function localInstant(instant: string, timezone: string): string {
@@ -31,6 +31,7 @@ export function extractReadingSources(snapshot: ReadingSnapshotLike): ReadingSou
       { id: "question_time", label: "QUESTION TIME", value: localInstant(snapshot.context.askedAt, chart.location.timezone) },
       { id: "ascendant", label: "QUESTION ASC", value: chart.ascendant.sign },
       { id: "moon", label: "QUESTION MOON", value: `${moon.sign} · House ${moon.house}` },
+      { id: "panchanga", label: "QUESTION PANCHANGA", value: `${chart.panchanga.tithi.name} · ${chart.panchanga.nakshatra.name}` },
     ];
   }
 
@@ -47,7 +48,7 @@ export function extractReadingSources(snapshot: ReadingSnapshotLike): ReadingSou
   return [
     { id: "ascendant", label: "ASCENDANT", value: chart.ascendant.sign },
     { id: "moon", label: "MOON", value: `${moon.sign} · House ${moon.house}` },
-    { id: "numerology", label: "LIFE PATH", value: String(chart.numerology.lifePath) },
+    { id: "dasha", label: "DASHA", value: `${chart.dasha.mahadasha.lord} · ${chart.dasha.antardasha.lord}` },
   ];
 }
 

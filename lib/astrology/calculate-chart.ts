@@ -36,6 +36,7 @@ const metadata = {
   ayanamsaVersion: "suriya-lahiri-1",
   houseSystem: "whole-sign",
   nodeMode: "mean",
+  dashaYear: "tropical-365.2425-days",
 } as const;
 
 export { tropicalGeocentricLongitude } from "./ephemeris";

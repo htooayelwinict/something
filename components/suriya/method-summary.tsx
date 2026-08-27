@@ -1,7 +1,7 @@
 import { SourceChip } from "./source-chip";
 
 type CalculatedSource = {
-  id: "vedic" | "numerology";
+  id: "jyotish";
   label: string;
   value: string;
   status: "calculated";
@@ -12,7 +12,7 @@ export function MethodSummary({ sources }: { sources: CalculatedSource[] }) {
     <section className="method-summary" aria-labelledby="method-summary-title">
       <div>
         <p className="eyebrow">CALCULATION SOURCES</p>
-        <h2 id="method-summary-title">{sources.length} METHODS COMBINED</h2>
+        <h2 id="method-summary-title">JYOTISH CALCULATION</h2>
       </div>
       <div className="source-chip-row">
         {sources.map((source, index) => (

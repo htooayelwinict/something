@@ -5,6 +5,7 @@ import { tropicalGeocentricLongitude } from "./ephemeris";
 import { findMuhurtaWindow } from "./muhurta";
 import { calculatePanchangaAt } from "./panchanga";
 import { localDateInTimezone } from "./time";
+import { vimshottariAt } from "./dasha";
 import type {
   ChartSnapshot,
   DailyCategoryScores,
@@ -187,6 +188,7 @@ export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): Dail
   const moonHouse = houseFrom(natalMoon.signIndex, transitSign(Body.Moon, date));
   const jupiterHouse = houseFrom(natalMoon.signIndex, transitSign(Body.Jupiter, date));
   const saturnHouse = houseFrom(natalMoon.signIndex, transitSign(Body.Saturn, date));
+  const dasha = vimshottariAt(natalMoon.longitude, new Date(snapshot.instant), date);
   const targetDate = localDateInTimezone(date, snapshot.location.timezone);
   const window = findMuhurtaWindow(snapshot.location, targetDate, "general", date);
 
@@ -194,8 +196,8 @@ export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): Dail
     moonTransitFactor(moonHouse),
     jupiterTransitFactor(jupiterHouse),
     saturnTransitFactor(saturnHouse),
-    dashaFactor(snapshot, snapshot.dasha.mahadasha.lord, "mahadasha"),
-    dashaFactor(snapshot, snapshot.dasha.antardasha.lord, "antardasha"),
+    dashaFactor(snapshot, dasha.mahadasha.lord, "mahadasha"),
+    dashaFactor(snapshot, dasha.antardasha.lord, "antardasha"),
     panchangaFactor(date, snapshot.location.timezone),
     window
       ? factor("muhurta.window.available", "muhurta", "တွက်ချက်ထားသောအချိန်", `${window.horaLord} Hora အတွင်း Rahu Kalam မထိသော အချိန်ကို တွေ့ရှိထားသည်။`, { focus: 2, caution: -1 })
@@ -212,7 +214,7 @@ export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): Dail
     favorableWindow: window?.label ?? "ယနေ့အတွက် ကျန်ရှိချိန် မတွေ့ပါ",
     window,
     categories,
-    confidence: window ? "high" : "medium",
+    timingStatus: window ? "calculated" : "unavailable",
     factors,
   };
 }

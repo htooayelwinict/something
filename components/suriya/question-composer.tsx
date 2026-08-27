@@ -5,15 +5,22 @@ import { ArrowRight } from "lucide-react";
 import { readingTechniques, type ReadingTechnique } from "@/lib/content/demo";
 import { TechniqueCard } from "./technique-card";
 import type { MuhurtaEventTypeInput, ReadingRequestInput } from "@/lib/schemas/reading";
+import { localDateInTimezone } from "@/lib/astrology/time";
 
 const MAX_QUESTION_LENGTH = 500;
 
-export function defaultMuhurtaTargetDate(now = new Date()) {
-  return new Date(now.valueOf() + 86_400_000).toISOString().slice(0, 10);
+function addCalendarDays(localDate: string, days: number) {
+  const date = new Date(`${localDate}T12:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
 }
 
-function maximumMuhurtaTargetDate(now = new Date()) {
-  return new Date(now.valueOf() + 90 * 86_400_000).toISOString().slice(0, 10);
+export function defaultMuhurtaTargetDate(now = new Date(), timezone = "UTC") {
+  return addCalendarDays(localDateInTimezone(now, timezone), 1);
+}
+
+function maximumMuhurtaTargetDate(now = new Date(), timezone = "UTC") {
+  return addCalendarDays(localDateInTimezone(now, timezone), 90);
 }
 
 export function buildReadingPayload(
@@ -32,10 +39,14 @@ export function unauthenticatedAskTarget(authenticated: boolean) {
   return authenticated ? null : "/login?return_to=/ask";
 }
 
-export function QuestionComposer({ initialQuestion = "", authenticated }: { initialQuestion?: string; authenticated: boolean }) {
+export function QuestionComposer({ initialQuestion = "", authenticated, timezone = "Asia/Yangon" }: {
+  initialQuestion?: string;
+  authenticated: boolean;
+  timezone?: string;
+}) {
   const [question, setQuestion] = useState(initialQuestion.slice(0, MAX_QUESTION_LENGTH));
   const [technique, setTechnique] = useState<ReadingTechnique["id"]>("janma");
-  const [targetDate, setTargetDate] = useState(() => defaultMuhurtaTargetDate());
+  const [targetDate, setTargetDate] = useState(() => defaultMuhurtaTargetDate(new Date(), timezone));
   const [eventType, setEventType] = useState<MuhurtaEventTypeInput>("general");
   const [status, setStatus] = useState("");
   const [pending, setPending] = useState(false);
@@ -110,8 +121,8 @@ export function QuestionComposer({ initialQuestion = "", authenticated }: { init
               className="text-field"
               id="muhurta-date"
               type="date"
-              min={new Date().toISOString().slice(0, 10)}
-              max={maximumMuhurtaTargetDate()}
+              min={localDateInTimezone(new Date(), timezone)}
+              max={maximumMuhurtaTargetDate(new Date(), timezone)}
               value={targetDate}
               onChange={(event) => setTargetDate(event.target.value)}
               required

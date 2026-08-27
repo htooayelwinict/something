@@ -19,7 +19,7 @@ export default async function DailyPage() {
         <h1 className="page-title">ယနေ့အတွက် သင့်အမြင်</h1>
         <p className="page-lede">နေ့စဉ်ကောင်းကင်အနေအထားနှင့် သင့်မွေးဇာတာဆက်နွယ်မှုမှ တွက်ချက်ထားသော လက်တွေ့လမ်းညွှန်။</p>
       </header>
-      <section><DailyInsight data={daily.presentation} /></section>
+      <section><DailyInsight expanded data={daily.presentation} /></section>
       <div className="daily-metric-grid">
         <CosmicMetric label="CAREER" value={`${daily.presentation.categories.career}/100`} description="အလုပ်နှင့် တည်ဆောက်မှု" tone="green" />
         <CosmicMetric label="RELATIONSHIPS" value={`${daily.presentation.categories.relationships}/100`} description="ဆက်ဆံရေးစီးဆင်းမှု" tone="lilac" />
@@ -31,7 +31,7 @@ export default async function DailyPage() {
         favorableWindow={daily.presentation.favorableWindow}
         available={daily.presentation.windowAvailable}
         horaLord={daily.presentation.horaLord}
-        confidence={daily.presentation.confidence}
+        timingStatus={daily.presentation.timingStatus}
       />
       <MethodSummary sources={daily.presentation.sources} />
       <div className="daily-actions">

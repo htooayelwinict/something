@@ -23,6 +23,7 @@ describe("canonical chart", () => {
       ayanamsaVersion: "suriya-lahiri-1",
       houseSystem: "whole-sign",
       nodeMode: "mean",
+      dashaYear: "tropical-365.2425-days",
     });
     const rahu = chart.planets.find((planet) => planet.name === "Rahu")!;
     const ketu = chart.planets.find((planet) => planet.name === "Ketu")!;

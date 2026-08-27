@@ -18,7 +18,7 @@ describe("reading source extraction", () => {
     expect(extractReadingSources(chart)).toEqual([
       { id: "ascendant", label: "ASCENDANT", value: "Pisces" },
       { id: "moon", label: "MOON", value: "Aquarius · House 12" },
-      { id: "numerology", label: "LIFE PATH", value: "3" },
+      { id: "dasha", label: "DASHA", value: `${chart.dasha.mahadasha.lord} · ${chart.dasha.antardasha.lord}` },
     ]);
   });
 
@@ -42,7 +42,28 @@ describe("reading source extraction", () => {
       eventType: "work",
     }, now);
 
-    expect(extractReadingSources(prashna).map((source) => source.id)).toEqual(["question_time", "ascendant", "moon"]);
+    expect(extractReadingSources(prashna).map((source) => source.id)).toEqual(["question_time", "ascendant", "moon", "panchanga"]);
     expect(extractReadingSources(muhurta).map((source) => source.id)).toEqual(["window", "hora", "panchanga"]);
+  });
+
+  it("keeps real v1 snapshots readable when v2 metadata is absent", () => {
+    const current = calculateChart({
+      name: "Legacy Test",
+      birthDate: "1990-01-01",
+      birthTime: "12:00",
+      birthCity: "Yangon",
+      latitude: 16.7967,
+      longitude: 96.161,
+      timezone: "Asia/Yangon",
+    }, new Date("2026-08-28T00:00:00.000Z"));
+    const legacy = structuredClone(current) as Record<string, unknown>;
+    legacy.version = "suriya-vedic-1";
+    delete legacy.role;
+    delete legacy.metadata;
+    delete legacy.location;
+    for (const planet of legacy.planets as Array<Record<string, unknown>>) delete planet.category;
+
+    expect(extractReadingSources(legacy as never).map((source) => source.id))
+      .toEqual(["ascendant", "moon", "dasha"]);
   });
 });

@@ -37,6 +37,8 @@ test("server-renders the Suriya home experience", async () => {
   assert.match(html, /မင်္ဂလာပါ/);
   assert.match(html, /TODAY’S POWER NUMBER/);
   assert.match(html, /ယနေ့၏ မင်္ဂလာလမ်းညွှန်/);
+  assert.match(html, /JYOTISH CALCULATION/);
+  assert.doesNotMatch(html, /METHODS COMBINED|မြန်မာဗေဒင်/);
   assert.match(html, /manifest\.webmanifest/);
   assert.match(html, /property=["']og:image["'][^>]*og\.png/i);
   assert.match(html, /<nav\b[^>]*aria-label=["']အဓိက လမ်းညွှန်["']/i);
@@ -56,9 +58,9 @@ test("serves an installable Burmese manifest", async () => {
 
 test("server-renders the designed public product routes", async () => {
   const expectations = [
-    ["/daily", /DAILY ENERGY[\s\S]*LUCKY WINDOW/],
+    ["/daily", /DAILY ENERGY[\s\S]*လ၏နေ့စဉ်ရွေ့လျားမှု[\s\S]*ဂုရုဂြိုဟ် ဂေါစရ[\s\S]*စနေဂြိုဟ်[\s\S]*CALCULATED WINDOW/],
     ["/daily/details", /D1 · RASI[\s\S]*D9 · NAVAMSA[\s\S]*D10 · DASAMSA/],
-    ["/ask", /သုရိယကို မေးပါ[\s\S]*သင့်ဇာတာနှင့် ချိတ်ဆက်ထားသည်[\s\S]*အဖြေတွက်ချက်ပုံ/],
+    ["/ask", /သုရိယကို မေးပါ[\s\S]*တွက်ချက်နည်းကို သင်ရွေးနိုင်သည်[\s\S]*အဖြေတွက်ချက်ပုံ/],
     ["/profile", /YOUR COSMIC IDENTITY[\s\S]*ChatGPT ဖြင့် ဝင်ရောက်မည်/],
     ["/tarot", /လူသားအကြံပေး[\s\S]*Preview[\s\S]*သီရိလမင်း/],
     ["/tarot/thiri", /သီရိလမင်း[\s\S]*booking မဖွင့်ရသေးပါ/],
@@ -70,6 +72,10 @@ test("server-renders the designed public product routes", async () => {
     assert.equal(response.status, 200, pathname);
     const html = await response.text();
     assert.match(html, copy, pathname);
+    if (pathname === "/daily") {
+      assert.doesNotMatch(html, /ယုံကြည်မှုအဆင့်/, pathname);
+      assert.doesNotMatch(html, /href=["']\/daily["'][^>]*>အသေးစိတ်ဖတ်ရန်/, pathname);
+    }
     if (pathname === "/login") assert.doesNotMatch(html, /ChatGPT စကားဝိုင်း/, pathname);
   }
 });

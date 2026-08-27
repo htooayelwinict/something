@@ -3,7 +3,7 @@ import type { ReadingInterpretationInput } from "@/lib/schemas/reading";
 import { isReadingSnapshot, readingChart, readingTechnique, type ReadingSnapshotLike } from "./snapshot";
 
 export type ReadingSource = {
-  id: "ascendant" | "moon" | "life_path" | "question_time" | "window" | "hora" | "panchanga";
+  id: "ascendant" | "moon" | "dasha" | "question_time" | "window" | "hora" | "panchanga";
   label: string;
   value: string;
 };
@@ -15,7 +15,7 @@ export type DeterministicReading = {
 };
 
 function isNatalChart(chart: ReturnType<typeof readingChart>): chart is ChartSnapshot {
-  return chart.role === "natal" && "numerology" in chart && "dasha" in chart;
+  return "numerology" in chart && "input" in chart && "dasha" in chart;
 }
 
 function localInstant(instant: string, timezone: string): string {
@@ -38,6 +38,22 @@ export function buildDeterministicReading(
   const moon = chart.planets.find((planet) => planet.name === "Moon");
   if (!moon) throw new Error("Moon is required for a deterministic reading");
 
+  if (!isReadingSnapshot(snapshot) && technique !== "janma") {
+    const legacySources: ReadingSource[] = [
+      { id: "ascendant", label: "သိမ်းထားသောလဂ်", value: chart.ascendant.sign },
+      { id: "moon", label: "သိမ်းထားသောလ", value: `${moon.sign} · အိမ် ${moon.house}` },
+    ];
+    return {
+      mode: "deterministic",
+      sources: legacySources,
+      text: [
+        `အကျဉ်းချုပ် — “${input.question}” အတွက် သိမ်းထားသော v1 မှတ်တမ်းဟောင်းမှာ နည်းလမ်းသီးသန့်တွက်ချက်မှု မပါရှိပါ။ ထို့ကြောင့် ဤမွေးဇာတာကို မေးချိန်ဇာတာအဖြစ် မသတ်မှတ်ပါ။`,
+        "ယခုမြင်ရသော အချက်များသည် မူလမှတ်တမ်းကို ပြန်လည်ပြသခြင်းသာဖြစ်ပြီး Prashna သို့မဟုတ် Muhurta အဖြေသစ်အဖြစ် မယူသင့်ပါ။",
+        "လက်တွေ့လုပ်ဆောင်ရန် — နည်းလမ်းသစ်ဖြင့် မေးခွန်းကို ပြန်လည်တွက်ချက်ပါ။",
+      ].join("\n\n"),
+    };
+  }
+
   if (technique === "prashna") {
     const questionTime = isReadingSnapshot(snapshot) && snapshot.technique === "prashna"
       ? snapshot.context.askedAt
@@ -46,6 +62,7 @@ export function buildDeterministicReading(
       { id: "question_time", label: "မေးသည့်အချိန်", value: localInstant(questionTime, chart.location.timezone) },
       { id: "ascendant", label: "မေးချိန်လဂ်", value: chart.ascendant.sign },
       { id: "moon", label: "မေးချိန်လ", value: `${moon.sign} · အိမ် ${moon.house}` },
+      { id: "panchanga", label: "မေးချိန် Panchanga", value: `${chart.panchanga.tithi.name} · ${chart.panchanga.nakshatra.name}` },
     ];
     const text = [
       `အကျဉ်းချုပ် — “${input.question}” ကို မေးသည့်အချိန်ဇာတာအရ ချက်ချင်းအတည်ပြုခြင်းထက် အခြေအနေကို တစ်ဆင့်ချင်း စစ်ဆေးရန် သင့်တော်ပါတယ်။ ဤအဖြေသည် အာမခံချက်မဟုတ်ဘဲ ဆုံးဖြတ်ချက်ပြန်လည်စဉ်းစားရန် လမ်းညွှန်ဖြစ်ပါတယ်။`,
@@ -80,11 +97,11 @@ export function buildDeterministicReading(
   const sources: ReadingSource[] = [
     { id: "ascendant", label: "လဂ်", value: `${chart.ascendant.sign} · အိမ် ၁` },
     { id: "moon", label: "လ၏အနေအထား", value: `${moon.sign} · အိမ် ${moon.house}` },
-    { id: "life_path", label: "ဘဝလမ်းကြောင်း", value: String(chart.numerology.lifePath) },
+    { id: "dasha", label: "လက်ရှိဒဿာ", value: `${chart.dasha.mahadasha.lord} · ${chart.dasha.antardasha.lord}` },
   ];
   const text = [
     `အကျဉ်းချုပ် — “${input.question}” ဆိုတဲ့မေးခွန်းကို ချက်ချင်းအတည်ပြုဆုံးဖြတ်ခြင်းထက် ရရှိထားတဲ့အချက်အလက်နဲ့ ပြန်လည်ချိန်ဆဖို့ သင့်တော်ပါတယ်။ ဒီအဖြေဟာ တွက်ချက်ထားတဲ့ ဇာတာအချက်များကို ရှင်းပြထားတဲ့ လမ်းညွှန်သာဖြစ်ပါတယ်။`,
-    `သင့်လဂ်က ${chart.ascendant.sign} ဖြစ်ပြီး လက ${moon.sign} ရာသီ အိမ် ${moon.house} မှာ ရှိပါတယ်။ ဘဝလမ်းကြောင်းဂဏန်း ${chart.numerology.lifePath} နဲ့အတူ ကြည့်တဲ့အခါ ကိုယ့်ဦးစားပေးမှုကို တိတိကျကျ စာရင်းပြုစုခြင်းက အထောက်အကူဖြစ်နိုင်ပါတယ်။`,
+    `သင့်လဂ်က ${chart.ascendant.sign} ဖြစ်ပြီး လက ${moon.sign} ရာသီ အိမ် ${moon.house} မှာ ရှိပါတယ်။ လက်ရှိ ${chart.dasha.mahadasha.lord} မဟာဒဿာနှင့် ${chart.dasha.antardasha.lord} အန္တရဒဿာကိုပါ ကြည့်တဲ့အခါ ကိုယ့်ဦးစားပေးမှုကို တိတိကျကျ စာရင်းပြုစုခြင်းက အထောက်အကူဖြစ်နိုင်ပါတယ်။`,
     "လက်တွေ့လုပ်ဆောင်ရန် — ဆုံးဖြတ်ချက်မချမီ အရေးကြီးဆုံးအချက်သုံးခုကို ရေးပြီး ယုံကြည်ရသူတစ်ဦးနှင့် ပြန်လည်စစ်ဆေးပါ။",
   ].join("\n\n");
 

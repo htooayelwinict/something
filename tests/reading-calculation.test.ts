@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateChart } from "@/lib/astrology/calculate-chart";
 import { calculateReadingSnapshot, readingPeriod } from "@/lib/readings/calculate-reading";
-import { readingChart, readingTechnique } from "@/lib/readings/snapshot";
+import { readingBasisLede, readingChart, readingTechnique } from "@/lib/readings/snapshot";
 
 const profile = {
   name: "Technique Test",
@@ -71,5 +71,14 @@ describe("technique-aware reading calculation", () => {
 
     expect(readingChart(legacy)).toBe(legacy);
     expect(readingTechnique(legacy, "janma")).toBe("janma");
+    expect(readingBasisLede(legacy, "prashna")).toContain("v1 မှတ်တမ်းဟောင်း");
+    expect(readingBasisLede(legacy, "prashna")).toContain("မေးချိန်ဇာတာ မဟုတ်ပါ");
+  });
+
+  it("stores Janma and Prashna periods using the calculation location's local date", () => {
+    const lateUtc = new Date("2026-08-28T20:00:00.000Z");
+    const snapshot = calculateReadingSnapshot(profile, { kind: "prashna", question }, lateUtc);
+
+    expect(readingPeriod(snapshot)).toEqual({ start: "2026-08-29", end: "2026-08-29" });
   });
 });

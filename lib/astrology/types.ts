@@ -31,6 +31,7 @@ export type CalculationMetadata = {
   ayanamsaVersion: "suriya-lahiri-1";
   houseSystem: "whole-sign";
   nodeMode: "mean";
+  dashaYear: "tropical-365.2425-days";
 };
 
 export type PlanetPosition = {
@@ -121,6 +122,6 @@ export type DailyInsightData = {
   favorableWindow: string;
   window: MuhurtaWindow | null;
   categories: DailyCategoryScores;
-  confidence: "medium" | "high";
+  timingStatus: "calculated" | "unavailable";
   factors: DailyFactor[];
 };

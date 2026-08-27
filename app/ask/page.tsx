@@ -36,7 +36,7 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
         <h1 className="page-title">သုရိယကို မေးပါ</h1>
         <p className="page-lede">အရေးကြီးဆုံးမေးခွန်းတစ်ခုကို ရှင်းရှင်းလင်းလင်း ရေးပြီး သင့်လိုအပ်ချက်နှင့် ကိုက်ညီသော တွက်ချက်နည်းကို ရွေးပါ။</p>
       </header>
-      <section className="surface form-card ask-composer-card" aria-label="ဗေဒင် မေးခွန်းရေးရန်"><QuestionComposer initialQuestion={q} authenticated={Boolean(daily.user)} /></section>
+      <section className="surface form-card ask-composer-card" aria-label="ဗေဒင် မေးခွန်းရေးရန်"><QuestionComposer initialQuestion={q} authenticated={Boolean(daily.user)} timezone={daily.chart.location.timezone} /></section>
     </AppShell>
   );
 }

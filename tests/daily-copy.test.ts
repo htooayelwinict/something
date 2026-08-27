@@ -26,8 +26,9 @@ describe("daily Burmese copy", () => {
     const chart = calculateChart(profile, now);
     const presentation = buildDailyPresentation(chart, calculateDailyInsight(chart, now));
 
-    expect(presentation.sources.map((source) => source.id)).toEqual(["vedic", "numerology"]);
-    expect(presentation.combinedMethodCount).toBe(2);
+    expect(presentation.sources.map((source) => source.id)).toEqual(["jyotish"]);
+    expect(presentation.sources.map((source) => source.label)).toEqual(["Jyotish · Lahiri"]);
+    expect(presentation.calculationMethodCount).toBe(1);
     expect(presentation.sources.every((source) => source.status === "calculated")).toBe(true);
   });
 
@@ -38,9 +39,9 @@ describe("daily Burmese copy", () => {
     const presentation = buildDailyPresentation(chart, insight);
 
     expect(presentation.categories).toEqual(insight.categories);
-    expect(presentation.factors).toEqual(insight.factors.map((factor) => factor.description));
+    expect(presentation.factors).toEqual(insight.factors.map(({ id, source, label, description }) => ({ id, source, label, description })));
     expect(presentation.focus).toBe(insight.factors[0].description);
-    expect(presentation.confidence).toBe("မြင့်");
+    expect(presentation.timingStatus).toBe("တွက်ချက်ပြီး");
     expect(presentation.horaLord).toBe(insight.window?.horaLord);
   });
 });

@@ -24,11 +24,13 @@ describe("buildDeterministicReading", () => {
     expect(result.sources.map((source) => source.label)).toEqual([
       "လဂ်",
       "လ၏အနေအထား",
-      "ဘဝလမ်းကြောင်း",
+      "လက်ရှိဒဿာ",
     ]);
     expect(result.text).toContain(chart.ascendant.sign);
     expect(result.text).toContain(chart.planets.find((planet) => planet.name === "Moon")!.sign);
-    expect(result.text).toContain(String(chart.numerology.lifePath));
+    expect(result.text).toContain(chart.dasha.mahadasha.lord);
+    expect(result.text).toContain(chart.dasha.antardasha.lord);
+    expect(result.text).not.toContain("ဘဝလမ်းကြောင်းဂဏန်း");
     expect(result.text).toMatch(/လက်တွေ့လုပ်ဆောင်ရန် — .+$/);
   });
 
@@ -47,7 +49,7 @@ describe("buildDeterministicReading", () => {
     const snapshot = calculateReadingSnapshot(chart.input, { kind: "prashna", question }, new Date("2026-08-28T03:15:00.000Z"));
     const result = buildDeterministicReading(snapshot, { kind: "prashna", question });
 
-    expect(result.sources.map((source) => source.id)).toEqual(["question_time", "ascendant", "moon"]);
+    expect(result.sources.map((source) => source.id)).toEqual(["question_time", "ascendant", "moon", "panchanga"]);
     expect(result.text).toContain("မေးသည့်အချိန်ဇာတာ");
     expect(result.text).not.toContain("ဘဝလမ်းကြောင်းဂဏန်း");
   });
@@ -66,5 +68,21 @@ describe("buildDeterministicReading", () => {
     expect(result.text).toContain(snapshot.context.window!.label);
     expect(result.text).toContain(`${snapshot.context.window!.horaLord} Hora`);
     expect(result.text).toContain("အာမခံချက်မဟုတ်");
+  });
+
+  it("labels legacy Prashna data instead of presenting its natal chart as a question chart", () => {
+    const legacy = structuredClone(chart) as Record<string, unknown>;
+    legacy.version = "suriya-vedic-1";
+    delete legacy.role;
+    delete legacy.metadata;
+    delete legacy.location;
+
+    const result = buildDeterministicReading(legacy as never, {
+      kind: "prashna",
+      question: "ဒီဆုံးဖြတ်ချက်ကို ဆက်လုပ်သင့်သလား?",
+    });
+
+    expect(result.text).toContain("v1 မှတ်တမ်းဟောင်း");
+    expect(result.text).toContain("မေးချိန်ဇာတာအဖြစ် မသတ်မှတ်ပါ");
   });
 });

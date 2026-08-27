@@ -40,7 +40,7 @@ export function validateMuhurtaTargetDate(targetDate: string, now: Date, timezon
 export function readingPeriod(snapshot: ReadingSnapshot): { start: string; end: string } {
   const date = snapshot.technique === "muhurta"
     ? snapshot.context.targetDate
-    : snapshot.calculatedAt.slice(0, 10);
+    : localDateInTimezone(new Date(snapshot.calculatedAt), snapshot.chart.location.timezone);
   return { start: date, end: date };
 }
 

@@ -49,3 +49,17 @@ export function readingChart(snapshot: ReadingSnapshotLike): CelestialChart {
 export function readingTechnique(snapshot: ReadingSnapshotLike, fallback: ReadingTechniqueId): ReadingTechniqueId {
   return isReadingSnapshot(snapshot) ? snapshot.technique : fallback;
 }
+
+export function readingBasisLede(snapshot: ReadingSnapshotLike, fallback: ReadingTechniqueId): string {
+  const technique = readingTechnique(snapshot, fallback);
+  if (!isReadingSnapshot(snapshot) && technique !== "janma") {
+    return "ဤ v1 မှတ်တမ်းဟောင်းတွင် မွေးဇာတာသာ သိမ်းထားပြီး မေးချိန်ဇာတာ မဟုတ်ပါ။ နည်းလမ်းသစ်ဖြင့် ပြန်တွက်ချက်နိုင်ပါတယ်။";
+  }
+  if (technique === "prashna") {
+    return "မေးခွန်းပေးပို့သည့်အချိန်နှင့် သိမ်းထားသောနေရာမှ တွက်ချက်ထားသည့် မေးချိန်ဇာတာအမြင်။";
+  }
+  if (technique === "muhurta") {
+    return "နေထွက်၊ Hora၊ Rahu Kalam နှင့် Panchanga ကို အခြေခံ၍ ရွေးထားသော ကိုယ်စားလှယ်အချိန်။";
+  }
+  return "သင့်မွေးဇာတာနှင့် လက်ရှိဒဿာကာလမှ ဖန်တီးထားသည့် ပြန်လည်စဉ်းစားရန်အမြင်။";
+}

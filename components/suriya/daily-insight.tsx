@@ -1,6 +1,8 @@
 import { ArrowRight, Clock3, Compass, MoonStar } from "lucide-react";
 import { demoDailyInsight } from "@/lib/content/demo";
-import type { DailyCategoryScores } from "@/lib/astrology/types";
+import type { DailyCategoryScores, DailyFactor } from "@/lib/astrology/types";
+
+type DailyFactorView = Pick<DailyFactor, "id" | "source" | "label" | "description">;
 
 export type DailyInsightView = {
   score: number;
@@ -10,15 +12,21 @@ export type DailyInsightView = {
   moonSign: string;
   energy: string;
   focus: string;
-  factors?: string[];
+  factors?: DailyFactorView[];
   powerNumber?: number;
   categories?: DailyCategoryScores;
-  confidence?: string;
+  timingStatus?: string;
   horaLord?: string;
 };
 
 export function DailyInsight({ expanded = false, data }: { expanded?: boolean; data?: DailyInsightView }) {
   const insight = data ?? demoDailyInsight;
+  const factors = insight.factors?.length ? insight.factors : [{
+    id: "summary.focus",
+    source: "transit" as const,
+    label: "ဦးစားပေးရမည့်အရာ",
+    description: insight.focus,
+  }];
   return (
     <>
       <article className="dark-card hero-insight">
@@ -35,7 +43,7 @@ export function DailyInsight({ expanded = false, data }: { expanded?: boolean; d
           <div
             className="score-ring"
             style={{ "--score": `${insight.score}%` } as React.CSSProperties}
-            aria-label={`ယနေ့ စွမ်းအင် ${insight.score} ရာခိုင်နှုန်း`}
+            aria-label={`ယနေ့ စွမ်းအင်အညွှန်း ${insight.score} အမှတ်`}
             role="img"
           />
         </div>
@@ -44,7 +52,7 @@ export function DailyInsight({ expanded = false, data }: { expanded?: boolean; d
         <article className="surface metric-card">
           <span className="metric-icon"><Clock3 size={19} aria-hidden="true" /></span>
           <p className="metric-label">တွက်ချက်ထားသော သင့်လျော်ချိန်</p><p className="metric-value">{insight.favorableWindow}</p>
-          {insight.horaLord && <small>{insight.horaLord} Hora · ယုံကြည်မှု {insight.confidence}</small>}
+          {insight.horaLord && <small>{insight.horaLord} Hora · {insight.timingStatus}</small>}
         </article>
         <article className="surface metric-card">
           <span className="metric-icon"><MoonStar size={19} aria-hidden="true" /></span>
@@ -55,9 +63,15 @@ export function DailyInsight({ expanded = false, data }: { expanded?: boolean; d
         <section className="surface prose-card" aria-labelledby="today-factors">
           <div className="section-title"><h2 id="today-factors">ယနေ့အတွက် သင့်အမြင်</h2></div>
           <ul className="factor-list">
-            <li className="factor-item"><Compass size={18} aria-hidden="true" /><div><strong>ဦးစားပေးရမည့်အရာ</strong><span>{insight.factors?.[0] ?? insight.focus}</span></div></li>
-            <li className="factor-item"><MoonStar size={18} aria-hidden="true" /><div><strong>စိတ်စွမ်းအင်</strong><span>{insight.energy} — ဆုံးဖြတ်ချက်မချမီ အသက်ရှူချိန်တစ်ခုယူပါ။</span></div></li>
-            <li className="factor-item"><Clock3 size={18} aria-hidden="true" /><div><strong>လက်တွေ့လုပ်ဆောင်ရန်</strong><span>{insight.factors?.[1] ?? "နံနက်ပိုင်းမှာ အရေးကြီးဆုံးစာတစ်စောင် သို့မဟုတ် စကားဝိုင်းတစ်ခုကို အပြီးသတ်ပါ။"}</span></div></li>
+            {factors.map((item) => {
+              const Icon = item.source === "muhurta" ? Clock3 : item.source === "transit" ? Compass : MoonStar;
+              return (
+                <li className="factor-item" key={item.id}>
+                  <Icon size={18} aria-hidden="true" />
+                  <div><strong>{item.label}</strong><span>{item.description}</span></div>
+                </li>
+              );
+            })}
           </ul>
         </section>
       ) : (

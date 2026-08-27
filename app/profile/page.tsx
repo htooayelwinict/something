@@ -44,10 +44,10 @@ export default async function ProfilePage() {
                   <div><dt><MapPin size={15} aria-hidden="true" /> နေရာ</dt><dd>{birthProfile.birthCity} · {birthProfile.timezone}</dd></div>
                 </dl>
               </section>
-              <CosmicFingerprint numerology={numerology} connectedMethods={["Vedic Astrology", "Numerology"]} />
+              <CosmicFingerprint numerology={numerology} connectedMethods={["Jyotish · Lahiri", "Numerology"]} />
             </div>
           ) : (
-            <aside className="profile-start-note"><ShieldCheck size={20} aria-hidden="true" /><div><strong>Cosmic fingerprint အတွက် အချက်အလက်ဖြည့်ပါ</strong><p>သိမ်းပြီးသည်နှင့် Vedic chart နှင့် numerology ကို ကိုယ်ပိုင်တွက်ချက်ပေးပါမယ်။</p></div></aside>
+            <aside className="profile-start-note"><ShieldCheck size={20} aria-hidden="true" /><div><strong>Cosmic fingerprint အတွက် အချက်အလက်ဖြည့်ပါ</strong><p>သိမ်းပြီးသည်နှင့် Lahiri sidereal Jyotish chart နှင့် numerology ကို သီးခြားတွက်ချက်ပေးပါမယ်။</p></div></aside>
           )}
           <section className="surface form-card profile-edit-card">
             <div className="section-title"><div><p className="eyebrow">EDIT PROFILE</p><h2>မွေးဖွားမှုအချက်အလက် ပြင်ဆင်ရန်</h2></div></div>

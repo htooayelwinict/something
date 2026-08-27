@@ -1,10 +1,10 @@
 import { Clock3 } from "lucide-react";
 
-export function LuckyWindow({ favorableWindow, available, horaLord, confidence }: {
+export function LuckyWindow({ favorableWindow, available, horaLord, timingStatus }: {
   favorableWindow: string;
   available: boolean;
   horaLord?: string;
-  confidence: string;
+  timingStatus: string;
 }) {
   return (
     <section className="lucky-window" aria-labelledby="lucky-window-title">
@@ -18,7 +18,7 @@ export function LuckyWindow({ favorableWindow, available, horaLord, confidence }
         </div>
       )}
       <p>{available
-        ? `${horaLord} Hora၊ Rahu Kalam နှင့် Panchanga ကို ထည့်တွက်ထားသည်။ ယုံကြည်မှုအဆင့် — ${confidence}။`
+        ? `${horaLord} Hora၊ Rahu Kalam နှင့် Panchanga ကို ထည့်တွက်ထားသည်။ အခြေအနေ — ${timingStatus}။`
         : favorableWindow}</p>
     </section>
   );

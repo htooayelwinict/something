@@ -85,7 +85,7 @@
 - Test: `tests/daily-copy.test.ts`
 
 **Interfaces:**
-- Produces: `DailyInsightData.categories`, `confidence`, `window`, and structured `factors`.
+- Produces: `DailyInsightData.categories`, `timingStatus`, `window`, and structured `factors`.
 - Preserves: bounded overall `score`, `band`, and formatted `favorableWindow` for existing consumers.
 
 - [ ] Add tests proving every score is bounded, the score is reconstructible from category values, all factors have stable IDs and impacts, numerology does not affect scoring, and the selected window uses the profile timezone.
@@ -97,7 +97,7 @@
   ```
 - [ ] Run focused tests and confirm failure against the old three-aspect heuristic.
 - [ ] Implement the transit-house, Dasha-activation, Panchanga, and timing factors with named rules and capped impacts.
-- [ ] Update presentation components to show categories, confidence, and non-certain timing language.
+- [ ] Update presentation components to show categories, factual timing status, and non-certain timing language.
 - [ ] Run focused tests and the complete unit suite; confirm both pass.
 
 ### Task 4: Technique-aware reading snapshots

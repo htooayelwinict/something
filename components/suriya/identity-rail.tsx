@@ -1,4 +1,4 @@
-import { CircleCheck, LockKeyhole, MoonStar, Sparkles } from "lucide-react";
+import { CircleCheck, LockKeyhole, Sparkles } from "lucide-react";
 import type { NumerologySnapshot } from "@/lib/numerology/calculate";
 
 export function IdentityRail({
@@ -36,12 +36,10 @@ export function IdentityRail({
         </a>
       </section>
       <section className="identity-methods" aria-labelledby="method-title">
-        <h2 id="method-title">ဟောကိန်းနည်းလမ်းများ</h2>
+        <h2 id="method-title">တွက်ချက်မှုနည်းလမ်း</h2>
         <ul>
-          <li><Sparkles size={15} aria-hidden="true" /><span>ဇာတာဗေဒင်</span><small>ချိတ်ဆက်ပြီး</small></li>
-          <li><CircleCheck size={15} aria-hidden="true" /><span>ဂဏန်းဗေဒင်</span><small>ချိတ်ဆက်ပြီး</small></li>
-          <li data-upcoming="true"><MoonStar size={15} aria-hidden="true" /><span>မြန်မာဗေဒင်</span><small>မကြာမီ</small></li>
-          <li data-upcoming="true"><MoonStar size={15} aria-hidden="true" /><span>Tarot</span><small>Preview</small></li>
+          <li><Sparkles size={15} aria-hidden="true" /><span>Jyotish · Lahiri</span><small>အဓိက</small></li>
+          <li><CircleCheck size={15} aria-hidden="true" /><span>ဂဏန်းဗေဒင်</span><small>သီးခြား</small></li>
         </ul>
       </section>
     </div>

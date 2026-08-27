@@ -8,7 +8,7 @@ import { ReadingFeedback } from "@/components/suriya/reading-feedback";
 import { ReadingSources } from "@/components/suriya/reading-sources";
 import { StreamingReading } from "@/components/suriya/streaming-reading";
 import { getReading } from "@/db/repositories/readings";
-import { readingChart, readingTechnique, type ReadingSnapshotLike } from "@/lib/readings/snapshot";
+import { readingBasisLede, readingChart, type ReadingSnapshotLike } from "@/lib/readings/snapshot";
 
 export const metadata: Metadata = { title: "ကိုယ်ပိုင် ဖတ်ကြားမှု" };
 export const dynamic = "force-dynamic";
@@ -20,13 +20,8 @@ export default async function ReadingPage({ params }: { params: Promise<{ id: st
   if (!reading) notFound();
   const snapshot = reading.chartSnapshot as unknown as ReadingSnapshotLike;
   const fallbackTechnique = reading.kind === "prashna" || reading.kind === "muhurta" ? reading.kind : "janma";
-  const technique = readingTechnique(snapshot, fallbackTechnique);
   const chart = readingChart(snapshot);
-  const lede = technique === "prashna"
-    ? "မေးခွန်းပေးပို့သည့်အချိန်နှင့် သိမ်းထားသောနေရာမှ တွက်ချက်ထားသည့် မေးချိန်ဇာတာအမြင်။"
-    : technique === "muhurta"
-      ? "နေထွက်၊ Hora၊ Rahu Kalam နှင့် Panchanga ကို အခြေခံ၍ ရွေးထားသော ကိုယ်စားလှယ်အချိန်။"
-      : "သင့်မွေးဇာတာနှင့် လက်ရှိဒဿာကာလမှ ဖန်တီးထားသည့် ပြန်လည်စဉ်းစားရန်အမြင်။";
+  const lede = readingBasisLede(snapshot, fallbackTechnique);
   return (
     <AppShell>
       <a className="text-link" href="/readings"><ArrowLeft size={15} aria-hidden="true" /> မှတ်တမ်းသို့</a>

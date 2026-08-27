@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import type { BirthProfileInput } from "@/lib/schemas/profile";
+import { localDateInTimezone } from "@/lib/astrology/time";
 
 const defaults: BirthProfileInput = {
   name: "",
@@ -13,6 +14,14 @@ const defaults: BirthProfileInput = {
   longitude: 96.161,
   timezone: "Asia/Yangon",
 };
+
+function latestBirthDate(timezone: string) {
+  try {
+    return localDateInTimezone(new Date(), timezone);
+  } catch {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
 
 export function BirthProfileForm({ initialName = "", onboarding = false }: { initialName?: string; onboarding?: boolean }) {
   const [values, setValues] = useState({ ...defaults, name: initialName });
@@ -66,7 +75,7 @@ export function BirthProfileForm({ initialName = "", onboarding = false }: { ini
       <div className="form-grid-two">
         <div className="field-group">
           <label className="field-label" htmlFor="birth-date">မွေးသက္ကရာဇ်</label>
-          <input className="text-field" id="birth-date" type="date" value={values.birthDate} max={new Date().toISOString().slice(0, 10)} onChange={(e) => update("birthDate", e.target.value)} required />
+          <input className="text-field" id="birth-date" type="date" value={values.birthDate} max={latestBirthDate(values.timezone)} onChange={(e) => update("birthDate", e.target.value)} required />
         </div>
         <div className="field-group">
           <label className="field-label" htmlFor="birth-time">မွေးချိန်အတိအကျ</label>

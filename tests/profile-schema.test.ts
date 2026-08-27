@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { birthProfileSchema } from "@/lib/schemas/profile";
 
 const yangon = {
@@ -7,6 +7,8 @@ const yangon = {
 };
 
 describe("birthProfileSchema", () => {
+  afterEach(() => vi.useRealTimers());
+
   it("normalizes a valid Yangon profile without altering Burmese letters", () => {
     const value = birthProfileSchema.parse(yangon);
     expect(value.name).toBe("မေသဇင်");
@@ -23,5 +25,13 @@ describe("birthProfileSchema", () => {
     const result = birthProfileSchema.safeParse(input);
     expect(result.success).toBe(false);
     if (!result.success) expect(result.error.issues.some((issue) => issue.path[0] === field)).toBe(true);
+  });
+
+  it("evaluates today's birth date in the selected timezone rather than UTC", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-08-28T20:00:00.000Z"));
+
+    expect(birthProfileSchema.safeParse({ ...yangon, birthDate: "2026-08-29" }).success).toBe(true);
+    expect(birthProfileSchema.safeParse({ ...yangon, birthDate: "2026-08-30" }).success).toBe(false);
   });
 });

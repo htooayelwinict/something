@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateChart } from "@/lib/astrology/calculate-chart";
 import { calculateDailyInsight, calculateOverallScore } from "@/lib/astrology/daily-score";
+import { vimshottariAt } from "@/lib/astrology/dasha";
 
 const profile = {
   name: "Daily Evidence",
@@ -21,7 +22,7 @@ describe("daily evidence ruleset", () => {
     expect(result.rulesetVersion).toBe("suriya-daily-2");
     expect(Object.values(result.categories).every((score) => score >= 20 && score <= 95)).toBe(true);
     expect(result.score).toBe(calculateOverallScore(result.categories));
-    expect(result.confidence).toMatch(/^(medium|high)$/);
+    expect(result.timingStatus).toBe(result.window ? "calculated" : "unavailable");
   });
 
   it("makes every scoring influence traceable to a stable rule and category impact", () => {
@@ -50,5 +51,18 @@ describe("daily evidence ruleset", () => {
     expect(result.window?.timezone).toBe("Asia/Yangon");
     expect(Date.parse(result.window!.start)).toBeGreaterThanOrEqual(instant.valueOf());
     expect(result.favorableWindow).toBe(result.window?.label);
+  });
+
+  it("evaluates Dasha at the requested daily instant rather than a stale chart as-of date", () => {
+    const chart = calculateChart(profile, instant);
+    const future = new Date("2100-01-01T00:00:00.000Z");
+    const moon = chart.planets.find((planet) => planet.name === "Moon")!;
+    const expected = vimshottariAt(moon.longitude, new Date(chart.instant), future);
+    const result = calculateDailyInsight(chart, future);
+
+    expect(result.factors.find((factor) => factor.id.startsWith("dasha.mahadasha"))?.label)
+      .toBe(`မဟာဒဿာ ${expected.mahadasha.lord}`);
+    expect(result.factors.find((factor) => factor.id.startsWith("dasha.antardasha"))?.label)
+      .toBe(`အန္တရဒဿာ ${expected.antardasha.lord}`);
   });
 });
