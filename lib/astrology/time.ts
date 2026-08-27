@@ -21,17 +21,26 @@ function offsetAt(date: Date, timezone: string): number {
   return Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute) - Math.floor(date.valueOf() / 60_000) * 60_000;
 }
 
-export function localBirthToUtc(input: Pick<BirthProfileInput, "birthDate" | "birthTime" | "timezone">): Date {
-  const [year, month, day] = input.birthDate.split("-").map(Number);
-  const [hour, minute] = input.birthTime.split(":").map(Number);
+export function localDateTimeToUtc(localDate: string, localTime: string, timezone: string): Date {
+  const [year, month, day] = localDate.split("-").map(Number);
+  const [hour, minute] = localTime.split(":").map(Number);
   const desired = { year, month, day, hour, minute };
   const naive = Date.UTC(year, month - 1, day, hour, minute);
   const offsets = new Set<number>();
-  for (const delta of [-86_400_000, 0, 86_400_000]) offsets.add(offsetAt(new Date(naive + delta), input.timezone));
+  for (const delta of [-86_400_000, 0, 86_400_000]) offsets.add(offsetAt(new Date(naive + delta), timezone));
   const candidates = [...offsets]
     .map((offset) => new Date(naive - offset))
-    .filter((candidate) => sameParts(localParts(candidate, input.timezone), desired));
-  if (candidates.length === 0) throw new Error("The local birth time does not exist in the selected timezone");
-  if (candidates.length > 1) throw new Error("The local birth time is repeated in the selected timezone");
+    .filter((candidate) => sameParts(localParts(candidate, timezone), desired));
+  if (candidates.length === 0) throw new Error("The local time does not exist in the selected timezone");
+  if (candidates.length > 1) throw new Error("The local time is repeated in the selected timezone");
   return candidates[0];
+}
+
+export function localBirthToUtc(input: Pick<BirthProfileInput, "birthDate" | "birthTime" | "timezone">): Date {
+  return localDateTimeToUtc(input.birthDate, input.birthTime, input.timezone);
+}
+
+export function localDateInTimezone(instant: Date, timezone: string): string {
+  const parts = localParts(instant, timezone);
+  return `${String(parts.year).padStart(4, "0")}-${String(parts.month).padStart(2, "0")}-${String(parts.day).padStart(2, "0")}`;
 }

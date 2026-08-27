@@ -1,4 +1,4 @@
-import { Body, Ecliptic, GeoVector, MakeTime, SiderealTime, e_tilt } from "astronomy-engine";
+import { Body, MakeTime, SiderealTime, e_tilt } from "astronomy-engine";
 import type { BirthProfileInput } from "@/lib/schemas/profile";
 import { degreeInSign, normalizeDegrees, signIndex, signedAngularDelta } from "./angles";
 import { lahiriAyanamsa, toSidereal } from "./ayanamsa";
@@ -7,6 +7,7 @@ import { d1Sign, d9Sign, d10Sign } from "./divisional";
 import { calculatePanchanga } from "./panchanga";
 import { localBirthToUtc } from "./time";
 import { meanLunarNodes } from "./nodes";
+import { tropicalGeocentricLongitude } from "./ephemeris";
 import {
   CALCULATION_VERSION,
   zodiacSigns,
@@ -37,9 +38,7 @@ const metadata = {
   nodeMode: "mean",
 } as const;
 
-export function tropicalGeocentricLongitude(body: Body, instant: Date): number {
-  return normalizeDegrees(Ecliptic(GeoVector(body, instant, true)).elon);
-}
+export { tropicalGeocentricLongitude } from "./ephemeris";
 
 export function tropicalAscendant(instant: Date, latitude: number, longitude: number): number {
   const localSidereal = normalizeDegrees(SiderealTime(instant) * 15 + longitude) * Math.PI / 180;

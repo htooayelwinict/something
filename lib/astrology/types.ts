@@ -55,6 +55,23 @@ export type Panchanga = {
 
 export type DashaPeriod = { lord: string; start: string; end: string };
 
+export type MuhurtaEventType = "general" | "work" | "relationship" | "travel";
+export type TimeInterval = { start: string; end: string };
+export type MuhurtaReason = { id: string; label: string; delta: number };
+export type MuhurtaWindow = TimeInterval & {
+  label: string;
+  timezone: string;
+  eventType: MuhurtaEventType;
+  horaLord: "Sun" | "Moon" | "Mars" | "Mercury" | "Jupiter" | "Venus" | "Saturn";
+  score: number;
+  reasons: MuhurtaReason[];
+  sunrise: string;
+  sunset: string;
+  rahuKalam: TimeInterval;
+  panchanga: Panchanga;
+  rulesetVersion: "suriya-muhurta-2";
+};
+
 export type CelestialChart = {
   version: typeof CALCULATION_VERSION;
   role: ChartRole;

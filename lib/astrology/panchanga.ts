@@ -1,5 +1,8 @@
 import { normalizeDegrees } from "./angles";
 import type { Panchanga } from "./types";
+import { Body } from "astronomy-engine";
+import { tropicalGeocentricLongitude } from "./ephemeris";
+import { toSidereal } from "./ayanamsa";
 
 export const nakshatraNames = [
   "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra", "Punarvasu", "Pushya", "Ashlesha",
@@ -56,4 +59,10 @@ export function calculatePanchanga(sunLongitude: number, moonLongitude: number, 
     yoga: calculateYoga(sunLongitude, moonLongitude),
     karana: calculateKarana(sunLongitude, moonLongitude),
   };
+}
+
+export function calculatePanchangaAt(instant: Date, timezone: string): Panchanga {
+  const sun = toSidereal(tropicalGeocentricLongitude(Body.Sun, instant), instant);
+  const moon = toSidereal(tropicalGeocentricLongitude(Body.Moon, instant), instant);
+  return calculatePanchanga(sun, moon, instant, timezone);
 }
