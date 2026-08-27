@@ -3,7 +3,9 @@ import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireChatGPTUser } from "@/app/chatgpt-auth";
 import { AppShell } from "@/components/suriya/app-shell";
-import { ChartGrid } from "@/components/suriya/chart-grid";
+import { DivisionalCharts } from "@/components/suriya/divisional-charts";
+import { PlacementList } from "@/components/suriya/placement-list";
+import { SouthIndianChart } from "@/components/suriya/south-indian-chart";
 import { ReadingFeedback } from "@/components/suriya/reading-feedback";
 import { ReadingSources } from "@/components/suriya/reading-sources";
 import { StreamingReading } from "@/components/suriya/streaming-reading";
@@ -47,7 +49,12 @@ export default async function ReadingPage({ params }: { params: Promise<{ id: st
         </div>
       </section>
       <ReadingFeedback id={reading.id} initialValue={reading.feedback} />
-      <ChartGrid chart={chart} />
+      <section className="surface prose-card reading-chart" aria-labelledby="chart-title">
+        <div className="section-title"><h2 id="chart-title">ဤအဖြေအတွက် တွက်ချက်ထားသောဇာတာ</h2></div>
+        <SouthIndianChart chart={chart} division="d1" size="compact" describedBy="placement-list" />
+      </section>
+      <PlacementList chart={chart} />
+      <DivisionalCharts chart={chart} />
     </AppShell>
   );
 }

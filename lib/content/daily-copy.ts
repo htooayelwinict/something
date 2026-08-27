@@ -28,9 +28,15 @@ export function dailyCopy(band: DailyInsightData["band"]) {
   return copyByBand[band];
 }
 
+function localTime(iso: string, timezone: string): string {
+  return new Intl.DateTimeFormat("en-GB", { timeZone: timezone, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso));
+}
+
 export function buildDailyPresentation(snapshot: ChartSnapshot, insight: DailyInsightData) {
   const copy = dailyCopy(insight.band);
   const moon = snapshot.planets.find((planet) => planet.name === "Moon")!;
+  const window = insight.window;
+  const timezone = snapshot.location.timezone;
   return {
     score: insight.score,
     title: copy.title,
@@ -39,12 +45,26 @@ export function buildDailyPresentation(snapshot: ChartSnapshot, insight: DailyIn
     windowAvailable: Boolean(insight.window),
     horaLord: insight.window?.horaLord,
     timingStatus: insight.timingStatus === "calculated" ? "တွက်ချက်ပြီး" : "အချိန်မကျန်",
+    timing: window
+      ? {
+        sunrise: localTime(window.sunrise, timezone),
+        sunset: localTime(window.sunset, timezone),
+        rahuKalam: `${localTime(window.rahuKalam.start, timezone)}–${localTime(window.rahuKalam.end, timezone)}`,
+      }
+      : null,
+    panchanga: {
+      vara: insight.panchanga.vara,
+      tithi: `${insight.panchanga.tithi.name} (${insight.panchanga.tithi.paksha})`,
+      nakshatra: `${insight.panchanga.nakshatra.name} · ပါဒ ${insight.panchanga.nakshatra.pada}`,
+      yoga: insight.panchanga.yoga.name,
+      karana: insight.panchanga.karana.name,
+    },
     categories: insight.categories,
     rulesetVersion: insight.rulesetVersion,
     moonSign: `${moon.sign} · ${zodiacSignsMyanmar[moon.signIndex]}ရာသီ`,
     energy: copy.energy,
     focus: insight.factors[0]?.description ?? "တွက်ချက်ထားသော အချက်များကို မျှတစွာ သုံးသပ်ပါ။",
-    factors: insight.factors.map(({ id, source, label, description }) => ({ id, source, label, description })),
+    factors: insight.factors.map(({ id, source, label, description, house }) => ({ id, source, label, description, house })),
     powerNumber: snapshot.numerology.lifePath,
     calculationMethodCount: 1,
     sources: [

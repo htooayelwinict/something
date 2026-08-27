@@ -30,6 +30,7 @@ export function IdentityRail({
           <div><strong>{numerology.birthNumber}</strong><span>မွေးဂဏန်း</span></div>
           <div><strong>{numerology.attitudeNumber}</strong><span>သဘောထား</span></div>
         </div>
+        <a className="identity-chart-link" href="/chart">မွေးဇာတာ ကြည့်ရန်</a>
         <a className="identity-profile-link" href="/profile">
           {personalized ? <CircleCheck size={14} aria-hidden="true" /> : <LockKeyhole size={14} aria-hidden="true" />}
           {personalized ? "အခြေခံအချက်အလက် ပြည့်စုံ" : "ကိုယ်ပိုင်ဇာတာ စတင်မည်"}

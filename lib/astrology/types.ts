@@ -113,6 +113,8 @@ export type DailyFactor = {
   label: string;
   description: string;
   impacts: Partial<Record<keyof DailyCategoryScores, number>>;
+  /** Natal house (from the Moon for transits, from the Lagna for Dasha lords) that the rule evaluated. */
+  house?: number;
 };
 
 export type DailyInsightData = {
@@ -123,5 +125,6 @@ export type DailyInsightData = {
   window: MuhurtaWindow | null;
   categories: DailyCategoryScores;
   timingStatus: "calculated" | "unavailable";
+  panchanga: Panchanga;
   factors: DailyFactor[];
 };

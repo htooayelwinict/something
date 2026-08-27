@@ -8,10 +8,10 @@ import { localDateInTimezone } from "./time";
 import { vimshottariAt } from "./dasha";
 import type {
   ChartSnapshot,
-  ChartLocation,
   DailyCategoryScores,
   DailyFactor,
   DailyInsightData,
+  Panchanga,
   PlanetName,
 } from "./types";
 
@@ -43,8 +43,9 @@ function factor(
   label: string,
   description: string,
   impacts: DailyFactor["impacts"],
+  house?: number,
 ): DailyFactor {
-  return { id, source, label, description, impacts };
+  return house === undefined ? { id, source, label, description, impacts } : { id, source, label, description, impacts, house };
 }
 
 function moonTransitFactor(house: number): DailyFactor {
@@ -55,6 +56,7 @@ function moonTransitFactor(house: number): DailyFactor {
       "လ၏နေ့စဉ်ရွေ့လျားမှု",
       `လက မွေးလမှ ${house} အိမ်မြောက်တွင် ရှိပြီး အာရုံနှင့် တုံ့ပြန်မှုကို အားပေးနေသည်။`,
       { focus: 8, energy: 6, relationships: 4, caution: -3 },
+      house,
     );
   }
   return factor(
@@ -63,6 +65,7 @@ function moonTransitFactor(house: number): DailyFactor {
     "လ၏နေ့စဉ်ရွေ့လျားမှု",
     `လက မွေးလမှ ${house} အိမ်မြောက်တွင် ရှိသောကြောင့် တုံ့ပြန်မီ ခဏရပ်၍ စစ်ဆေးရန်ကောင်းသည်။`,
     { focus: -4, energy: -5, caution: 8 },
+    house,
   );
 }
 
@@ -74,6 +77,7 @@ function jupiterTransitFactor(house: number): DailyFactor {
       "ဂုရုဂြိုဟ် ဂေါစရ",
       `ဂုရုဂြိုဟ်က မွေးလမှ ${house} အိမ်မြောက်ကို ဖြတ်သန်း၍ သင်ယူမှုနှင့် အခွင့်အရေးအမြင်ကို အားပေးနေသည်။`,
       { career: 8, relationships: 5, focus: 4, caution: -2 },
+      house,
     );
   }
   return factor(
@@ -82,6 +86,7 @@ function jupiterTransitFactor(house: number): DailyFactor {
     "ဂုရုဂြိုဟ် ဂေါစရ",
     `ဂုရုဂြိုဟ်က မွေးလမှ ${house} အိမ်မြောက်တွင် ရှိပြီး ချဲ့ထွင်မီ ရှိပြီးသားအရာကို သေချာစေရန် ဦးစားပေးသည်။`,
     { career: 2, focus: 3, caution: 2 },
+    house,
   );
 }
 
@@ -93,6 +98,7 @@ function saturnTransitFactor(house: number): DailyFactor {
       "စနေဂြိုဟ် ဖိအားဇုန်",
       `စနေဂြိုဟ်က မွေးလမှ ${house} အိမ်မြောက်တွင် ရှိသောကြောင့် အရှိန်ထက် စည်းကမ်းနှင့် အနားယူမှုကို ဦးစားပေးရန်လိုသည်။`,
       { career: -3, focus: -4, energy: -8, caution: 12 },
+      house,
     );
   }
   if ([3, 6, 11].includes(house)) {
@@ -102,6 +108,7 @@ function saturnTransitFactor(house: number): DailyFactor {
       "စနေဂြိုဟ် တည်ဆောက်မှု",
       `စနေဂြိုဟ်က မွေးလမှ ${house} အိမ်မြောက်တွင် ရှိပြီး စနစ်တကျ ကြိုးစားမှုကို အားပေးနေသည်။`,
       { career: 6, focus: 6, energy: 2, caution: -2 },
+      house,
     );
   }
   return factor(
@@ -110,6 +117,7 @@ function saturnTransitFactor(house: number): DailyFactor {
     "စနေဂြိုဟ် စည်းကမ်း",
     `စနေဂြိုဟ်က မွေးလမှ ${house} အိမ်မြောက်တွင် ရှိသဖြင့် အချိန်နှင့် တာဝန်ကို သေချာစီမံရန်လိုသည်။`,
     { career: 2, focus: 3, energy: -3, caution: 4 },
+    house,
   );
 }
 
@@ -132,6 +140,7 @@ function dashaFactor(snapshot: ChartSnapshot, lord: string, level: "mahadasha" |
       `${prefix} ${lord}`,
       `${lord} က မွေးဇာတာ အိမ် ${placement.house} တွင် ရှိပြီး လက်ရှိကာလ၏ တည်ဆောက်နိုင်စွမ်းကို အားပေးသည်။`,
       { career: level === "mahadasha" ? 6 : 4, relationships: 3, focus: 3, caution: -1 },
+      placement.house,
     );
   }
   if ([6, 8, 12].includes(placement.house)) {
@@ -141,6 +150,7 @@ function dashaFactor(snapshot: ChartSnapshot, lord: string, level: "mahadasha" |
       `${prefix} ${lord}`,
       `${lord} က မွေးဇာတာ အိမ် ${placement.house} တွင် ရှိသဖြင့် ပြုပြင်ခြင်းနှင့် အပိုသတိထားခြင်းကို ဦးစားပေးသည်။`,
       { focus: -2, energy: -2, caution: level === "mahadasha" ? 6 : 4 },
+      placement.house,
     );
   }
   return factor(
@@ -149,11 +159,11 @@ function dashaFactor(snapshot: ChartSnapshot, lord: string, level: "mahadasha" |
     `${prefix} ${lord}`,
     `${lord} က မွေးဇာတာ အိမ် ${placement.house} ကို လှုပ်ရှားစေပြီး ပုံမှန်အရှိန်ဖြင့် ဆက်လုပ်ရန် သင့်တော်သည်။`,
     { focus: 2, energy: 1 },
+    placement.house,
   );
 }
 
-function panchangaFactor(instant: Date, location: ChartLocation): DailyFactor {
-  const panchanga = calculatePanchangaAt(instant, location);
+function panchangaFactor(panchanga: Panchanga): DailyFactor {
   if (panchanga.karana.name === "Vishti") {
     return factor(
       "panchanga.karana.vishti",
@@ -192,6 +202,7 @@ export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): Dail
   const dasha = vimshottariAt(natalMoon.longitude, new Date(snapshot.instant), date);
   const targetDate = localDateInTimezone(date, snapshot.location.timezone);
   const window = findMuhurtaWindow(snapshot.location, targetDate, "general", date);
+  const panchanga = calculatePanchangaAt(date, snapshot.location);
 
   const factors: DailyFactor[] = [
     moonTransitFactor(moonHouse),
@@ -199,7 +210,7 @@ export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): Dail
     saturnTransitFactor(saturnHouse),
     dashaFactor(snapshot, dasha.mahadasha.lord, "mahadasha"),
     dashaFactor(snapshot, dasha.antardasha.lord, "antardasha"),
-    panchangaFactor(date, snapshot.location),
+    panchangaFactor(panchanga),
     // Remaining-window status is advisory and must not make the headline drift intra-day.
     window
       ? factor("muhurta.window.available", "muhurta", "တွက်ချက်ထားသောအချိန်", `${window.horaLord} Hora အတွင်း Rahu Kalam မထိသော အချိန်ကို တွေ့ရှိထားသည်။`, {})
@@ -218,6 +229,7 @@ export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): Dail
     window,
     categories,
     timingStatus: window ? "calculated" : "unavailable",
+    panchanga,
     factors,
   };
 }

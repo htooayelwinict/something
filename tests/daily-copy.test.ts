@@ -39,7 +39,10 @@ describe("daily Burmese copy", () => {
     const presentation = buildDailyPresentation(chart, insight);
 
     expect(presentation.categories).toEqual(insight.categories);
-    expect(presentation.factors).toEqual(insight.factors.map(({ id, source, label, description }) => ({ id, source, label, description })));
+    expect(presentation.factors).toEqual(insight.factors.map(({ id, source, label, description, house }) => ({ id, source, label, description, house })));
+    expect(presentation.panchanga.tithi).toContain(insight.panchanga.tithi.name);
+    expect(presentation.timing?.sunrise).toMatch(/^\d{2}:\d{2}$/);
+    expect(presentation.timing?.rahuKalam).toMatch(/^\d{2}:\d{2}–\d{2}:\d{2}$/);
     expect(presentation.focus).toBe(insight.factors[0].description);
     expect(presentation.timingStatus).toBe("တွက်ချက်ပြီး");
     expect(presentation.horaLord).toBe(insight.window?.horaLord);

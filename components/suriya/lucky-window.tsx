@@ -1,10 +1,11 @@
 import { Clock3 } from "lucide-react";
 
-export function LuckyWindow({ favorableWindow, available, horaLord, timingStatus }: {
+export function LuckyWindow({ favorableWindow, available, horaLord, timingStatus, timing }: {
   favorableWindow: string;
   available: boolean;
   horaLord?: string;
   timingStatus: string;
+  timing?: { sunrise: string; sunset: string; rahuKalam: string } | null;
 }) {
   return (
     <section className="lucky-window" aria-labelledby="lucky-window-title">
@@ -14,11 +15,18 @@ export function LuckyWindow({ favorableWindow, available, horaLord, timingStatus
       </div>
       {available && (
         <div className="lucky-window-track" aria-label={`တွက်ချက်ထားသော သင့်လျော်ချိန် ${favorableWindow}`}>
-          <span>နေထွက်</span><strong>{favorableWindow}</strong><span>နေဝင်</span>
+          <span>နေထွက် {timing?.sunrise ?? ""}</span><strong>{favorableWindow}</strong><span>နေဝင် {timing?.sunset ?? ""}</span>
         </div>
       )}
+      {available && timing && (
+        <dl className="lucky-window-facts">
+          <div><dt>Hora</dt><dd>{horaLord}</dd></div>
+          <div><dt>Rahu Kalam (ရှောင်ရန်)</dt><dd>{timing.rahuKalam}</dd></div>
+          <div><dt>အခြေအနေ</dt><dd>{timingStatus}</dd></div>
+        </dl>
+      )}
       <p>{available
-        ? `${horaLord} Hora၊ Rahu Kalam နှင့် Panchanga ကို ထည့်တွက်ထားသည်။ အခြေအနေ — ${timingStatus}။`
+        ? "နေထွက်မှ နေဝင်အထိ Hora ၁၂ ခုအနက် Rahu Kalam မထိသော၊ Panchanga အရ သင့်လျော်ဆုံးအချိန်ကို ရွေးထားသည်။ အာမခံချက်မဟုတ်ဘဲ လမ်းညွှန်သာဖြစ်သည်။"
         : favorableWindow}</p>
     </section>
   );
