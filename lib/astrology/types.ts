@@ -1,7 +1,7 @@
 import type { BirthProfileInput } from "@/lib/schemas/profile";
 import type { NumerologySnapshot } from "@/lib/numerology/calculate";
 
-export const CALCULATION_VERSION = "suriya-vedic-1";
+export const CALCULATION_VERSION = "suriya-vedic-2" as const;
 
 export const zodiacSigns = [
   "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
@@ -14,7 +14,24 @@ export const zodiacSignsMyanmar = [
 ] as const;
 
 export type ZodiacSign = (typeof zodiacSigns)[number];
-export type PlanetName = "Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto";
+export type PlanetName = "Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Rahu" | "Ketu" | "Uranus" | "Neptune" | "Pluto";
+export type PlanetCategory = "classical" | "node" | "outer";
+export type ChartRole = "natal" | "question" | "election" | "transit";
+
+export type ChartLocation = {
+  label: string;
+  latitude: number;
+  longitude: number;
+  timezone: string;
+};
+
+export type CalculationMetadata = {
+  ephemeris: "astronomy-engine-2.1";
+  ayanamsa: "lahiri-chitrapaksha";
+  ayanamsaVersion: "suriya-lahiri-1";
+  houseSystem: "whole-sign";
+  nodeMode: "mean";
+};
 
 export type PlanetPosition = {
   name: PlanetName;
@@ -25,6 +42,7 @@ export type PlanetPosition = {
   degreeInSign: number;
   house: number;
   retrograde: boolean;
+  category: PlanetCategory;
 };
 
 export type Panchanga = {
@@ -37,10 +55,11 @@ export type Panchanga = {
 
 export type DashaPeriod = { lord: string; start: string; end: string };
 
-export type ChartSnapshot = {
+export type CelestialChart = {
   version: typeof CALCULATION_VERSION;
-  numerology: NumerologySnapshot;
-  input: BirthProfileInput;
+  role: ChartRole;
+  metadata: CalculationMetadata;
+  location: ChartLocation;
   instant: string;
   asOf: string;
   ayanamsa: number;
@@ -48,12 +67,18 @@ export type ChartSnapshot = {
   planets: PlanetPosition[];
   houses: Array<{ house: number; signIndex: number; sign: ZodiacSign }>;
   panchanga: Panchanga;
-  dasha: { mahadasha: DashaPeriod; antardasha: DashaPeriod };
   divisional: {
     d1: Record<PlanetName | "Ascendant", number>;
     d9: Record<PlanetName | "Ascendant", number>;
     d10: Record<PlanetName | "Ascendant", number>;
   };
+};
+
+export type ChartSnapshot = CelestialChart & {
+  role: "natal";
+  numerology: NumerologySnapshot;
+  input: BirthProfileInput;
+  dasha: { mahadasha: DashaPeriod; antardasha: DashaPeriod };
 };
 
 export type DailyInsightData = {

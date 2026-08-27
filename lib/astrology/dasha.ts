@@ -26,7 +26,8 @@ export function vimshottariAt(moonLongitude: number, birth: Date, at: Date) {
     }
   }
   const atTime = at.valueOf();
-  const mahadasha = majorPeriods.find((item) => Date.parse(item.start) <= atTime && atTime < Date.parse(item.end)) ?? majorPeriods[0];
+  const mahadasha = majorPeriods.find((item) => Date.parse(item.start) <= atTime && atTime < Date.parse(item.end));
+  if (!mahadasha) throw new RangeError("Requested instant is outside generated Vimshottari range");
   const mahaIndex = vimshottariLords.indexOf(mahadasha.lord as (typeof vimshottariLords)[number]);
   const mahaYears = vimshottariYears[mahaIndex];
   let antarCursor = Date.parse(mahadasha.start);
@@ -37,6 +38,7 @@ export function vimshottariAt(moonLongitude: number, birth: Date, at: Date) {
     antarPeriods.push(item);
     antarCursor = Date.parse(item.end);
   }
-  const antardasha = antarPeriods.find((item) => Date.parse(item.start) <= atTime && atTime < Date.parse(item.end)) ?? antarPeriods.at(-1)!;
+  const antardasha = antarPeriods.find((item) => Date.parse(item.start) <= atTime && atTime < Date.parse(item.end));
+  if (!antardasha) throw new RangeError("Requested instant is outside generated Vimshottari range");
   return { mahadasha, antardasha };
 }

@@ -6,13 +6,36 @@ import { vimshottariAt } from "./dasha";
 import { d1Sign, d9Sign, d10Sign } from "./divisional";
 import { calculatePanchanga } from "./panchanga";
 import { localBirthToUtc } from "./time";
-import { CALCULATION_VERSION, zodiacSigns, type ChartSnapshot, type PlanetName, type PlanetPosition } from "./types";
+import { meanLunarNodes } from "./nodes";
+import {
+  CALCULATION_VERSION,
+  zodiacSigns,
+  type CelestialChart,
+  type ChartLocation,
+  type ChartRole,
+  type ChartSnapshot,
+  type PlanetCategory,
+  type PlanetName,
+  type PlanetPosition,
+} from "./types";
 import { calculateNumerology } from "@/lib/numerology/calculate";
 
-const bodies: Array<[PlanetName, Body]> = [
-  ["Sun", Body.Sun], ["Moon", Body.Moon], ["Mercury", Body.Mercury], ["Venus", Body.Venus], ["Mars", Body.Mars],
-  ["Jupiter", Body.Jupiter], ["Saturn", Body.Saturn], ["Uranus", Body.Uranus], ["Neptune", Body.Neptune], ["Pluto", Body.Pluto],
+type PhysicalPlanetName = Exclude<PlanetName, "Rahu" | "Ketu">;
+
+const bodies: Array<[PhysicalPlanetName, Body, PlanetCategory]> = [
+  ["Sun", Body.Sun, "classical"], ["Moon", Body.Moon, "classical"], ["Mercury", Body.Mercury, "classical"],
+  ["Venus", Body.Venus, "classical"], ["Mars", Body.Mars, "classical"], ["Jupiter", Body.Jupiter, "classical"],
+  ["Saturn", Body.Saturn, "classical"], ["Uranus", Body.Uranus, "outer"], ["Neptune", Body.Neptune, "outer"],
+  ["Pluto", Body.Pluto, "outer"],
 ];
+
+const metadata = {
+  ephemeris: "astronomy-engine-2.1",
+  ayanamsa: "lahiri-chitrapaksha",
+  ayanamsaVersion: "suriya-lahiri-1",
+  houseSystem: "whole-sign",
+  nodeMode: "mean",
+} as const;
 
 export function tropicalGeocentricLongitude(body: Body, instant: Date): number {
   return normalizeDegrees(Ecliptic(GeoVector(body, instant, true)).elon);
@@ -37,23 +60,45 @@ function isRetrograde(body: Body, instant: Date) {
   return signedAngularDelta(after, before) < 0;
 }
 
-export function calculateChart(input: BirthProfileInput, asOf = new Date()): ChartSnapshot {
-  const birth = localBirthToUtc(input);
-  const ayanamsa = lahiriAyanamsa(birth);
-  const tropicalAsc = tropicalAscendant(birth, input.latitude, input.longitude);
-  const ascLongitude = toSidereal(tropicalAsc, birth);
+export function calculateCelestialChart(
+  instant: Date,
+  location: ChartLocation,
+  role: ChartRole,
+  asOf = instant,
+): CelestialChart {
+  const ayanamsa = lahiriAyanamsa(instant);
+  const tropicalAsc = tropicalAscendant(instant, location.latitude, location.longitude);
+  const ascLongitude = toSidereal(tropicalAsc, instant);
   const ascSign = signIndex(ascLongitude);
 
-  const planets: PlanetPosition[] = bodies.map(([name, body]) => {
-    const tropicalLongitude = tropicalGeocentricLongitude(body, birth);
-    const longitude = toSidereal(tropicalLongitude, birth);
+  const positionFromLongitude = (
+    name: PlanetName,
+    tropicalLongitude: number,
+    retrograde: boolean,
+    category: PlanetCategory,
+  ): PlanetPosition => {
+    const longitude = toSidereal(tropicalLongitude, instant);
     const planetSign = signIndex(longitude);
     return {
       name, tropicalLongitude, longitude, signIndex: planetSign, sign: zodiacSigns[planetSign],
       degreeInSign: degreeInSign(longitude), house: ((planetSign - ascSign + 12) % 12) + 1,
-      retrograde: isRetrograde(body, birth),
+      retrograde, category,
     };
-  });
+  };
+
+  const physicalPlanets = bodies.map(([name, body, category]) => positionFromLongitude(
+    name,
+    tropicalGeocentricLongitude(body, instant),
+    isRetrograde(body, instant),
+    category,
+  ));
+  const nodes = meanLunarNodes(instant);
+  const planets: PlanetPosition[] = [
+    ...physicalPlanets.slice(0, 7),
+    positionFromLongitude("Rahu", nodes.rahu, true, "node"),
+    positionFromLongitude("Ketu", nodes.ketu, true, "node"),
+    ...physicalPlanets.slice(7),
+  ];
 
   const sun = planets.find((planet) => planet.name === "Sun")!;
   const moon = planets.find((planet) => planet.name === "Moon")!;
@@ -62,9 +107,10 @@ export function calculateChart(input: BirthProfileInput, asOf = new Date()): Cha
 
   return {
     version: CALCULATION_VERSION,
-    numerology: calculateNumerology(input.birthDate),
-    input,
-    instant: birth.toISOString(),
+    role,
+    metadata,
+    location,
+    instant: instant.toISOString(),
     asOf: asOf.toISOString(),
     ayanamsa,
     ascendant: {
@@ -73,8 +119,26 @@ export function calculateChart(input: BirthProfileInput, asOf = new Date()): Cha
     },
     planets,
     houses: Array.from({ length: 12 }, (_, index) => ({ house: index + 1, signIndex: (ascSign + index) % 12, sign: zodiacSigns[(ascSign + index) % 12] })),
-    panchanga: calculatePanchanga(sun.longitude, moon.longitude, birth, input.timezone),
-    dasha: vimshottariAt(moon.longitude, birth, asOf),
+    panchanga: calculatePanchanga(sun.longitude, moon.longitude, instant, location.timezone),
     divisional: { d1: mapDivision(d1Sign), d9: mapDivision(d9Sign), d10: mapDivision(d10Sign) },
+  };
+}
+
+export function calculateChart(input: BirthProfileInput, asOf = new Date()): ChartSnapshot {
+  const birth = localBirthToUtc(input);
+  const location: ChartLocation = {
+    label: input.birthCity,
+    latitude: input.latitude,
+    longitude: input.longitude,
+    timezone: input.timezone,
+  };
+  const chart = calculateCelestialChart(birth, location, "natal", asOf);
+  const moon = chart.planets.find((planet) => planet.name === "Moon")!;
+  return {
+    ...chart,
+    role: "natal",
+    numerology: calculateNumerology(input.birthDate),
+    input,
+    dasha: vimshottariAt(moon.longitude, birth, asOf),
   };
 }
