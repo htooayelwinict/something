@@ -10,7 +10,7 @@ import { listReadings } from "@/db/repositories/readings";
 import { dailyQuota } from "@/lib/readings/quota";
 import { getDailyExperience } from "@/lib/services/daily";
 
-export const metadata: Metadata = { title: "မေးမြန်းရန်" };
+export const metadata: Metadata = { title: "မေးမြန်းရန်", alternates: { canonical: "/ask" } };
 
 export default async function AskPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const daily = await getDailyExperience();

@@ -7,7 +7,7 @@ import { CosmicFingerprint } from "@/components/suriya/cosmic-fingerprint";
 import { getBirthProfile } from "@/db/repositories/profiles";
 import { calculateNumerology } from "@/lib/numerology/calculate";
 
-export const metadata: Metadata = { title: "ကိုယ်ရေးအချက်အလက်" };
+export const metadata: Metadata = { title: "ကိုယ်ရေးအချက်အလက်", robots: { index: false, follow: false } };
 
 export default async function ProfilePage() {
   const user = await getChatGPTUser();

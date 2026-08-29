@@ -7,7 +7,7 @@ import { RouteCards } from "@/components/suriya/route-cards";
 import { listReadings } from "@/db/repositories/readings";
 import { getDailyExperience } from "@/lib/services/daily";
 
-export const metadata: Metadata = { title: "ပင်မ" };
+export const metadata: Metadata = { title: "ပင်မ", alternates: { canonical: "/" } };
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {

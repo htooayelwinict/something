@@ -655,3 +655,52 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .chart-cell[data-lagna="true"] { box-shadow: inset 0 0 0 1px var(--gold), 0 0 24px rgb(232 200 122 / 18%); }
 .text-field:focus, .text-area:focus, .select-field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgb(232 200 122 / 18%); }
 .home-heading .page-title, .page-heading .page-title { text-shadow: 0 2px 30px rgb(232 200 122 / 12%); }
+
+/* Public content pages */
+.breadcrumbs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; color: var(--muted); font-size: .78rem; }
+.breadcrumbs a { display: inline-flex; min-height: 44px; align-items: center; color: var(--gold); }
+.breadcrumbs [aria-current] { color: var(--text); }
+.rasi-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.rasi-card { display: grid; justify-items: center; gap: 8px; padding: 20px 12px; text-align: center; transition: transform 160ms ease; }
+.rasi-card:hover { transform: translateY(-2px); }
+.rasi-card-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
+.rasi-card-meta { color: var(--muted); font-size: .75rem; }
+.rasi-hero { position: relative; display: grid; gap: 16px; padding: 26px 24px; isolation: isolate; }
+.rasi-hero .page-title { font-size: clamp(2.2rem, 9vw, 3.6rem); }
+.rasi-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; margin: 0; }
+.rasi-facts div { display: grid; gap: 2px; border-top: 1px solid var(--hairline); padding-top: 8px; }
+.rasi-facts dt { color: var(--muted); font-size: .75rem; }
+.rasi-facts dd { margin: 0; font-size: .85rem; font-weight: 700; }
+.rasi-columns { display: grid; gap: 14px; }
+.rasi-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.rasi-list li { border-left: 3px solid var(--sage); background: var(--sage-tint); padding: 10px 14px; font-size: .85rem; }
+.rasi-list[data-tone="caution"] li { border-color: var(--lacquer); background: var(--lacquer-tint); }
+.rasi-today { display: grid; gap: 10px; margin: 0 0 14px; }
+.rasi-today div { display: grid; gap: 4px; border-top: 1px solid var(--hairline); padding-top: 10px; }
+.rasi-today dt { color: var(--muted); font-size: .75rem; }
+.rasi-today dd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; font-size: .85rem; font-weight: 700; }
+.rasi-others { display: flex; flex-wrap: wrap; gap: 8px; }
+.rasi-others a { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--surface); padding: 6px 14px; font-size: .8rem; font-weight: 600; }
+.rasi-others a span { color: var(--gold); font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-latin); }
+.today-sky-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.today-sky-item { display: grid; justify-items: center; gap: 8px; text-align: center; font-size: .82rem; font-weight: 700; }
+.today-sky-item small { color: var(--muted); font-size: .75rem; font-weight: 500; }
+.hora-table { width: 100%; margin-top: 16px; border-collapse: collapse; font-size: .8rem; }
+.hora-table caption { margin-bottom: 8px; color: var(--muted); font-size: .75rem; text-align: left; }
+.hora-table th, .hora-table td { border-bottom: 1px solid var(--hairline); padding: 8px 6px; text-align: left; }
+.hora-table thead th { color: var(--muted); font-size: .75rem; }
+.hora-table tr[data-rahu="true"] td { color: var(--lacquer); }
+.hora-table .numeric { font-family: var(--font-latin), var(--font-ui); white-space: nowrap; }
+.lucky-window-facts dd[data-tone="caution"] { color: var(--lacquer); }
+.faq-list { display: grid; gap: 14px; margin: 0; }
+.faq-list div { border-top: 1px solid var(--hairline); padding-top: 12px; }
+.faq-list dt { font-family: var(--font-display); font-size: .95rem; font-weight: 600; }
+.faq-list dd { margin: 6px 0 0; color: var(--muted); font-size: .82rem; line-height: 1.7; }
+@media (min-width: 720px) {
+  .rasi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .rasi-columns { grid-template-columns: 1fr 1fr; }
+  .rasi-hero { grid-template-columns: auto 1fr; align-items: start; }
+  .rasi-hero .rasi-facts { grid-column: 1 / -1; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .today-sky-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .rasi-today { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

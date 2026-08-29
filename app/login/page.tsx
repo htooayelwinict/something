@@ -3,7 +3,7 @@ import { ArrowRight, ShieldCheck, Sun } from "lucide-react";
 import { Brand } from "@/components/suriya/brand";
 import { chatGPTSignInPath } from "@/app/chatgpt-auth";
 
-export const metadata: Metadata = { title: "ဝင်ရောက်ရန်" };
+export const metadata: Metadata = { title: "ဝင်ရောက်ရန်", robots: { index: false, follow: false } };
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ return_to?: string }> }) {
   const params = await searchParams;

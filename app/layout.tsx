@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Myanmar, Noto_Serif_Myanmar } from "next/font/google";
 import "./globals.css";
+import { JsonLd } from "@/components/suriya/json-ld";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/content/seo";
 
 const myanmar = Noto_Sans_Myanmar({
   variable: "--font-myanmar",
@@ -62,6 +64,7 @@ export default function RootLayout({
   return (
     <html lang="my">
       <body className={`${myanmar.variable} ${myanmarSerif.variable} ${inter.variable}`}>
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <a className="skip-link" href="#main-content">
           အဓိကအကြောင်းအရာသို့ ကျော်ရန်
         </a>

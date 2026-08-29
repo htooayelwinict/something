@@ -5,7 +5,7 @@ import { AppShell } from "@/components/suriya/app-shell";
 import { readingTechniques } from "@/lib/content/demo";
 import { listReadings } from "@/db/repositories/readings";
 
-export const metadata: Metadata = { title: "ဖတ်ကြားမှုမှတ်တမ်း" };
+export const metadata: Metadata = { title: "ဖတ်ကြားမှုမှတ်တမ်း", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function ReadingsPage() {

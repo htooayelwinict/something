@@ -14,7 +14,7 @@ import { TarotUpsell } from "@/components/suriya/tarot-upsell";
 import { getReading } from "@/db/repositories/readings";
 import { readingBasisLede, readingChart, type ReadingSnapshotLike } from "@/lib/readings/snapshot";
 
-export const metadata: Metadata = { title: "ကိုယ်ပိုင် ဖတ်ကြားမှု" };
+export const metadata: Metadata = { title: "ကိုယ်ပိုင် ဖတ်ကြားမှု", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function ReadingPage({ params }: { params: Promise<{ id: string }> }) {

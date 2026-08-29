@@ -3,7 +3,7 @@ import { requireChatGPTUser } from "@/app/chatgpt-auth";
 import { AppShell } from "@/components/suriya/app-shell";
 import { BirthProfileForm } from "@/components/suriya/birth-profile-form";
 
-export const metadata: Metadata = { title: "မွေးဇာတာ စတင်ရန်" };
+export const metadata: Metadata = { title: "မွေးဇာတာ စတင်ရန်", robots: { index: false, follow: false } };
 
 export default async function OnboardingPage() {
   const user = await requireChatGPTUser("/onboarding");

@@ -7,7 +7,7 @@ import { getSpecialist } from "@/db/repositories/specialists";
 import { bookingLabels, formatBookingDate, maskPhone } from "@/lib/content/booking-copy";
 import { findDemoSpecialist } from "@/lib/content/demo";
 
-export const metadata: Metadata = { title: "ရက်ချိန်း လက်ခံရရှိပါပြီ" };
+export const metadata: Metadata = { title: "ရက်ချိန်း လက်ခံရရှိပါပြီ", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function BookingConfirmationPage({ params }: { params: Promise<{ id: string }> }) {

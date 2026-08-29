@@ -12,7 +12,7 @@ import { TodayConnection } from "@/components/suriya/today-connection";
 import { chartBirthLabel, todayHighlights } from "@/lib/content/chart-view";
 import { getDailyExperience } from "@/lib/services/daily";
 
-export const metadata: Metadata = { title: "သင့်မွေးဇာတာ" };
+export const metadata: Metadata = { title: "သင့်မွေးဇာတာ", alternates: { canonical: "/chart" } };
 
 export default async function ChartPage() {
   const daily = await getDailyExperience();

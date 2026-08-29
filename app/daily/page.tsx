@@ -12,7 +12,7 @@ import { StreamingReading } from "@/components/suriya/streaming-reading";
 import { TarotUpsell } from "@/components/suriya/tarot-upsell";
 import { getDailyExperience } from "@/lib/services/daily";
 
-export const metadata: Metadata = { title: "နေ့စဉ်ဖတ်စာ" };
+export const metadata: Metadata = { title: "နေ့စဉ်ဖတ်စာ", alternates: { canonical: "/daily" } };
 
 const categoryCopy = [
   ["career", "အလုပ်အကိုင်", "CAREER", "အလုပ်နှင့် တည်ဆောက်မှု", "green"],
