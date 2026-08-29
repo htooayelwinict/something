@@ -75,6 +75,10 @@ export function QuestionComposer({ initialQuestion = "", authenticated, timezone
         window.location.assign("/onboarding");
         return;
       }
+      if (response.status === 429) {
+        window.location.assign("/ask");
+        return;
+      }
       const result = (await response.json()) as { id?: string; error?: string };
       if (!response.ok || !result.id) throw new Error(result.error ?? "reading_failed");
       window.location.assign(`/readings/${result.id}`);

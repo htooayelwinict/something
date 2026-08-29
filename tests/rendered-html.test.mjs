@@ -33,11 +33,11 @@ test("server-renders the Suriya home experience", async () => {
   assert.match(html, /<main\b/i);
   assert.match(html, /SURIYA/);
   assert.match(html, /နေ့စဉ်ဖတ်စာ/);
-  assert.match(html, /နည်းလမ်းများ/);
+  assert.match(html, /Tarot ဆွေးနွေးမှု/);
   assert.match(html, /မင်္ဂလာပါ/);
   assert.match(html, /ပင်မ/);
   assert.match(html, /daily-brief/);
-  assert.match(html, /href=["']\/daily["'][\s\S]*href=["']\/ask["'][\s\S]*href=["']\/chart["']/);
+  assert.match(html, /href=["']\/daily["'][\s\S]*href=["']\/ask["'][\s\S]*href=["']\/tarot["'][\s\S]*href=["']\/chart["']/);
   assert.doesNotMatch(html, /hero-insight|TODAY’S POWER NUMBER|JYOTISH CALCULATION|TODAY’S RITUAL|METHODS COMBINED|မြန်မာဗေဒင်/);
   assert.match(html, /manifest\.webmanifest/);
   assert.match(html, /property=["']og:image["'][^>]*og\.png/i);
@@ -60,10 +60,10 @@ test("server-renders the designed public product routes", async () => {
   const expectations = [
     ["/daily", /DAILY ENERGY[\s\S]*လ၏နေ့စဉ်ရွေ့လျားမှု[\s\S]*ဂုရုဂြိုဟ် ဂေါစရ[\s\S]*စနေဂြိုဟ်[\s\S]*အလုပ်အကိုင်[\s\S]*CALCULATED WINDOW[\s\S]*Rahu Kalam[\s\S]*ယနေ့ Panchanga[\s\S]*href=["']\/chart["']/],
     ["/chart", /သင့်မွေးဇာတာ[\s\S]*chart-cell[\s\S]*လဂ်[\s\S]*ဂြိုဟ်တည်နေရာများ[\s\S]*လက်ရှိ ဒဿာကာလ[\s\S]*ယနေ့ ဤဇာတာနှင့်[\s\S]*D9 · နဝံသ[\s\S]*D10 · ဒသံသ/],
-    ["/ask", /သုရိယကို မေးပါ[\s\S]*တွက်ချက်နည်းကို သင်ရွေးနိုင်သည်[\s\S]*အဖြေတွက်ချက်ပုံ/],
+    ["/ask", /သုရိယကို မေးပါ[\s\S]*တစ်နေ့ ၃ ကြိမ် အခမဲ့[\s\S]*တွက်ချက်နည်းကို သင်ရွေးနိုင်သည်[\s\S]*tarot-upsell[\s\S]*အဖြေတွက်ချက်ပုံ/],
     ["/profile", /YOUR COSMIC IDENTITY[\s\S]*ChatGPT ဖြင့် ဝင်ရောက်မည်/],
-    ["/tarot", /လူသားအကြံပေး[\s\S]*Preview[\s\S]*သီရိလမင်း/],
-    ["/tarot/thiri", /သီရိလမင်း[\s\S]*booking မဖွင့်ရသေးပါ/],
+    ["/tarot", /လူချင်းတွေ့ ဆွေးနွေးပါ[\s\S]*ဘယ်လို အလုပ်လုပ်သလဲ[\s\S]*သီရိလမင်း[\s\S]*href=["']\/tarot\/thiri#booking["'][\s\S]*ရက်ချိန်းယူရန်/],
+    ["/tarot/thiri", /သီရိလမင်း[\s\S]*id="booking"[\s\S]*id="booking-phone"[\s\S]*ရက်ချိန်း တောင်းဆိုမည်/],
     ["/login", /ပြန်လည်ကြိုဆိုပါတယ်/],
   ];
 
@@ -73,6 +73,7 @@ test("server-renders the designed public product routes", async () => {
     const html = await response.text();
     assert.match(html, copy, pathname);
     if (pathname === "/daily") {
+      assert.match(html, /tarot-upsell[\s\S]*href=["']\/tarot["']/, pathname);
       assert.doesNotMatch(html, /ယုံကြည်မှုအဆင့်/, pathname);
       assert.doesNotMatch(html, /href=["']\/daily["'][^>]*>အသေးစိတ်ဖတ်ရန်/, pathname);
     }
@@ -85,6 +86,7 @@ test("server-renders the designed public product routes", async () => {
       assert.match(html, /aria-describedby="placement-list"/, pathname);
       assert.match(html, /\d{1,2}°\d{2}′/, pathname);
     }
+    if (pathname.startsWith("/tarot")) assert.doesNotMatch(html, /Preview|PREVIEW|မကြာမီ ရနိုင်မည်|booking မဖွင့်ရသေးပါ/, pathname);
     if (pathname === "/login") assert.doesNotMatch(html, /ChatGPT စကားဝိုင်း/, pathname);
   }
 });
@@ -93,4 +95,9 @@ test("redirects the legacy chart route to /chart", async () => {
   const response = await render("/daily/details");
   assert.ok([301, 302, 307, 308].includes(response.status), String(response.status));
   assert.match(response.headers.get("location") ?? "", /\/chart$/);
+});
+
+test("unknown booking confirmations are not found", async () => {
+  const response = await render("/tarot/bookings/bkg_missing");
+  assert.equal(response.status, 404);
 });

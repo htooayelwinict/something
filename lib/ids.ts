@@ -1,8 +1,8 @@
-const allowedPrefixes = new Set(["bpr", "rdg", "tsp"]);
+const allowedPrefixes = new Set(["bpr", "rdg", "tsp", "bkg"]);
 let lastTimestamp = 0;
 let sequence = 0;
 
-export function newId(prefix: "bpr" | "rdg" | "tsp"): string {
+export function newId(prefix: "bpr" | "rdg" | "tsp" | "bkg"): string {
   if (!allowedPrefixes.has(prefix)) throw new Error("Invalid ID prefix");
   const now = Date.now();
   sequence = now === lastTimestamp ? sequence + 1 : 0;

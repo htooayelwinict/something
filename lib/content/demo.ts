@@ -13,6 +13,8 @@ export type TarotSpecialist = {
   rate: string;
   availability: string;
   tags: string[];
+  location: string;
+  sessionMinutes: number;
 };
 
 export const demoDailyInsight = {
@@ -38,12 +40,28 @@ export const readingTechniques: ReadingTechnique[] = [
 export const demoSpecialists: TarotSpecialist[] = [
   {
     id: "thiri", name: "သီရိလမင်း", initials: "TL", specialty: "Tarot & Relationship Guidance",
-    experience: "အတွေ့အကြုံ ၆ နှစ်", rate: "၁၅ မိနစ် · ၁၂,၀၀၀ ကျပ်", availability: "မကြာမီ ရနိုင်မည်",
-    tags: ["ချစ်ရေး", "အလုပ်အကိုင်", "စိတ်ခံစားမှု"],
+    experience: "အတွေ့အကြုံ ၆ နှစ်", rate: "၃၀ မိနစ် · ၂၅,၀၀၀ ကျပ်", availability: "စနေ · တနင်္ဂနွေ",
+    tags: ["ချစ်ရေး", "အလုပ်အကိုင်", "စိတ်ခံစားမှု"], location: "ရန်ကုန် · ကမာရွတ်", sessionMinutes: 30,
   },
   {
     id: "min-thu", name: "မင်းသူရ", initials: "MT", specialty: "Intuitive Tarot & Life Direction",
-    experience: "အတွေ့အကြုံ ၉ နှစ်", rate: "၁၅ မိနစ် · ၁၅,၀၀၀ ကျပ်", availability: "မကြာမီ ရနိုင်မည်",
-    tags: ["ဘဝလမ်းကြောင်း", "စီးပွားရေး", "ဆုံးဖြတ်ချက်"],
+    experience: "အတွေ့အကြုံ ၉ နှစ်", rate: "၃၀ မိနစ် · ၃၀,၀၀၀ ကျပ်", availability: "အင်္ဂါ · ကြာသပတေး · စနေ",
+    tags: ["ဘဝလမ်းကြောင်း", "စီးပွားရေး", "ဆုံးဖြတ်ချက်"], location: "ရန်ကုန် · လှိုင်", sessionMinutes: 30,
   },
 ];
+
+export function findDemoSpecialist(id: string) {
+  return demoSpecialists.find((item) => item.id === id) ?? null;
+}
+
+type SpecialistRowLike = {
+  id: string; name: string; initials: string; specialty: string; experience: string;
+  displayRate: string; availabilityLabel: string; tags: string[]; location: string; sessionMinutes: number;
+};
+
+export function specialistFromRow(row: SpecialistRowLike): TarotSpecialist {
+  return {
+    id: row.id, name: row.name, initials: row.initials, specialty: row.specialty, experience: row.experience,
+    rate: row.displayRate, availability: row.availabilityLabel, tags: row.tags, location: row.location, sessionMinutes: row.sessionMinutes,
+  };
+}
