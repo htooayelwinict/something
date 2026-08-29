@@ -9,6 +9,8 @@ export async function initializeDatabase() {
     db.prepare("CREATE INDEX IF NOT EXISTS tarot_bookings_specialist_idx ON tarot_bookings(specialist_id, created_at)"),
     db.prepare("CREATE INDEX IF NOT EXISTS tarot_bookings_user_idx ON tarot_bookings(user_id, created_at)"),
     db.prepare("CREATE INDEX IF NOT EXISTS tarot_bookings_ip_idx ON tarot_bookings(ip_hash, created_at)"),
+    db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS period_readings_key_idx ON period_readings(user_id, kind, period_key, prompt_version)"),
+    db.prepare("CREATE INDEX IF NOT EXISTS period_readings_user_idx ON period_readings(user_id, created_at)"),
     db.prepare("PRAGMA optimize"),
   ]);
 }
