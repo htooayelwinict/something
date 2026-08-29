@@ -6,6 +6,7 @@ import { CALCULATION_VERSION } from "@/lib/astrology/types";
 import { PROMPT_VERSION } from "@/lib/ai/prompt";
 import { birthProfileSchema } from "@/lib/schemas/profile";
 import { readingRequestSchema } from "@/lib/schemas/reading";
+import { dailyQuota } from "@/lib/readings/quota";
 
 export const dynamic = "force-dynamic";
 
@@ -16,10 +17,9 @@ export async function POST(request: Request) {
   if (!parsed.success) return Response.json({ error: parsed.error.issues[0]?.message ?? "invalid_reading" }, { status: 400 });
   try {
     await upsertProfile(user);
-    const recent = await listReadings(user.userId);
-    const cutoff = Date.now() - 10 * 60_000;
-    if (recent.filter((item) => Date.parse(item.createdAt) > cutoff).length >= 5) {
-      return Response.json({ error: "မေးခွန်းများလွန်းနေပါတယ်။ ခဏနားပြီး ပြန်စမ်းပါ။" }, { status: 429 });
+    const quota = dailyQuota(await listReadings(user.userId), new Date());
+    if (quota.remaining === 0) {
+      return Response.json({ error: "quota_exhausted", resetsAt: quota.resetsAt }, { status: 429 });
     }
     const storedProfile = await getBirthProfile(user.userId);
     const birthProfile = birthProfileSchema.safeParse(storedProfile);
