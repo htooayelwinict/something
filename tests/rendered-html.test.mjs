@@ -37,6 +37,11 @@ test("server-renders the Suriya home experience", async () => {
   assert.match(html, /မင်္ဂလာပါ/);
   assert.match(html, /ပင်မ/);
   assert.match(html, /daily-brief/);
+  assert.match(html, /star-field/);
+  assert.match(html, /site-footer/);
+  assert.match(html, /zodiac-glyph/);
+  assert.match(html, /moon-phase/);
+  assert.doesNotMatch(html.slice(html.indexOf("<main")), /class="eyebrow"[^>]*>[A-Z]{4,}[^<]*<\/p>/);
   assert.match(html, /href=["']\/daily["'][\s\S]*href=["']\/ask["'][\s\S]*href=["']\/tarot["'][\s\S]*href=["']\/chart["']/);
   assert.doesNotMatch(html, /hero-insight|TODAY’S POWER NUMBER|JYOTISH CALCULATION|TODAY’S RITUAL|METHODS COMBINED|မြန်မာဗေဒင်/);
   assert.match(html, /manifest\.webmanifest/);
@@ -58,10 +63,10 @@ test("serves an installable Burmese manifest", async () => {
 
 test("server-renders the designed public product routes", async () => {
   const expectations = [
-    ["/daily", /DAILY ENERGY[\s\S]*လ၏နေ့စဉ်ရွေ့လျားမှု[\s\S]*ဂုရုဂြိုဟ် ဂေါစရ[\s\S]*စနေဂြိုဟ်[\s\S]*အလုပ်အကိုင်[\s\S]*CALCULATED WINDOW[\s\S]*Rahu Kalam[\s\S]*ယနေ့ Panchanga[\s\S]*href=["']\/chart["']/],
+    ["/daily", /ယနေ့၏ မင်္ဂလာလမ်းညွှန်[\s\S]*လ၏နေ့စဉ်ရွေ့လျားမှု[\s\S]*ဂုရုဂြိုဟ် ဂေါစရ[\s\S]*စနေဂြိုဟ်[\s\S]*အလုပ်အကိုင်[\s\S]*တွက်ချက်ထားသော အချိန်[\s\S]*Rahu Kalam[\s\S]*ယနေ့ Panchanga[\s\S]*href=["']\/chart["']/],
     ["/chart", /သင့်မွေးဇာတာ[\s\S]*chart-cell[\s\S]*လဂ်[\s\S]*ဂြိုဟ်တည်နေရာများ[\s\S]*လက်ရှိ ဒဿာကာလ[\s\S]*ယနေ့ ဤဇာတာနှင့်[\s\S]*D9 · နဝံသ[\s\S]*D10 · ဒသံသ/],
     ["/ask", /သုရိယကို မေးပါ[\s\S]*တစ်နေ့ ၃ ကြိမ် အခမဲ့[\s\S]*တွက်ချက်နည်းကို သင်ရွေးနိုင်သည်[\s\S]*tarot-upsell[\s\S]*အဖြေတွက်ချက်ပုံ/],
-    ["/profile", /YOUR COSMIC IDENTITY[\s\S]*ChatGPT ဖြင့် ဝင်ရောက်မည်/],
+    ["/profile", /သင့်ကောင်းကင် ကိုယ်ရေး[\s\S]*ChatGPT ဖြင့် ဝင်ရောက်မည်/],
     ["/tarot", /လူချင်းတွေ့ ဆွေးနွေးပါ[\s\S]*ဘယ်လို အလုပ်လုပ်သလဲ[\s\S]*သီရိလမင်း[\s\S]*href=["']\/tarot\/thiri#booking["'][\s\S]*ရက်ချိန်းယူရန်/],
     ["/tarot/thiri", /သီရိလမင်း[\s\S]*id="booking"[\s\S]*id="booking-phone"[\s\S]*ရက်ချိန်း တောင်းဆိုမည်/],
     ["/login", /ပြန်လည်ကြိုဆိုပါတယ်/],
@@ -123,4 +128,30 @@ test("period reading routes render tabs, readings and guest gating", async () =>
   const text = await dailyStream.text();
   assert.match(text, /[က-႟]/);
   assert.match(text, /လက်တွေ့လုပ်ဆောင်ရန်/);
+});
+
+test("public SEO pages carry structured data and crawl files", async () => {
+  for (const [path, needle] of [["/rasi", /CollectionPage/], ["/rasi/mesha", /"@type":"Article"[\s\S]*မိဿရာသီ/], ["/today", /FAQPage[\s\S]*hora-table/], ["/tarot", /LocalBusiness[\s\S]*FAQPage/]]) {
+    const response = await render(path);
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    assert.match(html, needle, path);
+    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+    assert.ok(blocks.length >= 2, `${path} json-ld blocks`);
+    for (const block of blocks) JSON.parse(block[1]);
+    assert.match(html, /rel="canonical"/, path);
+  }
+  assert.equal((await render("/rasi/nope")).status, 404);
+  const robots = await render("/robots.txt");
+  assert.equal(robots.status, 200);
+  assert.match(await robots.text(), /Disallow: \/readings[\s\S]*Sitemap: https:\/\/suriya\.openai\.site\/sitemap\.xml/);
+  const sitemap = await render("/sitemap.xml");
+  assert.equal(sitemap.status, 200);
+  const xml = await sitemap.text();
+  for (const slug of ["mesha", "meena"]) assert.match(xml, new RegExp(`/rasi/${slug}<`));
+  assert.match(xml, /\/today</);
+  const readings = await (await render("/readings")).text();
+  assert.match(readings, /noindex/);
+  const { readFileSync } = await import("node:fs");
+  assert.match(readFileSync(new URL("../public/llms.txt", import.meta.url), "utf8"), /suriya\.openai\.site\/today/);
 });

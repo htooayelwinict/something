@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireChatGPTUser } from "@/app/chatgpt-auth";
 import { AppShell } from "@/components/suriya/app-shell";
+import { readingTechniques } from "@/lib/content/demo";
 import { DivisionalCharts } from "@/components/suriya/divisional-charts";
 import { PlacementList } from "@/components/suriya/placement-list";
 import { SouthIndianChart } from "@/components/suriya/south-indian-chart";
@@ -13,7 +14,7 @@ import { TarotUpsell } from "@/components/suriya/tarot-upsell";
 import { getReading } from "@/db/repositories/readings";
 import { readingBasisLede, readingChart, type ReadingSnapshotLike } from "@/lib/readings/snapshot";
 
-export const metadata: Metadata = { title: "ကိုယ်ပိုင် ဖတ်ကြားမှု" };
+export const metadata: Metadata = { title: "ကိုယ်ပိုင် ဖတ်ကြားမှု", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function ReadingPage({ params }: { params: Promise<{ id: string }> }) {
@@ -29,7 +30,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ id: st
     <AppShell>
       <a className="text-link" href="/readings"><ArrowLeft size={15} aria-hidden="true" /> မှတ်တမ်းသို့</a>
       <header className="page-heading">
-        <p className="eyebrow">{reading.kind} · {reading.calculationVersion}</p>
+        <p className="eyebrow">{readingTechniques.find((item) => item.id === reading.kind)?.title ?? reading.kind} · {reading.calculationVersion}</p>
         <h1 className="page-title">{reading.question}</h1>
         <p className="page-lede">{lede}</p>
       </header>
@@ -41,7 +42,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ id: st
       />
       <ReadingSources chart={snapshot} />
       <section className="follow-up-panel" aria-labelledby="follow-up-title">
-        <p className="eyebrow">CONTINUE THE THREAD</p>
+        <p className="eyebrow">ဆက်လက် မေးမြန်းရန်</p>
         <h2 id="follow-up-title">ဆက်မေးနိုင်သည့် မေးခွန်းများ</h2>
         <div>
           <a href="/ask?q=ဒီအဖြေထဲက ဘယ်အရာကို ပထမဆုံး လုပ်ဆောင်သင့်ပါသလဲ။">ဘယ်အရာကို ပထမဆုံး လုပ်ဆောင်ရမလဲ။</a>

@@ -3,9 +3,12 @@ import { ArrowDown, CalendarCheck, HandCoins, PhoneCall, ShieldCheck, UserRoundS
 import { AppShell } from "@/components/suriya/app-shell";
 import { ConsultantDirectory } from "@/components/suriya/consultant-directory";
 import { listSpecialists } from "@/db/repositories/specialists";
+import { JsonLd } from "@/components/suriya/json-ld";
+import { tarotFaq } from "@/lib/content/business";
 import { demoSpecialists, specialistFromRow } from "@/lib/content/demo";
+import { breadcrumbJsonLd, faqJsonLd, localBusinessJsonLd } from "@/lib/content/seo";
 
-export const metadata: Metadata = { title: "Tarot လူချင်းတွေ့ ဆွေးနွေးမှု" };
+export const metadata: Metadata = { title: "Tarot လူချင်းတွေ့ ဆွေးနွေးမှု", alternates: { canonical: "/tarot" } };
 
 const steps = [
   { icon: UserRoundSearch, title: "ပညာရှင် ရွေးပါ", text: "အထူးပြုနှင့် ရနိုင်သောရက်ကို ကြည့်၍ သင့်နှင့် ကိုက်ညီသူကို ရွေးပါ။" },
@@ -24,8 +27,9 @@ export default async function TarotPage() {
   const specialists = rows.length > 0 ? rows.map(specialistFromRow) : demoSpecialists;
   return (
     <AppShell>
+      <JsonLd data={[localBusinessJsonLd(specialists), faqJsonLd(tarotFaq), breadcrumbJsonLd([{ name: "ပင်မ", path: "/" }, { name: "Tarot ဆွေးနွေးမှု", path: "/tarot" }])]} />
       <header className="tarot-hero">
-        <p className="eyebrow">TAROT · လူချင်းတွေ့ ဆွေးနွေးမှု</p>
+        <p className="eyebrow">Tarot · လူချင်းတွေ့ ဆွေးနွေးမှု</p>
         <h1 className="page-title">Tarot ပညာရှင်နှင့် လူချင်းတွေ့ ဆွေးနွေးပါ</h1>
         <p className="page-lede">ဇာတာက ပြသနေသည့် အခြေအနေကို လူသားအမြင်ဖြင့် နက်နက်နဲနဲ ဆွေးနွေးလိုပါက ရန်ကုန်ရှိ Tarot ပညာရှင်များနှင့် ၃၀ မိနစ် လူချင်းတွေ့ ဆွေးနွေးမှုကို ရက်ချိန်းယူနိုင်ပါသည်။ မြန်မာဘာသာဖြင့် ပြောဆိုပြီး ဆွေးနွေးချိန်တွင်သာ ငွေပေးချေပါ။</p>
         <a className="primary-button tarot-hero-cta" href="#consultants">ပညာရှင် ရွေးရန် <ArrowDown size={15} aria-hidden="true" /></a>
@@ -49,6 +53,10 @@ export default async function TarotPage() {
       <ul className="tarot-trust" aria-label="ယုံကြည်စိတ်ချရမှု">
         {trust.map((item) => <li key={item.text}><item.icon size={16} aria-hidden="true" /><span>{item.text}</span></li>)}
       </ul>
+      <section className="surface prose-card" aria-labelledby="tarot-faq-title">
+        <div className="section-title"><h2 id="tarot-faq-title">မေးလေ့ရှိသော မေးခွန်းများ</h2></div>
+        <dl className="faq-list">{tarotFaq.map((item) => <div key={item.question}><dt>{item.question}</dt><dd>{item.answer}</dd></div>)}</dl>
+      </section>
     </AppShell>
   );
 }

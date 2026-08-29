@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "ကိုယ့်နေ့ရက်ကို ကြယ်တာရာများနှင့်အတူ နားလည်ပါ။",
     start_url: "/",
     display: "standalone",
-    background_color: "#F4F2EF",
-    theme_color: "#F4F2EF",
+    background_color: "#0b0f1e",
+    theme_color: "#0b0f1e",
     lang: "my",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },

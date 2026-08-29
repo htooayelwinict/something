@@ -7,7 +7,7 @@ import { getSpecialist } from "@/db/repositories/specialists";
 import { bookingLabels, formatBookingDate, maskPhone } from "@/lib/content/booking-copy";
 import { findDemoSpecialist } from "@/lib/content/demo";
 
-export const metadata: Metadata = { title: "ရက်ချိန်း လက်ခံရရှိပါပြီ" };
+export const metadata: Metadata = { title: "ရက်ချိန်း လက်ခံရရှိပါပြီ", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function BookingConfirmationPage({ params }: { params: Promise<{ id: string }> }) {
@@ -20,7 +20,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
   return (
     <AppShell>
       <header className="page-heading">
-        <p className="eyebrow">TAROT · BOOKING REQUEST</p>
+        <p className="eyebrow">Tarot · ရက်ချိန်း တောင်းဆိုမှု</p>
         <h1 className="page-title">ရက်ချိန်း တောင်းဆိုမှု လက်ခံရရှိပါပြီ</h1>
         <p className="page-lede">{booking.name} ၏ တောင်းဆိုမှုကို {specialistName} ထံ ပေးပို့ထားပါသည်။ ၂၄ နာရီအတွင်း ဖုန်းဆက်၍ အတည်ပြုပေးပါမည်။</p>
       </header>

@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { ArrowRight, BookOpen, LogIn } from "lucide-react";
 import { chatGPTSignInPath, getChatGPTUser } from "@/app/chatgpt-auth";
 import { AppShell } from "@/components/suriya/app-shell";
+import { readingTechniques } from "@/lib/content/demo";
 import { listReadings } from "@/db/repositories/readings";
 
-export const metadata: Metadata = { title: "ဖတ်ကြားမှုမှတ်တမ်း" };
+export const metadata: Metadata = { title: "ဖတ်ကြားမှုမှတ်တမ်း", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function ReadingsPage() {
@@ -13,7 +14,7 @@ export default async function ReadingsPage() {
   return (
     <AppShell>
       <header className="page-heading">
-        <p className="eyebrow">PRIVATE COSMIC LIBRARY</p>
+        <p className="eyebrow">ကိုယ်ပိုင် ဖတ်စာစုဆောင်းမှု</p>
         <h1 className="page-title">ဖတ်ကြားမှုမှတ်တမ်း</h1>
         <p className="page-lede">ပြီးခဲ့သောမေးခွန်းများ၊ အသုံးပြုခဲ့သည့်နည်းလမ်းနှင့် သုရိယ၏ အမြင်များကို ပြန်လည်ဖတ်ရှုပါ။</p>
       </header>
@@ -25,7 +26,7 @@ export default async function ReadingsPage() {
         <section className="history-grid" aria-label="သိမ်းထားသော ဖတ်ကြားမှုများ">
           {readings.map((reading) => (
             <article className="surface prose-card reading-history-card" data-status={reading.status} key={reading.id}>
-              <p className="eyebrow">{reading.kind} · {new Intl.DateTimeFormat("my-MM", { dateStyle: "medium" }).format(new Date(reading.createdAt))}</p>
+              <p className="eyebrow">{readingTechniques.find((item) => item.id === reading.kind)?.title ?? reading.kind} · {new Intl.DateTimeFormat("my-MM", { dateStyle: "medium" }).format(new Date(reading.createdAt))}</p>
               <h2>{reading.question}</h2>
               <p className="page-lede">{reading.status === "complete" ? "ဖတ်ကြားပြီး" : reading.status === "failed" ? "ပြန်စမ်းရန်လို" : "ရေးသားနေဆဲ"}</p>
               <a className="text-link" href={`/readings/${reading.id}`}>ပြန်ဖတ်ရန် <ArrowRight size={15} aria-hidden="true" /></a>

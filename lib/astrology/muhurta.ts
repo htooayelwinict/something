@@ -155,3 +155,23 @@ export function findMuhurtaWindow(
 
   return candidates.sort((a, b) => b.score - a.score || Date.parse(a.start) - Date.parse(b.start))[0] ?? null;
 }
+
+export type DayHora = TimeInterval & { lord: HoraLord; index: number };
+
+/** Daytime Hora table (12 equal divisions of sunrise→sunset) plus Rahu Kalam for a local date. */
+export function dayHoraTable(location: ChartLocation, targetDate: string): { solarDay: SolarDay; rahuKalam: TimeInterval; horas: DayHora[] } | null {
+  const solarDay = calculateSolarDay(location, targetDate);
+  if (!solarDay) return null;
+  const rise = Date.parse(solarDay.sunrise);
+  const set = Date.parse(solarDay.sunset);
+  const horaLength = (set - rise) / 12;
+  const weekday = weekdayAt(new Date(rise), location.timezone);
+  const dayLord = dayLordByWeekday[weekday];
+  if (!dayLord) return null;
+  const horas = Array.from({ length: 12 }, (_, index) => ({
+    ...interval(rise + index * horaLength, rise + (index + 1) * horaLength),
+    lord: horaLordFor(dayLord, index),
+    index,
+  }));
+  return { solarDay, rahuKalam: rahuKalam(solarDay), horas };
+}

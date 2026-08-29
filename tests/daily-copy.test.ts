@@ -48,3 +48,18 @@ describe("daily Burmese copy", () => {
     expect(presentation.horaLord).toBe(insight.window?.horaLord);
   });
 });
+
+describe("daily presentation sky data", () => {
+  it("exposes the transit Moon sign and tithi for the hero", async () => {
+    const { calculateChart } = await import("@/lib/astrology/calculate-chart");
+    const { calculateDailyInsight } = await import("@/lib/astrology/daily-score");
+    const { buildDailyPresentation } = await import("@/lib/content/daily-copy");
+    const { demoProfile } = await import("@/lib/content/demo-profile");
+    const now = new Date("2026-08-30T10:00:00Z");
+    const chart = calculateChart(demoProfile, now);
+    const presentation = buildDailyPresentation(chart, calculateDailyInsight(chart, now));
+    expect(presentation.transitMoonSignIndex).toBeGreaterThanOrEqual(0);
+    expect(presentation.transitMoonSignIndex).toBeLessThan(12);
+    expect(["Shukla", "Krishna"]).toContain(presentation.tithi.paksha);
+  });
+});

@@ -11,7 +11,7 @@ export function CosmicFingerprint({
   const methods = ["Jyotish · Lahiri", "Numerology"];
   return (
     <section className="cosmic-fingerprint" aria-labelledby="fingerprint-title">
-      <div><p className="eyebrow">COSMIC FINGERPRINT</p><h2 id="fingerprint-title">တွက်ချက်ထားသော သင့်ဂဏန်းများ</h2></div>
+      <div><p className="eyebrow">ကောင်းကင် လက်ဗွေ</p><h2 id="fingerprint-title">တွက်ချက်ထားသော သင့်ဂဏန်းများ</h2></div>
       <div className="fingerprint-grid">
         <article><span>LIFE PATH</span><strong>{numerology.lifePath}</strong><small>ဘဝလမ်းကြောင်း</small></article>
         <article><span>BIRTH NUMBER</span><strong>{numerology.birthNumber}</strong><small>မွေးရာပါစွမ်းအင်</small></article>

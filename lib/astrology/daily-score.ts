@@ -33,7 +33,7 @@ function houseFrom(referenceSign: number, movingSign: number): number {
   return ((movingSign - referenceSign + 12) % 12) + 1;
 }
 
-function transitSign(body: Body, instant: Date): number {
+export function transitSign(body: Body, instant: Date): number {
   return signIndex(toSidereal(tropicalGeocentricLongitude(body, instant), instant));
 }
 

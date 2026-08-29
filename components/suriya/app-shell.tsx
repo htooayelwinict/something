@@ -1,4 +1,6 @@
 import { BottomNav } from "./bottom-nav";
+import { SiteFooter } from "./site-footer";
+import { StarField } from "./star-field";
 import { TopNav } from "./top-nav";
 
 export function AppShell({
@@ -12,6 +14,7 @@ export function AppShell({
 }) {
   return (
     <div className="cosmic-shell">
+      <StarField />
       <TopNav />
       <BottomNav />
       <div
@@ -23,6 +26,7 @@ export function AppShell({
         <main className="page-main cosmic-content" id="main-content">{children}</main>
         {aside && <aside className="cosmic-aside">{aside}</aside>}
       </div>
+      <SiteFooter />
     </div>
   );
 }

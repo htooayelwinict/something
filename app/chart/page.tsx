@@ -12,7 +12,7 @@ import { TodayConnection } from "@/components/suriya/today-connection";
 import { chartBirthLabel, todayHighlights } from "@/lib/content/chart-view";
 import { getDailyExperience } from "@/lib/services/daily";
 
-export const metadata: Metadata = { title: "သင့်မွေးဇာတာ" };
+export const metadata: Metadata = { title: "သင့်မွေးဇာတာ", alternates: { canonical: "/chart" } };
 
 export default async function ChartPage() {
   const daily = await getDailyExperience();
@@ -21,7 +21,7 @@ export default async function ChartPage() {
   return (
     <AppShell rail={<IdentityRail {...daily.identity} personalized={daily.personalized} />}>
       <header className="page-heading chart-heading">
-        <p className="eyebrow">BIRTH CHART · JYOTISH · {daily.personalized ? "ကိုယ်ပိုင်" : "နမူနာ"}</p>
+        <p className="eyebrow">မွေးဇာတာ · Jyotish · {daily.personalized ? "ကိုယ်ပိုင်" : "နမူနာ"}</p>
         <h1 className="page-title">သင့်မွေးဇာတာ</h1>
         <p className="page-lede">{chartBirthLabel(chart)}</p>
         <p className="chart-caption">Lahiri ayanamsa {chart.ayanamsa.toFixed(2)}° · whole-sign · mean Rahu/Ketu · {chart.version}</p>

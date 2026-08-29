@@ -11,6 +11,7 @@ export const topNavigationLinks = [
   { href: "/daily", label: "နေ့စဉ်ဖတ်စာ" },
   { href: "/chart", label: "မွေးဇာတာ" },
   { href: "/tarot", label: "Tarot ဆွေးနွေးမှု" },
+  { href: "/rasi", label: "ရာသီများ" },
   { href: "/readings", label: "သိမ်းထားသည်" },
 ] as const;
 

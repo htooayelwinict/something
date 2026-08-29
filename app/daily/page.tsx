@@ -12,7 +12,7 @@ import { StreamingReading } from "@/components/suriya/streaming-reading";
 import { TarotUpsell } from "@/components/suriya/tarot-upsell";
 import { getDailyExperience } from "@/lib/services/daily";
 
-export const metadata: Metadata = { title: "နေ့စဉ်ဖတ်စာ" };
+export const metadata: Metadata = { title: "နေ့စဉ်ဖတ်စာ", alternates: { canonical: "/daily" } };
 
 const categoryCopy = [
   ["career", "အလုပ်အကိုင်", "CAREER", "အလုပ်နှင့် တည်ဆောက်မှု", "green"],
@@ -28,7 +28,7 @@ export default async function DailyPage() {
   return (
     <AppShell rail={<IdentityRail {...daily.identity} personalized={daily.personalized} />}>
       <header className="page-heading">
-        <p className="eyebrow">DAILY READING · {daily.personalized ? "ကိုယ်ပိုင်တွက်ချက်မှု" : "နမူနာတွက်ချက်မှု"}</p>
+        <p className="eyebrow">နေ့စဉ်ဖတ်စာ · {daily.personalized ? "ကိုယ်ပိုင်တွက်ချက်မှု" : "နမူနာတွက်ချက်မှု"}</p>
         <h1 className="page-title">ယနေ့အတွက် သင့်အမြင်</h1>
         <p className="page-lede">ယနေ့ ဂြိုဟ်ရွေ့လျားမှု၊ လက်ရှိဒဿာနှင့် Panchanga ကို သင့်မွေးဇာတာနှင့် တိုက်ဆိုင်၍ တွက်ချက်ထားသော လက်တွေ့လမ်းညွှန်။</p>
       </header>

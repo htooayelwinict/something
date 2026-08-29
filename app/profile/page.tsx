@@ -7,7 +7,7 @@ import { CosmicFingerprint } from "@/components/suriya/cosmic-fingerprint";
 import { getBirthProfile } from "@/db/repositories/profiles";
 import { calculateNumerology } from "@/lib/numerology/calculate";
 
-export const metadata: Metadata = { title: "ကိုယ်ရေးအချက်အလက်" };
+export const metadata: Metadata = { title: "ကိုယ်ရေးအချက်အလက်", robots: { index: false, follow: false } };
 
 export default async function ProfilePage() {
   const user = await getChatGPTUser();
@@ -16,7 +16,7 @@ export default async function ProfilePage() {
   return (
     <AppShell>
       <header className="page-heading">
-        <p className="eyebrow">YOUR COSMIC IDENTITY</p>
+        <p className="eyebrow">သင့်ကောင်းကင် ကိုယ်ရေး</p>
         <h1 className="page-title">သင့်ကောင်းကင် ကိုယ်ရေး</h1>
         <p className="page-lede">သင့်မွေးဇာတာတွက်ချက်မှုအတွက် အသုံးပြုသော ကိုယ်ပိုင်အချက်အလက်များကို ကြည့်ရှုပြင်ဆင်နိုင်ပါတယ်။</p>
       </header>
@@ -25,7 +25,7 @@ export default async function ProfilePage() {
           <section className="profile-identity-card">
             <div className="profile-avatar" aria-hidden="true">{(birthProfile?.name ?? user.displayName).slice(0, 1).toUpperCase()}</div>
             <div className="profile-identity-copy">
-              <p className="eyebrow">PRIVATE COSMIC ID</p>
+              <p className="eyebrow">ကိုယ်ပိုင် အထောက်အထား</p>
               <h2>{birthProfile?.name ?? user.displayName}</h2>
               <p>{birthProfile ? `${birthProfile.birthDate} · ${birthProfile.birthCity}` : "မွေးဖွားမှုအချက်အလက် မဖြည့်ရသေးပါ"}</p>
             </div>
@@ -37,7 +37,7 @@ export default async function ProfilePage() {
           {birthProfile && numerology ? (
             <div className="profile-summary-grid">
               <section className="birth-facts" aria-labelledby="birth-facts-title">
-                <p className="eyebrow">BIRTH FACTS</p><h2 id="birth-facts-title">သိမ်းထားသော အချက်အလက်</h2>
+                <p className="eyebrow">မွေးဖွားမှု အချက်အလက်</p><h2 id="birth-facts-title">သိမ်းထားသော အချက်အလက်</h2>
                 <dl>
                   <div><dt><CalendarDays size={15} aria-hidden="true" /> မွေးရက်</dt><dd>{birthProfile.birthDate}</dd></div>
                   <div><dt><Clock3 size={15} aria-hidden="true" /> မွေးချိန်</dt><dd>{birthProfile.birthTime}</dd></div>
@@ -50,7 +50,7 @@ export default async function ProfilePage() {
             <aside className="profile-start-note"><ShieldCheck size={20} aria-hidden="true" /><div><strong>Cosmic fingerprint အတွက် အချက်အလက်ဖြည့်ပါ</strong><p>သိမ်းပြီးသည်နှင့် Lahiri sidereal Jyotish chart နှင့် numerology ကို သီးခြားတွက်ချက်ပေးပါမယ်။</p></div></aside>
           )}
           <section className="surface form-card profile-edit-card">
-            <div className="section-title"><div><p className="eyebrow">EDIT PROFILE</p><h2>မွေးဖွားမှုအချက်အလက် ပြင်ဆင်ရန်</h2></div></div>
+            <div className="section-title"><div><p className="eyebrow">ကိုယ်ရေး ပြင်ဆင်ရန်</p><h2>မွေးဖွားမှုအချက်အလက် ပြင်ဆင်ရန်</h2></div></div>
             <BirthProfileForm initialName={birthProfile?.name ?? user.fullName ?? ""} />
           </section>
           <div className="profile-account-row"><span>အကောင့်ပိုင်ရှင် — {user.displayName}</span><a className="ghost-button" href={chatGPTSignOutPath("/")}><LogOut size={16} aria-hidden="true" /> ထွက်မည်</a></div>

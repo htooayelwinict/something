@@ -24,12 +24,12 @@ export default async function ConsultantProfilePage({ params }: { params: Promis
       <article className="consultant-profile">
         <header className="consultant-profile-hero">
           <span className="consultant-profile-monogram" aria-hidden="true">{specialist.initials}</span>
-          <div><p className="eyebrow">TAROT · လူချင်းတွေ့ ဆွေးနွေးမှု</p><h1>{specialist.name}</h1><p>{specialist.specialty}</p></div>
+          <div><p className="eyebrow">Tarot · လူချင်းတွေ့ ဆွေးနွေးမှု</p><h1>{specialist.name}</h1><p>{specialist.specialty}</p></div>
           <span className="consultant-status"><CircleCheck size={13} aria-hidden="true" /> Profile စစ်ဆေးပြီး</span>
         </header>
         <div className="consultant-profile-body">
           <section aria-labelledby="advisor-about">
-            <p className="eyebrow">ABOUT THE ADVISOR</p>
+            <p className="eyebrow">ပညာရှင်အကြောင်း</p>
             <h2 id="advisor-about">သင့်အခြေအနေကို လူသားအမြင်ဖြင့် နားထောင်ပေးမည့် ပညာရှင်</h2>
             <p>{specialist.experience} ရှိပြီး {specialist.tags.join("၊ ")} ကိစ္စများကို အဓိကထား ဆွေးနွေးပေးသည်။</p>
             <div className="tag-row">{specialist.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
@@ -43,7 +43,7 @@ export default async function ConsultantProfilePage({ params }: { params: Promis
             <p className="booking-availability">ရနိုင်သောရက်များ · {specialist.availability}</p>
           </section>
           <section className="booking-card" id="booking" aria-labelledby="booking-title">
-            <p className="eyebrow">BOOK A SESSION</p>
+            <p className="eyebrow">ရက်ချိန်းယူရန်</p>
             <h2 id="booking-title">ရက်ချိန်း တောင်းဆိုရန်</h2>
             <BookingForm
               specialistId={specialist.id}

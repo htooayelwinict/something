@@ -27,7 +27,7 @@ export function ReadingFeedback({ id, initialValue }: { id: string; initialValue
 
   return (
     <section className="reading-feedback" aria-labelledby="feedback-title">
-      <div><p className="eyebrow">YOUR FEEDBACK</p><h2 id="feedback-title">ဤအဖြေက အသုံးဝင်ပါသလား။</h2></div>
+      <div><p className="eyebrow">သင့်အမြင်</p><h2 id="feedback-title">ဤအဖြေက အသုံးဝင်ပါသလား။</h2></div>
       <div className="feedback-actions">
         <button type="button" aria-pressed={value === "useful"} onClick={() => void save("useful")}><ThumbsUp size={16} aria-hidden="true" /> အသုံးဝင်သည်</button>
         <button type="button" aria-pressed={value === "not_useful"} onClick={() => void save("not_useful")}><ThumbsDown size={16} aria-hidden="true" /> မကူညီပါ</button>
