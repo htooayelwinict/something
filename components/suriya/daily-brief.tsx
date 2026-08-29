@@ -1,4 +1,6 @@
 import { ArrowRight, Clock3 } from "lucide-react";
+import { MoonPhase } from "./moon-phase";
+import { ZodiacGlyph } from "./zodiac-glyph";
 
 export type DailyBriefView = {
   score: number;
@@ -7,6 +9,8 @@ export type DailyBriefView = {
   windowAvailable: boolean;
   horaLord?: string;
   moonSign: string;
+  transitMoonSignIndex?: number;
+  tithi?: { number: number; paksha: "Shukla" | "Krishna"; name?: string };
 };
 
 export function DailyBrief({ data, personalized }: { data: DailyBriefView; personalized: boolean }) {
@@ -29,6 +33,13 @@ export function DailyBrief({ data, personalized }: { data: DailyBriefView; perso
           <span aria-hidden="true">·</span>
           လ {data.moonSign}
         </p>
+        {data.transitMoonSignIndex !== undefined && (
+          <p className="daily-brief-sky">
+            <ZodiacGlyph signIndex={data.transitMoonSignIndex} size="sm" label={`ယနေ့ လ ${data.moonSign}`} />
+            {data.tithi && <MoonPhase tithi={data.tithi} size={26} />}
+            <span>{data.tithi?.name}</span>
+          </p>
+        )}
         <a className="text-link" href="/daily">နေ့စဉ်ဖတ်စာ အပြည့်အစုံ <ArrowRight size={15} aria-hidden="true" /></a>
         <p className="daily-brief-periods"><a href="/daily/week">ဤအပတ်</a><span aria-hidden="true">·</span><a href="/daily/month">ဤလ</a></p>
       </div>

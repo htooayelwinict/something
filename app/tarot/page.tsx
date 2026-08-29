@@ -25,7 +25,7 @@ export default async function TarotPage() {
   return (
     <AppShell>
       <header className="tarot-hero">
-        <p className="eyebrow">TAROT · လူချင်းတွေ့ ဆွေးနွေးမှု</p>
+        <p className="eyebrow">Tarot · လူချင်းတွေ့ ဆွေးနွေးမှု</p>
         <h1 className="page-title">Tarot ပညာရှင်နှင့် လူချင်းတွေ့ ဆွေးနွေးပါ</h1>
         <p className="page-lede">ဇာတာက ပြသနေသည့် အခြေအနေကို လူသားအမြင်ဖြင့် နက်နက်နဲနဲ ဆွေးနွေးလိုပါက ရန်ကုန်ရှိ Tarot ပညာရှင်များနှင့် ၃၀ မိနစ် လူချင်းတွေ့ ဆွေးနွေးမှုကို ရက်ချိန်းယူနိုင်ပါသည်။ မြန်မာဘာသာဖြင့် ပြောဆိုပြီး ဆွေးနွေးချိန်တွင်သာ ငွေပေးချေပါ။</p>
         <a className="primary-button tarot-hero-cta" href="#consultants">ပညာရှင် ရွေးရန် <ArrowDown size={15} aria-hidden="true" /></a>

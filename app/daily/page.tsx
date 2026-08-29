@@ -28,7 +28,7 @@ export default async function DailyPage() {
   return (
     <AppShell rail={<IdentityRail {...daily.identity} personalized={daily.personalized} />}>
       <header className="page-heading">
-        <p className="eyebrow">DAILY READING · {daily.personalized ? "ကိုယ်ပိုင်တွက်ချက်မှု" : "နမူနာတွက်ချက်မှု"}</p>
+        <p className="eyebrow">နေ့စဉ်ဖတ်စာ · {daily.personalized ? "ကိုယ်ပိုင်တွက်ချက်မှု" : "နမူနာတွက်ချက်မှု"}</p>
         <h1 className="page-title">ယနေ့အတွက် သင့်အမြင်</h1>
         <p className="page-lede">ယနေ့ ဂြိုဟ်ရွေ့လျားမှု၊ လက်ရှိဒဿာနှင့် Panchanga ကို သင့်မွေးဇာတာနှင့် တိုက်ဆိုင်၍ တွက်ချက်ထားသော လက်တွေ့လမ်းညွှန်။</p>
       </header>

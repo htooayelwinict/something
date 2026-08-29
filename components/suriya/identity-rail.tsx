@@ -1,16 +1,22 @@
 import { CircleCheck, LockKeyhole, Sparkles } from "lucide-react";
 import type { NumerologySnapshot } from "@/lib/numerology/calculate";
+import { zodiacSignsMyanmar } from "@/lib/astrology/types";
+import { ZodiacGlyph } from "./zodiac-glyph";
 
 export function IdentityRail({
   name,
   birthLabel,
   numerology,
   personalized,
+  ascendantSignIndex,
+  moonSignIndex,
 }: {
   name: string;
   birthLabel: string;
   numerology: NumerologySnapshot;
   personalized: boolean;
+  ascendantSignIndex?: number;
+  moonSignIndex?: number;
 }) {
   const initial = name.trim().slice(0, 1).toUpperCase() || "S";
   return (
@@ -25,6 +31,12 @@ export function IdentityRail({
             ? "သင့်မွေးဖွားမှုအချက်အလက်မှ တွက်ချက်ထားသော Cosmic ID"
             : "နမူနာအချက်အလက်ဖြင့် ပြထားသော Cosmic ID"}
         </p>
+        {ascendantSignIndex !== undefined && moonSignIndex !== undefined && (
+          <div className="identity-signs">
+            <div><ZodiacGlyph signIndex={ascendantSignIndex} size="sm" /><span>လဂ် · {zodiacSignsMyanmar[ascendantSignIndex]}</span></div>
+            <div><ZodiacGlyph signIndex={moonSignIndex} size="sm" /><span>လ · {zodiacSignsMyanmar[moonSignIndex]}</span></div>
+          </div>
+        )}
         <div className="fingerprint-mini-grid">
           <div><strong>{numerology.lifePath}</strong><span>ဘဝလမ်း</span></div>
           <div><strong>{numerology.birthNumber}</strong><span>မွေးဂဏန်း</span></div>

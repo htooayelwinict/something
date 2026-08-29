@@ -1,4 +1,7 @@
 import { Clock3, Compass, MoonStar } from "lucide-react";
+import { Dial } from "./dial";
+import { MoonPhase } from "./moon-phase";
+import { ZodiacGlyph } from "./zodiac-glyph";
 import { demoDailyInsight } from "@/lib/content/demo";
 import type { DailyCategoryScores, DailyFactor } from "@/lib/astrology/types";
 import { groupDailyFactors } from "@/lib/content/chart-view";
@@ -18,6 +21,8 @@ export type DailyInsightView = {
   categories?: DailyCategoryScores;
   timingStatus?: string;
   horaLord?: string;
+  transitMoonSignIndex?: number;
+  tithi?: { number: number; paksha: "Shukla" | "Krishna"; name?: string };
 };
 
 export function DailyInsight({ data }: { data?: DailyInsightView }) {
@@ -32,22 +37,26 @@ export function DailyInsight({ data }: { data?: DailyInsightView }) {
   return (
     <>
       <article className="dark-card hero-insight">
-        <div>
-          <p className="eyebrow">ယနေ့၏ မင်္ဂလာလမ်းညွှန် · DAILY ENERGY</p>
-          <h2>{insight.title}</h2>
-          <p>{insight.summary}</p>
+        <div className="hero-sky" aria-hidden="true" />
+        <div className="hero-insight-top">
+          {insight.transitMoonSignIndex !== undefined && (
+            <div className="hero-sign">
+              <ZodiacGlyph signIndex={insight.transitMoonSignIndex} size="lg" label={`ယနေ့ လ ${insight.moonSign}`} />
+              {insight.tithi && <MoonPhase tithi={insight.tithi} size={40} />}
+            </div>
+          )}
+          <div>
+            <p className="eyebrow">ယနေ့၏ မင်္ဂလာလမ်းညွှန်</p>
+            <h2>{insight.title}</h2>
+            <p>{insight.summary}</p>
+          </div>
         </div>
         <div className="score-row">
           <div>
             <div className="score-value">{insight.score}<small>/100</small></div>
             <span className="score-caption">ယနေ့ စွမ်းအင်အညွှန်း · {insight.energy}</span>
           </div>
-          <div
-            className="score-ring"
-            style={{ "--score": `${insight.score}%` } as React.CSSProperties}
-            aria-label={`ယနေ့ စွမ်းအင်အညွှန်း ${insight.score} အမှတ်`}
-            role="img"
-          />
+          <Dial score={insight.score} label="ယနေ့ စွမ်းအင်အညွှန်း" size={104} />
         </div>
       </article>
       <div className="metrics-grid">

@@ -40,6 +40,8 @@ export async function getDailyExperience() {
       name: personalized ? input.name : "Suriya Guest",
       birthLabel: `${input.birthDate} · ${input.birthCity}`,
       numerology: chart.numerology,
+      ascendantSignIndex: chart.ascendant.signIndex,
+      moonSignIndex: chart.planets.find((planet) => planet.name === "Moon")?.signIndex ?? 0,
     },
     presentation: buildDailyPresentation(chart, insight),
   };

@@ -23,7 +23,7 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
   const explainer = (
     <section className="ask-explainer" aria-labelledby="answer-method-title">
       <span className="ask-explainer-icon"><CircleHelp size={20} aria-hidden="true" /></span>
-      <p className="eyebrow">TRANSPARENT BY DESIGN</p>
+      <p className="eyebrow">ပွင့်လင်းမြင်သာမှု</p>
       <h2 id="answer-method-title">အဖြေတွက်ချက်ပုံ</h2>
       <ol>
         <li><Sparkles size={14} aria-hidden="true" /><span><strong>မွေးဇာတာ</strong>မွေးချိန်၊ လဂ်နှင့် လက်ရှိဒဿာကာလ</span></li>
@@ -36,7 +36,7 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
   return (
     <AppShell rail={rail} aside={explainer}>
       <header className="page-heading">
-        <p className="eyebrow">ASK SURIYA · PERSONAL READING</p>
+        <p className="eyebrow">သုရိယကို မေးရန် · ကိုယ်ပိုင်ဖတ်စာ</p>
         <h1 className="page-title">သုရိယကို မေးပါ</h1>
         <p className="page-lede">အရေးကြီးဆုံးမေးခွန်းတစ်ခုကို ရှင်းရှင်းလင်းလင်း ရေးပြီး သင့်လိုအပ်ချက်နှင့် ကိုက်ညီသော တွက်ချက်နည်းကို ရွေးပါ။</p>
         {quota ? <QuotaPill used={quota.used} limit={quota.limit} /> : <p className="ask-quota-hint">ဝင်ရောက်ပြီး တစ်နေ့ ၃ ကြိမ် အခမဲ့ မေးနိုင်ပါသည်။</p>}

@@ -56,7 +56,7 @@ export function ReadingSources({ chart }: { chart: ReadingSnapshotLike }) {
   return (
     <section className="reading-sources" aria-labelledby="reading-sources-title">
       <div>
-        <p className="eyebrow">SOURCE TRANSPARENCY</p>
+        <p className="eyebrow">တွက်ချက်မှု အထောက်အထား</p>
         <h2 id="reading-sources-title">ဤအဖြေတွင် အသုံးပြုထားသည်</h2>
       </div>
       <div className="reading-source-grid">

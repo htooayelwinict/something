@@ -12,7 +12,7 @@ export function TarotUpsell({ variant, resetsAt }: { variant: "inline" | "quota"
       <section className="tarot-upsell" data-variant="quota" aria-labelledby="quota-title">
         <span className="tarot-upsell-icon"><Sparkles size={20} aria-hidden="true" /></span>
         <div className="tarot-upsell-copy">
-          <p className="eyebrow">DAILY LIMIT REACHED</p>
+          <p className="eyebrow">ယနေ့ ကန့်သတ်ချက် ပြည့်ပြီ</p>
           <h2 id="quota-title">ယနေ့ အခမဲ့မေးခွန်း ကုန်သွားပါပြီ</h2>
           <p>{resetsAt ? resetLabel(resetsAt) : "မနက်ဖြန် အခမဲ့မေးခွန်း ၃ ခု ပြန်ရပါမည်။"} ယခုပင် နက်နက်နဲနဲ ဆွေးနွေးလိုပါက Tarot ပညာရှင်နှင့် လူချင်းတွေ့ ရက်ချိန်းယူနိုင်ပါသည်။</p>
         </div>

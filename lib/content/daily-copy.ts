@@ -37,7 +37,10 @@ export function buildDailyPresentation(snapshot: ChartSnapshot, insight: DailyIn
   const moon = snapshot.planets.find((planet) => planet.name === "Moon")!;
   const window = insight.window;
   const timezone = snapshot.location.timezone;
+  const moonHouse = insight.factors.find((factor) => factor.id.startsWith("transit.moon."))?.house ?? 1;
   return {
+    transitMoonSignIndex: (moon.signIndex + moonHouse - 1) % 12,
+    tithi: { number: insight.panchanga.tithi.number, paksha: insight.panchanga.tithi.paksha, name: insight.panchanga.tithi.name },
     score: insight.score,
     title: copy.title,
     summary: copy.summary,

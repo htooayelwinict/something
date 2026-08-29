@@ -16,7 +16,7 @@ export default async function HomePage() {
   return (
     <AppShell rail={<IdentityRail {...daily.identity} personalized={daily.personalized} />}>
       <header className="home-heading">
-        <p className="eyebrow">YOUR COSMIC BRIEF · {daily.personalized ? "ကိုယ်ပိုင်ဖတ်စာ" : "နမူနာဖတ်စာ"}</p>
+        <p className="eyebrow">ယနေ့ အကျဉ်းချုပ် · {daily.personalized ? "ကိုယ်ပိုင်ဖတ်စာ" : "နမူနာဖတ်စာ"}</p>
         <h1 className="page-title">မင်္ဂလာပါ{daily.user?.fullName ? `၊ ${daily.user.fullName}` : ""}</h1>
         <p className="page-lede">ယနေ့ အကျဉ်းကို ကြည့်ပြီး လိုအပ်သည့်နေရာသို့ တစ်ချက်နှိပ်၍ သွားပါ။</p>
         {!daily.personalized && (

@@ -15,7 +15,7 @@ export default async function OnboardingPage() {
         <li><span>3</span><strong>တွက်ချက်မှု</strong></li>
       </ol>
       <header className="page-heading">
-        <p className="eyebrow">STEP 2 OF 3 · BIRTH DATA</p>
+        <p className="eyebrow">အဆင့် ၂/၃ · မွေးဖွားမှုအချက်အလက်</p>
         <h1 className="page-title">သင့်ကောင်းကင်ကို တည်ဆောက်ပါ</h1>
         <p className="page-lede">မွေးဖွားခဲ့သည့် နေရာနှင့် အချိန်အတိအကျမှ သင့်ဇာတာကို တွက်ချက်ပါမယ်။ ဒီအချက်အလက်ကို အများမြင် မပြပါ။</p>
       </header>

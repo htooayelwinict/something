@@ -20,7 +20,7 @@ export default async function BookingConfirmationPage({ params }: { params: Prom
   return (
     <AppShell>
       <header className="page-heading">
-        <p className="eyebrow">TAROT · BOOKING REQUEST</p>
+        <p className="eyebrow">Tarot · ရက်ချိန်း တောင်းဆိုမှု</p>
         <h1 className="page-title">ရက်ချိန်း တောင်းဆိုမှု လက်ခံရရှိပါပြီ</h1>
         <p className="page-lede">{booking.name} ၏ တောင်းဆိုမှုကို {specialistName} ထံ ပေးပို့ထားပါသည်။ ၂၄ နာရီအတွင်း ဖုန်းဆက်၍ အတည်ပြုပေးပါမည်။</p>
       </header>
