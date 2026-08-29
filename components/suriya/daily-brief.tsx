@@ -30,6 +30,7 @@ export function DailyBrief({ data, personalized }: { data: DailyBriefView; perso
           လ {data.moonSign}
         </p>
         <a className="text-link" href="/daily">နေ့စဉ်ဖတ်စာ အပြည့်အစုံ <ArrowRight size={15} aria-hidden="true" /></a>
+        <p className="daily-brief-periods"><a href="/daily/week">ဤအပတ်</a><span aria-hidden="true">·</span><a href="/daily/month">ဤလ</a></p>
       </div>
     </article>
   );

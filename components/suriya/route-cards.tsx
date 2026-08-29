@@ -1,7 +1,7 @@
 import { ArrowRight, MessageCircleMore, Orbit, Sparkles, SunMedium } from "lucide-react";
 
 const routes = [
-  { href: "/daily", icon: SunMedium, title: "နေ့စဉ်ဖတ်စာ", description: "ယနေ့ အမှတ်၊ အချက်များနှင့် သင့်လျော်ချိန်ကို အပြည့်အစုံ ဖတ်ရန်", tone: "green" },
+  { href: "/daily", icon: SunMedium, title: "နေ့စဉ်ဖတ်စာ", description: "ယနေ့ · အပတ်စဉ် · လစဉ် ဖတ်စာ၊ အချက်များနှင့် သင့်လျော်ချိန်", tone: "green" },
   { href: "/ask", icon: MessageCircleMore, title: "သုရိယကို မေးရန်", description: "မွေးဇာတာ၊ မေးချိန်ဇာတာ သို့မဟုတ် အချိန်ရွေးချယ်မှုဖြင့် ကိုယ်ပိုင်မေးခွန်း", tone: "plum" },
   { href: "/tarot", icon: Sparkles, title: "Tarot ဆွေးနွေးမှု", description: "လူသားအမြင် လိုအပ်ပါက Tarot ပညာရှင်နှင့် လူချင်းတွေ့ ဆွေးနွေးမှု ရက်ချိန်းယူရန်", tone: "gold" },
   { href: "/chart", icon: Orbit, title: "မွေးဇာတာ", description: "လဂ်၊ ဂြိုဟ်တည်နေရာနှင့် ဒဿာကာလကို ဇာတာပုံဖြင့် ကြည့်ရန်", tone: "paper" },
