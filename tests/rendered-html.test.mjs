@@ -101,3 +101,26 @@ test("unknown booking confirmations are not found", async () => {
   const response = await render("/tarot/bookings/bkg_missing");
   assert.equal(response.status, 404);
 });
+
+test("period reading routes render tabs, readings and guest gating", async () => {
+  const daily = await (await render("/daily")).text();
+  assert.match(daily, /period-tabs[\s\S]*aria-current="page"[^>]*>ယနေ့</);
+  assert.match(daily, /သုရိယ၏ ယနေ့အမြင်/);
+  for (const [path, tab] of [["/daily/week", "ဤအပတ်"], ["/daily/month", "ဤလ"]]) {
+    const response = await render(path);
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    assert.match(html, new RegExp(`aria-current="page"[^>]*>${tab}<`), path);
+    assert.match(html, /ဝင်ရောက်ပြီး အပတ်စဉ်နှင့် လစဉ်/, path);
+    assert.match(html, /tarot-upsell/, path);
+  }
+  const home = await (await render("/")).text();
+  assert.match(home, /href=["']\/daily\/week["'][\s\S]*href=["']\/daily\/month["']/);
+  assert.equal((await render("/api/period-readings/yearly/stream")).status, 404);
+  assert.equal((await render("/api/period-readings/weekly/stream")).status, 401);
+  const dailyStream = await render("/api/period-readings/daily/stream");
+  assert.equal(dailyStream.status, 200);
+  const text = await dailyStream.text();
+  assert.match(text, /[က-႟]/);
+  assert.match(text, /လက်တွေ့လုပ်ဆောင်ရန်/);
+});

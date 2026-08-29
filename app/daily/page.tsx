@@ -7,6 +7,8 @@ import { IdentityRail } from "@/components/suriya/identity-rail";
 import { LuckyWindow } from "@/components/suriya/lucky-window";
 import { MethodFootnote } from "@/components/suriya/method-footnote";
 import { PanchangaStrip } from "@/components/suriya/panchanga-strip";
+import { PeriodTabs } from "@/components/suriya/period-tabs";
+import { StreamingReading } from "@/components/suriya/streaming-reading";
 import { TarotUpsell } from "@/components/suriya/tarot-upsell";
 import { getDailyExperience } from "@/lib/services/daily";
 
@@ -30,7 +32,9 @@ export default async function DailyPage() {
         <h1 className="page-title">ယနေ့အတွက် သင့်အမြင်</h1>
         <p className="page-lede">ယနေ့ ဂြိုဟ်ရွေ့လျားမှု၊ လက်ရှိဒဿာနှင့် Panchanga ကို သင့်မွေးဇာတာနှင့် တိုက်ဆိုင်၍ တွက်ချက်ထားသော လက်တွေ့လမ်းညွှန်။</p>
       </header>
+      <PeriodTabs active="daily" />
       <section aria-label="ယနေ့ အမှတ်နှင့် အကြောင်းရင်း"><DailyInsight data={presentation} /></section>
+      <StreamingReading id="daily" endpoint="/api/period-readings/daily/stream" initialStatus="generating" title="သုရိယ၏ ယနေ့အမြင်" headingId="daily-reading" />
       <section aria-labelledby="category-title">
         <div className="section-title"><h2 id="category-title">ကဏ္ဍအလိုက် အမှတ်</h2><span className="section-note">၂၀–၉၅ အတွင်း</span></div>
         <div className="daily-metric-grid">

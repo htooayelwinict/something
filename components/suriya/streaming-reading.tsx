@@ -16,16 +16,38 @@ export function shouldStartReadingStream(initialStatus: string, initialText: str
   return initialStatus !== "failed" || attempt > 0;
 }
 
+const RETRY_DELAY_MS = 3000;
+const MAX_RETRIES = 5;
+
+/** A 409 means another request is generating the same reading; poll a few times before giving up. */
+export function retryDelayFor(status: number, retries: number): number | null {
+  return status === 409 && retries < MAX_RETRIES ? RETRY_DELAY_MS : null;
+}
+
+function sleep(ms: number, signal: AbortSignal) {
+  return new Promise<void>((resolve) => {
+    const timer = setTimeout(resolve, ms);
+    signal.addEventListener("abort", () => { clearTimeout(timer); resolve(); }, { once: true });
+  });
+}
+
 export function StreamingReading({
   id,
   initialText,
   initialStatus,
   interpretationMode = "deterministic",
+  endpoint,
+  title = "သုရိယ၏ အမြင်",
+  headingId = "reading-answer",
 }: {
   id: string;
   initialText?: string | null;
   initialStatus: string;
   interpretationMode?: "deterministic" | "model";
+  /** Defaults to the saved-reading stream for `id`. */
+  endpoint?: string;
+  title?: string;
+  headingId?: string;
 }) {
   const initial = getInitialReadingState(initialStatus, initialText);
   const [text, setText] = useState(initial.text);
@@ -37,7 +59,15 @@ export function StreamingReading({
     const controller = new AbortController();
     void (async () => {
       try {
-        const response = await fetch(`/api/readings/${id}/stream`, { signal: controller.signal });
+        const url = endpoint ?? `/api/readings/${id}/stream`;
+        let response = await fetch(url, { signal: controller.signal });
+        for (let retries = 0; ; retries += 1) {
+          const delay = retryDelayFor(response.status, retries);
+          if (delay === null) break;
+          await sleep(delay, controller.signal);
+          if (controller.signal.aborted) return;
+          response = await fetch(url, { signal: controller.signal });
+        }
         if (!response.ok || !response.body) throw new Error("stream_failed");
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
@@ -52,12 +82,12 @@ export function StreamingReading({
       }
     })();
     return () => controller.abort();
-  }, [attempt, id, initialStatus, initialText]);
+  }, [attempt, endpoint, id, initialStatus, initialText]);
 
   return (
-    <section className="surface prose-card" aria-labelledby="reading-answer">
+    <section className="surface prose-card streaming-reading" aria-labelledby={headingId}>
       <div className="section-title">
-        <h2 id="reading-answer">သုရိယ၏ အမြင်</h2>
+        <h2 id={headingId}>{title}</h2>
         {status === "generating" ? <span className="tag"><Sparkles size={12} aria-hidden="true" /> ရေးသားနေသည်</span> : (
           <span className="tag">{interpretationMode === "model" ? "AI အဓိပ္ပာယ်ဖွင့်" : "စက်တွင်းတွက်ချက်အဖြေ"}</span>
         )}

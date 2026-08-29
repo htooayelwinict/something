@@ -86,7 +86,30 @@ export const tarotBookings = sqliteTable("tarot_bookings", {
   index("tarot_bookings_ip_idx").on(table.ipHash, table.createdAt),
 ]);
 
+export const periodReadings = sqliteTable("period_readings", {
+  id: text("id").primaryKey(),
+  // "demo" for guests; no FK so shared demo rows are allowed.
+  userId: text("user_id").notNull(),
+  kind: text("kind", { enum: ["daily", "weekly", "monthly"] }).notNull(),
+  periodKey: text("period_key").notNull(),
+  periodStart: text("period_start").notNull(),
+  periodEnd: text("period_end").notNull(),
+  evidence: text("evidence", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+  calculationVersion: text("calculation_version").notNull(),
+  rulesetVersion: text("ruleset_version").notNull(),
+  promptVersion: text("prompt_version").notNull(),
+  responseText: text("response_text"),
+  interpretationMode: text("interpretation_mode", { enum: ["deterministic", "model"] }).notNull().default("deterministic"),
+  status: text("status", { enum: ["generating", "complete", "failed"] }).notNull(),
+  errorCode: text("error_code"),
+  ...timestamps,
+}, (table) => [
+  uniqueIndex("period_readings_key_idx").on(table.userId, table.kind, table.periodKey, table.promptVersion),
+  index("period_readings_user_idx").on(table.userId, table.createdAt),
+]);
+
 export type BirthProfileRow = typeof birthProfiles.$inferSelect;
 export type ReadingRow = typeof readings.$inferSelect;
 export type TarotSpecialistRow = typeof tarotSpecialists.$inferSelect;
 export type TarotBookingRow = typeof tarotBookings.$inferSelect;
+export type PeriodReadingRow = typeof periodReadings.$inferSelect;

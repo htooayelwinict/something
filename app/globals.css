@@ -553,3 +553,24 @@ h1, h2, h3 { line-height: 1.38; }
   .tarot-upsell { grid-template-columns: auto 1fr auto; align-items: center; }
   .tarot-upsell .primary-button, .tarot-upsell .secondary-button { justify-self: end; }
 }
+
+/* Period readings */
+.period-tabs { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
+.period-tabs a { flex: 0 0 auto; display: inline-flex; min-height: 44px; align-items: center; border: 1px solid var(--cosmic-line); border-radius: 999px; background: var(--cosmic-paper); padding: 8px 16px; color: var(--cosmic-muted); font-size: .8rem; font-weight: 700; }
+.period-tabs a[aria-current="page"] { border-color: var(--cosmic-plum); background: var(--cosmic-plum); color: white; }
+.period-overview dl { display: grid; gap: 0; margin: 0; }
+.period-overview dl div { display: grid; gap: 6px; border-top: 1px solid var(--cosmic-line); padding: 11px 0; font-size: .8rem; }
+.period-overview dt { color: var(--cosmic-muted); }
+.period-overview dd { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; margin: 0; font-weight: 700; }
+.period-score { font-family: var(--font-latin); font-size: 1.5rem; }
+.period-overview dd small, .period-note { display: block; flex-basis: 100%; color: var(--cosmic-muted); font-size: .75rem; font-weight: 500; }
+.period-day { border-radius: 999px; padding: 4px 10px; font-size: .75rem; }
+.period-day[data-tone="good"] { background: #e7eee2; color: #2d4a2a; }
+.period-day[data-tone="caution"] { background: #efe1c6; color: #6b4b1a; }
+.moon-path span { border: 1px solid var(--cosmic-line); border-radius: 999px; padding: 4px 10px; font-size: .75rem; font-weight: 600; }
+.period-signin { text-align: center; }
+.daily-brief-periods { display: flex; gap: 10px; align-items: center; margin: 6px 0 0; font-size: .78rem; }
+.daily-brief-periods a { display: inline-flex; min-height: 44px; align-items: center; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 720px) {
+  .period-overview dl div { grid-template-columns: 200px 1fr; align-items: start; }
+}

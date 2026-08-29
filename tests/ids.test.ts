@@ -11,6 +11,7 @@ describe("newId", () => {
 
   it("supports booking identifiers", () => {
     expect(newId("bkg")).toMatch(/^bkg_/);
+    expect(newId("prd")).toMatch(/^prd_/);
   });
 
   it("rejects unknown prefixes at runtime", () => {

@@ -192,6 +192,11 @@ function applyFactors(factors: DailyFactor[]): DailyCategoryScores {
   return Object.fromEntries(Object.entries(scores).map(([key, value]) => [key, clampScore(value)])) as DailyCategoryScores;
 }
 
+/** Score bands match the reachable v2 factor range rather than the wider category clamps. */
+export function bandFor(score: number): DailyInsightData["band"] {
+  return score < 48 ? "quiet" : score < 55 ? "steady" : score < 62 ? "open" : "bright";
+}
+
 export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): DailyInsightData {
   const natalMoon = snapshot.planets.find((planet) => planet.name === "Moon");
   if (!natalMoon) throw new Error("Natal Moon is required for daily guidance");
@@ -220,7 +225,7 @@ export function calculateDailyInsight(snapshot: ChartSnapshot, date: Date): Dail
   const categories = applyFactors(factors);
   const score = calculateOverallScore(categories);
   // These boundaries match the reachable v2 factor range rather than the wider category clamps.
-  const band = score < 48 ? "quiet" : score < 55 ? "steady" : score < 62 ? "open" : "bright";
+  const band = bandFor(score);
   return {
     rulesetVersion: DAILY_RULESET_VERSION,
     score,
