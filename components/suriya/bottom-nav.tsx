@@ -1,10 +1,10 @@
 "use client";
 
-import { CircleUserRound, House, MessageCircleMore, Orbit, Sparkles } from "lucide-react";
+import { CircleUserRound, House, MessageCircleMore, Sparkles, SunMedium } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { navigationItems } from "@/lib/content/navigation";
 
-const icons = { home: House, daily: Sparkles, ask: MessageCircleMore, chart: Orbit, profile: CircleUserRound };
+const icons = { home: House, daily: SunMedium, ask: MessageCircleMore, tarot: Sparkles, profile: CircleUserRound };
 
 export function BottomNav() {
   const pathname = usePathname();

@@ -7,6 +7,7 @@ import { IdentityRail } from "@/components/suriya/identity-rail";
 import { LuckyWindow } from "@/components/suriya/lucky-window";
 import { MethodFootnote } from "@/components/suriya/method-footnote";
 import { PanchangaStrip } from "@/components/suriya/panchanga-strip";
+import { TarotUpsell } from "@/components/suriya/tarot-upsell";
 import { getDailyExperience } from "@/lib/services/daily";
 
 export const metadata: Metadata = { title: "နေ့စဉ်ဖတ်စာ" };
@@ -50,6 +51,7 @@ export default async function DailyPage() {
         <a className="primary-button" href="/chart">မွေးဇာတာ ကြည့်ရန် <ArrowRight size={15} aria-hidden="true" /></a>
         <a className="secondary-button" href="/ask">ကိုယ်ပိုင်မေးခွန်း မေးရန်</a>
       </div>
+      <TarotUpsell variant="inline" />
       <MethodFootnote version={presentation.rulesetVersion} />
     </AppShell>
   );

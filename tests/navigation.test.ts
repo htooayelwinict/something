@@ -28,11 +28,13 @@ describe("navigation compatibility", () => {
 });
 
 describe("shared navigation destinations", () => {
-  it("names Home, Daily, and the birth chart consistently", () => {
+  it("names Home, Daily, Tarot and the birth chart consistently", () => {
     expect(navigationItems.find((item) => item.href === "/")?.label).toBe("ပင်မ");
     expect(topNavigationLinks.find((item) => item.href === "/")?.label).toBe("ပင်မ");
     expect(topNavigationLinks.find((item) => item.href === "/daily")?.label).toBe("နေ့စဉ်ဖတ်စာ");
-    expect(navigationItems.some((item) => item.href === "/chart")).toBe(true);
+    expect(navigationItems.some((item) => item.href === "/tarot")).toBe(true);
+    expect(navigationItems.map((item) => item.href as string)).not.toContain("/chart");
+    expect(topNavigationLinks.find((item) => item.href === "/tarot")?.label).toBe("Tarot ဆွေးနွေးမှု");
     expect(topNavigationLinks.find((item) => item.href === "/chart")?.label).toBe("မွေးဇာတာ");
     expect(navigationItems).toHaveLength(5);
   });

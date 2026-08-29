@@ -385,6 +385,7 @@ h1, h2, h3 { line-height: 1.38; }
 .route-card[data-tone="green"] { background: #e7eee2; }
 .route-card[data-tone="plum"] { border-color: var(--cosmic-plum); background: var(--cosmic-plum); color: white; }
 .route-card[data-tone="gold"] { background: #efe1c6; }
+.route-card[data-tone="paper"] { background: var(--cosmic-paper); }
 .route-card-icon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 12px; background: rgb(255 255 255 / 55%); color: var(--cosmic-plum); }
 .route-card[data-tone="plum"] .route-card-icon { background: rgb(255 255 255 / 12%); color: #f6dc93; }
 .route-card-copy { display: grid; gap: 2px; min-width: 0; }
@@ -534,4 +535,21 @@ h1, h2, h3 { line-height: 1.38; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* Tarot upsell + question quota */
+.tarot-upsell { display: grid; gap: 12px; border: 1px solid var(--cosmic-gold); border-radius: 16px; background: #efe1c6; padding: 16px 18px; }
+.tarot-upsell-icon { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 12px; background: rgb(255 255 255 / 60%); color: var(--cosmic-plum); }
+.tarot-upsell-copy { display: grid; gap: 4px; min-width: 0; }
+.tarot-upsell-copy strong { font-size: .9rem; }
+.tarot-upsell-copy h2 { margin: 0; font-size: 1.15rem; }
+.tarot-upsell-copy p { margin: 0; color: var(--cosmic-muted); font-size: .78rem; line-height: 1.6; }
+.tarot-upsell .primary-button, .tarot-upsell .secondary-button { justify-self: start; }
+.tarot-upsell[data-variant="quota"] { padding: 22px; }
+.quota-pill { display: inline-flex; min-height: 32px; align-items: center; justify-self: start; border: 1px solid var(--cosmic-plum); border-radius: 999px; padding: 4px 12px; color: var(--cosmic-plum); font-size: .78rem; font-weight: 700; }
+.quota-pill[data-empty="true"] { background: var(--cosmic-plum); color: white; }
+.ask-quota-hint { margin: 0; color: var(--cosmic-muted); font-size: .78rem; }
+@media (min-width: 720px) {
+  .tarot-upsell { grid-template-columns: auto 1fr auto; align-items: center; }
+  .tarot-upsell .primary-button, .tarot-upsell .secondary-button { justify-self: end; }
 }
