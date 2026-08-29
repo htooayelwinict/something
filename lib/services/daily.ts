@@ -3,12 +3,8 @@ import { getBirthProfile } from "@/db/repositories/profiles";
 import { calculateChart } from "@/lib/astrology/calculate-chart";
 import { calculateDailyInsight } from "@/lib/astrology/daily-score";
 import { birthProfileSchema, type BirthProfileInput } from "@/lib/schemas/profile";
+import { demoProfile } from "@/lib/content/demo-profile";
 import { buildDailyPresentation } from "@/lib/content/daily-copy";
-
-const demoProfile: BirthProfileInput = {
-  name: "Suriya Guest", birthDate: "1990-01-01", birthTime: "12:00", birthCity: "ရန်ကုန်",
-  latitude: 16.7967, longitude: 96.161, timezone: "Asia/Yangon",
-};
 
 function calculateDaily(input: BirthProfileInput, now: Date) {
   const chart = calculateChart(input, now);

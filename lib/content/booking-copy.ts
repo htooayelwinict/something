@@ -6,7 +6,7 @@ export const bookingLabels = {
   topic: { love: "ချစ်ရေး", career: "အလုပ်အကိုင်", direction: "ဘဝလမ်းကြောင်း", other: "အခြား" },
 } as const;
 
-const weekdays = ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ကြာသပတေး", "သောကြာ", "စနေ"];
+export const burmeseWeekdays = ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ကြာသပတေး", "သောကြာ", "စနေ"];
 
 export function maskPhone(phone: string) {
   const digits = phone.replace(/\D/g, "");
@@ -14,7 +14,7 @@ export function maskPhone(phone: string) {
 }
 
 export function formatBookingDate(isoDate: string) {
-  const weekday = weekdays[new Date(`${isoDate}T12:00:00.000Z`).getUTCDay()];
+  const weekday = burmeseWeekdays[new Date(`${isoDate}T12:00:00.000Z`).getUTCDay()];
   return `${weekday} · ${toBurmeseDigits(isoDate)}`;
 }
 
