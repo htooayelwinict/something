@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Myanmar, Noto_Serif_Myanmar } from "next/font/google";
 import "./globals.css";
 import { JsonLd } from "@/components/suriya/json-ld";
+import { SITE_URL } from "@/lib/content/business";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/content/seo";
 
 const myanmar = Noto_Sans_Myanmar({
@@ -21,7 +22,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://suriya.openai.site"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "သုရိယ — နေ့စဉ် ကြယ်တာရာလမ်းညွှန်",
     template: "%s | သုရိယ",

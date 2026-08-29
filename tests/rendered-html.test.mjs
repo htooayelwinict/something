@@ -131,6 +131,7 @@ test("period reading routes render tabs, readings and guest gating", async () =>
 });
 
 test("public SEO pages carry structured data and crawl files", async () => {
+  const productionOrigin = "https://suriya-myanmar.htoo368095.chatgpt.site";
   for (const [path, needle] of [["/rasi", /CollectionPage/], ["/rasi/mesha", /"@type":"Article"[\s\S]*မိဿရာသီ/], ["/today", /FAQPage[\s\S]*hora-table/], ["/tarot", /LocalBusiness[\s\S]*FAQPage/]]) {
     const response = await render(path);
     assert.equal(response.status, 200, path);
@@ -139,19 +140,22 @@ test("public SEO pages carry structured data and crawl files", async () => {
     const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
     assert.ok(blocks.length >= 2, `${path} json-ld blocks`);
     for (const block of blocks) JSON.parse(block[1]);
-    assert.match(html, /rel="canonical"/, path);
+    assert.ok(html.includes(`rel="canonical" href="${productionOrigin}`), path);
   }
   assert.equal((await render("/rasi/nope")).status, 404);
   const robots = await render("/robots.txt");
   assert.equal(robots.status, 200);
-  assert.match(await robots.text(), /Disallow: \/readings[\s\S]*Sitemap: https:\/\/suriya\.openai\.site\/sitemap\.xml/);
+  const robotsText = await robots.text();
+  assert.match(robotsText, /Disallow: \/readings/);
+  assert.ok(robotsText.includes(`Sitemap: ${productionOrigin}/sitemap.xml`));
   const sitemap = await render("/sitemap.xml");
   assert.equal(sitemap.status, 200);
   const xml = await sitemap.text();
+  assert.ok(xml.includes(`<loc>${productionOrigin}/`));
   for (const slug of ["mesha", "meena"]) assert.match(xml, new RegExp(`/rasi/${slug}<`));
   assert.match(xml, /\/today</);
   const readings = await (await render("/readings")).text();
   assert.match(readings, /noindex/);
   const { readFileSync } = await import("node:fs");
-  assert.match(readFileSync(new URL("../public/llms.txt", import.meta.url), "utf8"), /suriya\.openai\.site\/today/);
+  assert.ok(readFileSync(new URL("../public/llms.txt", import.meta.url), "utf8").includes(`${productionOrigin}/today`));
 });

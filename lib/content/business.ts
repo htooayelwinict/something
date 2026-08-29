@@ -1,5 +1,5 @@
 /** Facts about the Tarot service used for the sales page and structured data. Edit freely. */
-export const SITE_URL = "https://suriya.openai.site";
+export const SITE_URL = "https://suriya-myanmar.htoo368095.chatgpt.site";
 
 export const business = {
   name: "သုရိယ",

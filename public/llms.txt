@@ -3,13 +3,13 @@
 > Burmese-language Vedic astrology (Jyotish) app for Myanmar users, plus in-person Tarot sessions in Yangon. Calculations use the Lahiri ayanamsa, whole-sign houses, mean Rahu/Ketu and Vimshottari dasha. All content is in Burmese (my).
 
 ## Public pages
-- https://suriya.openai.site/ — home: today's brief and navigation
-- https://suriya.openai.site/today — today's Panchanga for Yangon: vara, tithi, nakshatra, yoga, karana, sunrise/sunset, Rahu Kalam, Hora table
-- https://suriya.openai.site/rasi — guide to the 12 sidereal zodiac signs (ရာသီ) in Burmese
-- https://suriya.openai.site/rasi/{mesha|vrishabha|mithuna|karka|simha|kanya|tula|vrischika|dhanu|makara|kumbha|meena} — per-sign traits, ruling planet, element, lucky day, and today's Moon/Jupiter/Saturn positions relative to the sign
-- https://suriya.openai.site/daily — personalised daily reading (free; sign-in for a personal chart); /daily/week and /daily/month need sign-in
-- https://suriya.openai.site/tarot — in-person Tarot consultation booking in Yangon, 30-minute sessions, pay at the session, FAQ
-- https://suriya.openai.site/chart — the user's birth chart (South Indian style, D1/D9/D10)
+- https://suriya-myanmar.htoo368095.chatgpt.site/ — home: today's brief and navigation
+- https://suriya-myanmar.htoo368095.chatgpt.site/today — today's Panchanga for Yangon: vara, tithi, nakshatra, yoga, karana, sunrise/sunset, Rahu Kalam, Hora table
+- https://suriya-myanmar.htoo368095.chatgpt.site/rasi — guide to the 12 sidereal zodiac signs (ရာသီ) in Burmese
+- https://suriya-myanmar.htoo368095.chatgpt.site/rasi/{mesha|vrishabha|mithuna|karka|simha|kanya|tula|vrischika|dhanu|makara|kumbha|meena} — per-sign traits, ruling planet, element, lucky day, and today's Moon/Jupiter/Saturn positions relative to the sign
+- https://suriya-myanmar.htoo368095.chatgpt.site/daily — personalised daily reading (free; sign-in for a personal chart); /daily/week and /daily/month need sign-in
+- https://suriya-myanmar.htoo368095.chatgpt.site/tarot — in-person Tarot consultation booking in Yangon, 30-minute sessions, pay at the session, FAQ
+- https://suriya-myanmar.htoo368095.chatgpt.site/chart — the user's birth chart (South Indian style, D1/D9/D10)
 
 ## Business
 Suriya Tarot & Jyotish, Yangon, Myanmar. Sessions 25,000–30,000 MMK for 30 minutes, booked online and confirmed by phone within 24 hours.
