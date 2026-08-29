@@ -258,6 +258,22 @@ h1, h2, h3 { line-height: 1.38; }
 .consultant-intro span { font-size: .75rem; font-weight: 800; letter-spacing: .08em; }
 .consultant-intro p { margin: 0; color: var(--cosmic-muted); font-size: .75rem; }
 .specialist-link { width: 100%; }
+.specialist-chips { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 12px; padding: 0; list-style: none; }
+.specialist-chips li { display: inline-flex; align-items: center; gap: 5px; color: var(--cosmic-muted); font-size: .75rem; }
+.specialist-actions { display: grid; gap: 8px; margin-top: 14px; }
+.specialist-profile-link { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; color: var(--cosmic-muted); font-size: .78rem; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.tarot-hero { display: grid; max-width: 760px; gap: 10px; border-radius: 18px; background: var(--cosmic-plum); padding: 24px 22px; color: white; }
+.tarot-hero .eyebrow { color: #f6dc93; }
+.tarot-hero .page-lede { color: #e6dbe7; }
+.tarot-hero-cta { justify-self: start; border-color: #f6dc93; background: #f6dc93; color: var(--cosmic-ink); }
+.tarot-steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+.tarot-steps li { display: grid; gap: 6px; border: 1px solid var(--cosmic-line); border-radius: 14px; background: var(--cosmic-paper); padding: 14px 16px; }
+.tarot-steps strong { font-size: .88rem; }
+.tarot-steps p { margin: 0; color: var(--cosmic-muted); font-size: .78rem; line-height: 1.6; }
+.tarot-step-index { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 11px; background: #efe1c6; color: var(--cosmic-plum); }
+.tarot-trust { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.tarot-trust li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; border-left: 3px solid var(--cosmic-gold); background: rgb(248 242 232 / 70%); padding: 11px 14px; font-size: .78rem; line-height: 1.6; }
+.tarot-trust svg { margin-top: 2px; color: var(--cosmic-plum); }
 .consultant-profile { overflow: hidden; border: 1px solid var(--cosmic-line); border-radius: 18px; background: var(--cosmic-paper); }
 .consultant-profile-hero { display: grid; grid-template-columns: auto 1fr; gap: 15px; align-items: center; background: var(--cosmic-plum); padding: 22px; color: white; }
 .consultant-profile-monogram { display: grid; width: 72px; height: 72px; place-items: center; border: 1px solid rgb(255 255 255 / 30%); border-radius: 50%; background: rgb(255 255 255 / 9%); color: #f6dc93; font-family: Georgia, serif; font-size: 1.4rem; }
@@ -488,6 +504,8 @@ h1, h2, h3 { line-height: 1.38; }
   .profile-summary-grid, .consultant-profile-body { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tarot-grid, .history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .booking-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tarot-steps, .tarot-trust { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tarot-hero { padding: 32px 30px; }
   .daily-metric-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .route-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .route-card { grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: start; }
