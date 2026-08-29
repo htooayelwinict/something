@@ -59,9 +59,34 @@ export const tarotSpecialists = sqliteTable("tarot_specialists", {
   displayRate: text("display_rate").notNull(),
   availabilityLabel: text("availability_label").notNull(),
   tags: text("tags", { mode: "json" }).$type<string[]>().notNull(),
+  location: text("location").notNull().default(""),
+  sessionMinutes: integer("session_minutes").notNull().default(30),
   sortOrder: integer("sort_order").notNull().default(0),
   ...timestamps,
 }, (table) => [index("tarot_specialists_sort_idx").on(table.sortOrder)]);
 
+export const tarotBookings = sqliteTable("tarot_bookings", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").references(() => profiles.id, { onDelete: "set null" }),
+  ipHash: text("ip_hash"),
+  // Not a foreign key: demo specialists are bookable before the directory is seeded.
+  specialistId: text("specialist_id").notNull(),
+  name: text("name").notNull(),
+  phone: text("phone").notNull(),
+  contactChannel: text("contact_channel", { enum: ["phone", "viber", "telegram", "messenger"] }).notNull(),
+  preferredDate: text("preferred_date").notNull(),
+  preferredTime: text("preferred_time", { enum: ["morning", "afternoon", "evening"] }).notNull(),
+  topic: text("topic", { enum: ["love", "career", "direction", "other"] }).notNull(),
+  note: text("note"),
+  status: text("status", { enum: ["requested", "confirmed", "completed", "cancelled"] }).notNull().default("requested"),
+  ...timestamps,
+}, (table) => [
+  index("tarot_bookings_specialist_idx").on(table.specialistId, table.createdAt),
+  index("tarot_bookings_user_idx").on(table.userId, table.createdAt),
+  index("tarot_bookings_ip_idx").on(table.ipHash, table.createdAt),
+]);
+
 export type BirthProfileRow = typeof birthProfiles.$inferSelect;
 export type ReadingRow = typeof readings.$inferSelect;
+export type TarotSpecialistRow = typeof tarotSpecialists.$inferSelect;
+export type TarotBookingRow = typeof tarotBookings.$inferSelect;

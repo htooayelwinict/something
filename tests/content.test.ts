@@ -7,10 +7,11 @@ describe("Suriya launch content", () => {
     expect(readingTechniques.every((item) => /[က-အ]/.test(item.title))).toBe(true);
   });
 
-  it("keeps the daily score bounded and the preview directory populated", () => {
+  it("keeps the daily score bounded and the booking directory populated", () => {
     expect(demoDailyInsight.score).toBeGreaterThanOrEqual(0);
     expect(demoDailyInsight.score).toBeLessThanOrEqual(100);
     expect(demoSpecialists).toHaveLength(2);
-    expect(demoSpecialists.every((item) => item.availability.includes("မကြာမီ"))).toBe(true);
+    expect(demoSpecialists.every((item) => !item.availability.includes("မကြာမီ"))).toBe(true);
+    expect(demoSpecialists.every((item) => item.location.length > 0 && item.sessionMinutes === 30)).toBe(true);
   });
 });

@@ -9,6 +9,10 @@ describe("newId", () => {
     expect(first < second).toBe(true);
   });
 
+  it("supports booking identifiers", () => {
+    expect(newId("bkg")).toMatch(/^bkg_/);
+  });
+
   it("rejects unknown prefixes at runtime", () => {
     expect(() => newId("user" as "rdg")).toThrow("Invalid ID prefix");
   });

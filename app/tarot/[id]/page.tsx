@@ -3,27 +3,14 @@ import { ArrowLeft, CalendarClock, CircleCheck, Headphones, ShieldCheck, Star } 
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/suriya/app-shell";
 import { getSpecialist } from "@/db/repositories/specialists";
-import { demoSpecialists, type TarotSpecialist } from "@/lib/content/demo";
+import { findDemoSpecialist, specialistFromRow } from "@/lib/content/demo";
 
 export const metadata: Metadata = { title: "အကြံပေး Profile" };
-
-function toView(row: NonNullable<Awaited<ReturnType<typeof getSpecialist>>>): TarotSpecialist {
-  return {
-    id: row.id,
-    name: row.name,
-    initials: row.initials,
-    specialty: row.specialty,
-    experience: row.experience,
-    rate: row.displayRate,
-    availability: row.availabilityLabel,
-    tags: row.tags,
-  };
-}
 
 export default async function ConsultantProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const row = await getSpecialist(id).catch(() => null);
-  const specialist = row ? toView(row) : demoSpecialists.find((item) => item.id === id);
+  const specialist = row ? specialistFromRow(row) : findDemoSpecialist(id);
   if (!specialist) notFound();
 
   return (

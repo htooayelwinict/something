@@ -2,22 +2,13 @@ import type { Metadata } from "next";
 import { AppShell } from "@/components/suriya/app-shell";
 import { ConsultantDirectory } from "@/components/suriya/consultant-directory";
 import { listSpecialists } from "@/db/repositories/specialists";
-import { demoSpecialists } from "@/lib/content/demo";
+import { demoSpecialists, specialistFromRow } from "@/lib/content/demo";
 
 export const metadata: Metadata = { title: "Tarot ဆွေးနွေးမှု" };
 
 export default async function TarotPage() {
   const rows = await listSpecialists().catch(() => []);
-  const specialists = rows.length > 0 ? rows.map((row) => ({
-    id: row.id,
-    name: row.name,
-    initials: row.initials,
-    specialty: row.specialty,
-    experience: row.experience,
-    rate: row.displayRate,
-    availability: row.availabilityLabel,
-    tags: row.tags,
-  })) : demoSpecialists;
+  const specialists = rows.length > 0 ? rows.map(specialistFromRow) : demoSpecialists;
   return (
     <AppShell>
       <header className="page-heading">
