@@ -15,7 +15,10 @@ async function hashIp(ip: string) {
 
 export async function POST(request: Request) {
   const parsed = bookingRequestSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) return Response.json({ error: parsed.error.issues[0]?.message ?? "invalid_booking" }, { status: 400 });
+  if (!parsed.success) {
+    const message = parsed.error.issues[0]?.message ?? "";
+    return Response.json({ error: /[က-႟]/.test(message) ? message : "invalid_booking" }, { status: 400 });
+  }
   const input = parsed.data;
   if (!isBookingDateInRange(input.preferredDate)) {
     return Response.json({ error: "ရက်စွဲသည် ယနေ့မှ ရက် ၆၀ အတွင်း ဖြစ်ရပါမည်" }, { status: 400 });

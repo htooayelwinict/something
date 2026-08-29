@@ -165,7 +165,7 @@ h1, h2, h3 { line-height: 1.38; }
 .lucky-window-track strong { display: grid; min-height: 42px; place-items: center; border: 1px solid var(--cosmic-gold); border-radius: 999px; background: #efe1c6; color: var(--cosmic-ink); font-size: .78rem; }
 .lucky-window > p { margin: 0; color: var(--cosmic-muted); font-size: .75rem; }
 .daily-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.back-link { display: inline-flex; align-items: center; gap: 6px; justify-self: start; color: var(--cosmic-muted); font-size: .75rem; font-weight: 700; }
+.back-link { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; justify-self: start; color: var(--cosmic-muted); font-size: .75rem; font-weight: 700; }
 .safety-note { border-left: 3px solid var(--cosmic-gold); background: rgb(248 242 232 / 70%); padding: 14px 16px; }
 .safety-note strong { font-size: .76rem; }
 .safety-note p { margin: 5px 0 0; color: var(--cosmic-muted); font-size: .75rem; }
