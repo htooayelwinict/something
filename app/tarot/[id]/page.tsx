@@ -1,46 +1,57 @@
 import type { Metadata } from "next";
-import { ArrowLeft, CalendarClock, CircleCheck, Headphones, ShieldCheck, Star } from "lucide-react";
+import { ArrowLeft, CalendarClock, CircleCheck, Clock3, Headphones, MapPin, Star } from "lucide-react";
 import { notFound } from "next/navigation";
+import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { AppShell } from "@/components/suriya/app-shell";
+import { BookingForm } from "@/components/suriya/booking-form";
 import { getSpecialist } from "@/db/repositories/specialists";
+import { toBurmeseDigits } from "@/lib/content/burmese-digits";
 import { findDemoSpecialist, specialistFromRow } from "@/lib/content/demo";
 
-export const metadata: Metadata = { title: "အကြံပေး Profile" };
+export const metadata: Metadata = { title: "Tarot ပညာရှင် · ရက်ချိန်းယူရန်" };
+export const dynamic = "force-dynamic";
 
 export default async function ConsultantProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const row = await getSpecialist(id).catch(() => null);
   const specialist = row ? specialistFromRow(row) : findDemoSpecialist(id);
   if (!specialist) notFound();
+  const user = await getChatGPTUser();
 
   return (
     <AppShell>
-      <a className="back-link" href="/tarot"><ArrowLeft size={15} aria-hidden="true" /> အကြံပေးများသို့</a>
+      <a className="back-link" href="/tarot"><ArrowLeft size={15} aria-hidden="true" /> ပညာရှင်များသို့</a>
       <article className="consultant-profile">
         <header className="consultant-profile-hero">
           <span className="consultant-profile-monogram" aria-hidden="true">{specialist.initials}</span>
-          <div><p className="eyebrow">HUMAN ADVISOR · Preview</p><h1>{specialist.name}</h1><p>{specialist.specialty}</p></div>
+          <div><p className="eyebrow">TAROT · လူချင်းတွေ့ ဆွေးနွေးမှု</p><h1>{specialist.name}</h1><p>{specialist.specialty}</p></div>
           <span className="consultant-status"><CircleCheck size={13} aria-hidden="true" /> Profile စစ်ဆေးပြီး</span>
         </header>
         <div className="consultant-profile-body">
-          <section>
+          <section aria-labelledby="advisor-about">
             <p className="eyebrow">ABOUT THE ADVISOR</p>
-            <h2>သင့်မေးခွန်းကို လူသားအမြင်ဖြင့် နားထောင်ပေးမည့် အကြံပေး</h2>
+            <h2 id="advisor-about">သင့်အခြေအနေကို လူသားအမြင်ဖြင့် နားထောင်ပေးမည့် ပညာရှင်</h2>
             <p>{specialist.experience} ရှိပြီး {specialist.tags.join("၊ ")} ကိစ္စများကို အဓိကထား ဆွေးနွေးပေးသည်။</p>
             <div className="tag-row">{specialist.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
             <ul className="consultant-facts">
               <li><Star size={15} aria-hidden="true" /><span>အထူးပြု</span><strong>{specialist.specialty}</strong></li>
               <li><Headphones size={15} aria-hidden="true" /><span>အတွေ့အကြုံ</span><strong>{specialist.experience}</strong></li>
+              <li><MapPin size={15} aria-hidden="true" /><span>နေရာ</span><strong>{specialist.location}</strong></li>
+              <li><Clock3 size={15} aria-hidden="true" /><span>ကြာချိန်</span><strong>{toBurmeseDigits(specialist.sessionMinutes)} မိနစ်</strong></li>
               <li><CalendarClock size={15} aria-hidden="true" /><span>ပြသနှုန်း</span><strong>{specialist.rate}</strong></li>
             </ul>
+            <p className="booking-availability">ရနိုင်သောရက်များ · {specialist.availability}</p>
           </section>
-          <aside className="consultant-preview-action">
-            <ShieldCheck size={22} aria-hidden="true" />
-            <p className="eyebrow">CONSULTATION PREVIEW</p>
-            <h2>booking မဖွင့်ရသေးပါ</h2>
-            <p>{specialist.availability}။ ရက်ချိန်း၊ ငွေပေးချေမှုနှင့် live session များသည် ယခု Preview တွင် အလုပ်မလုပ်သေးပါ။</p>
-            <button className="primary-button" type="button" disabled>ဆွေးနွေးမှု မကြာမီ</button>
-          </aside>
+          <section className="booking-card" id="booking" aria-labelledby="booking-title">
+            <p className="eyebrow">BOOK A SESSION</p>
+            <h2 id="booking-title">ရက်ချိန်း တောင်းဆိုရန်</h2>
+            <BookingForm
+              specialistId={specialist.id}
+              specialistName={specialist.name}
+              defaultName={user?.fullName ?? ""}
+              contactPhone={process.env.TAROT_CONTACT_PHONE ?? null}
+            />
+          </section>
         </div>
       </article>
     </AppShell>
