@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ArrowRight } from "lucide-react";
 import { AppShell } from "@/components/suriya/app-shell";
 import { ChartKeyFacts } from "@/components/suriya/chart-key-facts";
 import { DashaTimeline } from "@/components/suriya/dasha-timeline";
@@ -19,7 +20,7 @@ export default async function ChartPage() {
   const { chart, insight } = daily;
   const highlights = todayHighlights(chart, insight.factors);
   return (
-    <AppShell rail={<IdentityRail {...daily.identity} personalized={daily.personalized} />}>
+    <AppShell rail={daily.personalized ? <IdentityRail {...daily.identity} personalized /> : undefined}>
       <header className="page-heading chart-heading">
         <p className="eyebrow">မွေးဇာတာ · Jyotish · {daily.personalized ? "ကိုယ်ပိုင်" : "နမူနာ"}</p>
         <h1 className="page-title">သင့်မွေးဇာတာ</h1>
@@ -33,7 +34,7 @@ export default async function ChartPage() {
             division="d1"
             size="hero"
             caption={chartBirthLabel(chart)}
-            describedBy="placement-list"
+            describedBy="chart-key-facts"
             highlights={highlights}
           />
           {highlights.length > 0 && (
@@ -44,11 +45,17 @@ export default async function ChartPage() {
           )}
         </div>
         <div className="chart-side-column">
-          <ChartKeyFacts chart={chart} />
-          <PlacementList chart={chart} />
-          <DashaTimeline dasha={chart.dasha} now={new Date(chart.asOf)} />
+          <ChartKeyFacts chart={chart} id="chart-key-facts" />
+          <details className="chart-data-disclosure disclosure-card surface">
+            <summary><span>ဂြိုဟ်နှင့် ဒဿာ အသေးစိတ်</span><small>လိုအပ်သည့်အခါ ဖွင့်ကြည့်ရန်</small></summary>
+            <div className="chart-data-content disclosure-content">
+              <PlacementList chart={chart} />
+              <DashaTimeline dasha={chart.dasha} now={new Date(chart.asOf)} />
+            </div>
+          </details>
         </div>
       </div>
+      <div className="chart-actions"><a className="primary-button" href="/ask">ဤဇာတာအကြောင်း မေးရန် <ArrowRight size={15} aria-hidden="true" /></a></div>
       <TodayConnection factors={insight.factors} score={insight.score} />
       <DivisionalCharts chart={chart} />
       <PanchangaStrip title="မွေးချိန် Panchanga" data={panchangaView(chart.panchanga)} />

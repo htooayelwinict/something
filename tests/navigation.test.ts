@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { navigationItems, topNavigationLinks } from "@/lib/content/navigation";
+import { isPrimaryDestinationCurrent, navigationItems, topNavigationLinks } from "@/lib/content/navigation";
 
 const navigationFiles = [
   "app/page.tsx",
@@ -28,14 +28,30 @@ describe("navigation compatibility", () => {
 });
 
 describe("shared navigation destinations", () => {
-  it("names Home, Daily, Tarot and the birth chart consistently", () => {
-    expect(navigationItems.find((item) => item.href === "/")?.label).toBe("ပင်မ");
-    expect(topNavigationLinks.find((item) => item.href === "/")?.label).toBe("ပင်မ");
-    expect(topNavigationLinks.find((item) => item.href === "/daily")?.label).toBe("နေ့စဉ်ဖတ်စာ");
-    expect(navigationItems.some((item) => item.href === "/tarot")).toBe(true);
-    expect(navigationItems.map((item) => item.href as string)).not.toContain("/chart");
-    expect(topNavigationLinks.find((item) => item.href === "/tarot")?.label).toBe("Tarot ဆွေးနွေးမှု");
-    expect(topNavigationLinks.find((item) => item.href === "/chart")?.label).toBe("မွေးဇာတာ");
-    expect(navigationItems).toHaveLength(5);
+  it("keeps the four mobile tasks in the intended story order", () => {
+    expect(navigationItems.map((item) => item.href as string)).toEqual(["/", "/ask", "/tarot", "/profile"]);
+    expect(navigationItems.map((item) => item.label)).toEqual(["ယနေ့", "မေးရန်", "Tarot", "ကိုယ်ရေး"]);
+    expect(navigationItems.some((item) => "featured" in item)).toBe(false);
+  });
+
+  it("limits desktop navigation to the three primary tasks", () => {
+    expect(topNavigationLinks.map((item) => item.href as string)).toEqual(["/", "/ask", "/tarot"]);
+    expect(topNavigationLinks.map((item) => item.label)).toEqual(["ယနေ့", "မေးရန်", "Tarot"]);
+  });
+
+  it("keeps the Today destination selected throughout the Daily flow", () => {
+    expect(isPrimaryDestinationCurrent("/", "/")).toBe(true);
+    expect(isPrimaryDestinationCurrent("/", "/daily")).toBe(true);
+    expect(isPrimaryDestinationCurrent("/", "/daily/week")).toBe(true);
+    expect(isPrimaryDestinationCurrent("/", "/today")).toBe(false);
+    expect(isPrimaryDestinationCurrent("/ask", "/ask")).toBe(true);
+    expect(isPrimaryDestinationCurrent("/ask", "/ask/example")).toBe(true);
+  });
+
+  it("keeps saved-reading history off the primary Home task flow", () => {
+    const source = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+    expect(source).not.toContain("RecentReadingsRail");
+    expect(source).not.toContain("listReadings");
   });
 });

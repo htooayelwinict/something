@@ -16,9 +16,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <div>
           <p className="eyebrow">သင့်ကိုယ်ပိုင် ကောင်းကင်အထောက်အထား</p>
           <h1>ပြန်လည်ကြိုဆိုပါတယ်</h1>
-          <p>သင့်မွေးဇာတာနှင့် ဖတ်ကြားမှုမှတ်တမ်းကို လုံခြုံစွာ သိမ်းဆည်းပြီး မည်သည့်စက်မှမဆို ဆက်လက်ဖတ်ရှုနိုင်ပါတယ်။</p>
+          <p><strong>သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်။</strong> သင့်မွေးဇာတာနှင့် ဖတ်ကြားမှုမှတ်တမ်းကို လုံခြုံစွာ သိမ်းဆည်းပြီး မည်သည့်စက်မှမဆို ဆက်လက်ဖတ်ရှုနိုင်ပါတယ်။</p>
         </div>
-        <a className="primary-button" href={chatGPTSignInPath(returnTo)}>ChatGPT ဖြင့် ဝင်ရောက်မည် <ArrowRight size={17} aria-hidden="true" /></a>
+        <a className="primary-button" href={chatGPTSignInPath(returnTo)}>အကောင့်ဖွင့်/ဝင်ရောက်မည် (ChatGPT) <ArrowRight size={17} aria-hidden="true" /></a>
         <div className="privacy-note"><ShieldCheck size={17} aria-hidden="true" /><span>OpenAI ၏ လုံခြုံသော အကောင့်ဝင်ခြင်းကို အသုံးပြုပါတယ်။ သင့်စကားဝှက်ကို သုရိယက မမြင်ရ၊ မသိမ်းဆည်းပါ။</span></div>
       </section>
       <p className="login-foot">ဆက်လက်ဝင်ရောက်ခြင်းဖြင့် သုရိယ၏ ကိုယ်ရေးအချက်အလက် မူဝါဒကို သဘောတူပါသည်။</p>

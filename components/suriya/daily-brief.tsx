@@ -1,4 +1,5 @@
 import { ArrowRight, Clock3 } from "lucide-react";
+import { toBurmeseDigits } from "@/lib/content/burmese-digits";
 import { MoonPhase } from "./moon-phase";
 import { ZodiacGlyph } from "./zodiac-glyph";
 
@@ -14,15 +15,16 @@ export type DailyBriefView = {
 };
 
 export function DailyBrief({ data, personalized }: { data: DailyBriefView; personalized: boolean }) {
+  const score = toBurmeseDigits(data.score);
   return (
     <article className="dark-card daily-brief" aria-labelledby="daily-brief-title">
       <div
         className="score-ring"
         style={{ "--score": `${data.score}%` } as React.CSSProperties}
-        aria-label={`ယနေ့ စွမ်းအင်အညွှန်း ${data.score} အမှတ်`}
+        aria-label={`ယနေ့ စွမ်းအင်အညွှန်း ${score} အမှတ်`}
         role="img"
       >
-        <span className="daily-brief-score">{data.score}</span>
+        <span className="daily-brief-score">{score}</span>
       </div>
       <div className="daily-brief-copy">
         <p className="eyebrow">ယနေ့ အကျဉ်း · {personalized ? "ကိုယ်ပိုင်" : "နမူနာ"}</p>
@@ -40,8 +42,7 @@ export function DailyBrief({ data, personalized }: { data: DailyBriefView; perso
             <span>{data.tithi?.name}</span>
           </p>
         )}
-        <a className="text-link" href="/daily">နေ့စဉ်ဖတ်စာ အပြည့်အစုံ <ArrowRight size={15} aria-hidden="true" /></a>
-        <p className="daily-brief-periods"><a href="/daily/week">ဤအပတ်</a><span aria-hidden="true">·</span><a href="/daily/month">ဤလ</a></p>
+        <a className="primary-button" href="/daily">ယနေ့ဖတ်စာ အပြည့်အစုံ <ArrowRight size={15} aria-hidden="true" /></a>
       </div>
     </article>
   );

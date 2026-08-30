@@ -1,10 +1,10 @@
 "use client";
 
-import { CircleUserRound, House, MessageCircleMore, Sparkles, SunMedium } from "lucide-react";
+import { CircleUserRound, MessageCircleMore, Sparkles, SunMedium } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { navigationItems } from "@/lib/content/navigation";
+import { isPrimaryDestinationCurrent, navigationItems } from "@/lib/content/navigation";
 
-const icons = { home: House, daily: SunMedium, ask: MessageCircleMore, tarot: Sparkles, profile: CircleUserRound };
+const icons = { today: SunMedium, ask: MessageCircleMore, tarot: Sparkles, profile: CircleUserRound };
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -12,17 +12,16 @@ export function BottomNav() {
     <nav className="bottom-nav" aria-label="အဓိက လမ်းညွှန်">
       {navigationItems.map((item) => {
         const Icon = icons[item.icon];
-        const featured = "featured" in item && item.featured;
-        const current = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+        const current = isPrimaryDestinationCurrent(item.href, pathname);
         return (
           <a
-            className={`nav-item${featured ? " nav-item-ask" : ""}`}
+            className="nav-item"
             href={item.href}
             key={item.href}
             aria-current={current ? "page" : undefined}
-            aria-label={featured ? "ဗေဒင် မေးမြန်းရန်" : item.label}
+            aria-label={item.label}
           >
-            <Icon size={featured ? 23 : 20} strokeWidth={1.7} aria-hidden="true" />
+            <Icon size={20} strokeWidth={1.7} aria-hidden="true" />
             <span>{item.label}</span>
           </a>
         );

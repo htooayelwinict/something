@@ -1,13 +1,11 @@
 import { Brand } from "./brand";
 
 const links = [
-  { href: "/", label: "ပင်မ" },
   { href: "/daily", label: "နေ့စဉ်ဖတ်စာ" },
+  { href: "/chart", label: "မွေးဇာတာ" },
+  { href: "/readings", label: "သိမ်းထားသောဖတ်စာ" },
   { href: "/today", label: "ယနေ့ Panchanga" },
   { href: "/rasi", label: "ရာသီ ၁၂ ခု" },
-  { href: "/chart", label: "မွေးဇာတာ" },
-  { href: "/ask", label: "မေးမြန်းရန်" },
-  { href: "/tarot", label: "Tarot ဆွေးနွေးမှု" },
 ];
 
 export function SiteFooter() {

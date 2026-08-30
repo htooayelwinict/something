@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { AppShell } from "@/components/suriya/app-shell";
 import { JsonLd } from "@/components/suriya/json-ld";
 import { MoonPhase } from "@/components/suriya/moon-phase";
-import { TarotUpsell } from "@/components/suriya/tarot-upsell";
 import { ZodiacGlyph } from "@/components/suriya/zodiac-glyph";
 import { zodiacSignsMyanmar } from "@/lib/astrology/types";
 import { toBurmeseDigits } from "@/lib/content/burmese-digits";
@@ -82,7 +81,6 @@ export default function TodayPage() {
         <a className="primary-button" href="/daily">သင့်ကိုယ်ပိုင် ယနေ့ဖတ်စာ</a>
         <a className="secondary-button" href="/rasi">ရာသီ ၁၂ ခု</a>
       </div>
-      <TarotUpsell variant="inline" />
     </AppShell>
   );
 }

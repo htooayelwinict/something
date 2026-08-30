@@ -1,10 +1,10 @@
 import type { CelestialChart } from "@/lib/astrology/types";
 import { chartKeyFacts } from "@/lib/content/chart-view";
 
-export function ChartKeyFacts({ chart }: { chart: CelestialChart }) {
+export function ChartKeyFacts({ chart, id }: { chart: CelestialChart; id?: string }) {
   const facts = chartKeyFacts(chart);
   return (
-    <dl className="key-facts" aria-label="အဓိက အချက်များ">
+    <dl className="key-facts" id={id} aria-label="အဓိက အချက်များ">
       <div data-tone="gold">
         <dt>လဂ်</dt>
         <dd><strong>{facts.lagna.signMy}</strong><span>{facts.lagna.sign} · {facts.lagna.degree}</span></dd>

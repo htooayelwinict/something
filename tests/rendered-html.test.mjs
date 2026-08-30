@@ -34,7 +34,7 @@ test("server-renders the Suriya home experience", async () => {
   assert.match(html, /SURIYA/);
   assert.match(html, /နေ့စဉ်ဖတ်စာ/);
   assert.match(html, /Tarot ဆွေးနွေးမှု/);
-  assert.match(html, /မင်္ဂလာပါ/);
+  assert.match(html, /ယနေ့အတွက် လမ်းညွှန်/);
   assert.match(html, /ပင်မ/);
   assert.match(html, /daily-brief/);
   assert.match(html, /star-field/);
@@ -49,6 +49,12 @@ test("server-renders the Suriya home experience", async () => {
   assert.match(html, /<nav\b[^>]*aria-label=["']အဓိက လမ်းညွှန်["']/i);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/i);
+
+  assert.doesNotMatch(html, /identity-rail/, "guest Home must not present a fake birth identity");
+  assert.equal((html.match(/class="[^"]*\bprimary-button\b[^"]*"/g) ?? []).length, 1, "guest Home primary CTA count");
+  assert.equal((html.match(/class="route-card(?:\s|")/g) ?? []).length, 2, "guest Home task-card count");
+  assert.doesNotMatch(html, /href=["']\/daily\/(?:week|month)["']/, "period shortcuts belong on Daily");
+  assert.match(html, /နမူနာဖတ်စာ[\s\S]*သင့်ကိုယ်ပိုင်ဖတ်စာ/, "guest Home explains how to personalize the demo");
 });
 
 test("serves an installable Burmese manifest", async () => {
@@ -63,10 +69,10 @@ test("serves an installable Burmese manifest", async () => {
 
 test("server-renders the designed public product routes", async () => {
   const expectations = [
-    ["/daily", /ယနေ့၏ မင်္ဂလာလမ်းညွှန်[\s\S]*လ၏နေ့စဉ်ရွေ့လျားမှု[\s\S]*ဂုရုဂြိုဟ် ဂေါစရ[\s\S]*စနေဂြိုဟ်[\s\S]*အလုပ်အကိုင်[\s\S]*တွက်ချက်ထားသော အချိန်[\s\S]*Rahu Kalam[\s\S]*ယနေ့ Panchanga[\s\S]*href=["']\/chart["']/],
+    ["/daily", /ယနေ့၏ မင်္ဂလာလမ်းညွှန်[\s\S]*လ၏နေ့စဉ်ရွေ့လျားမှု[\s\S]*ဂုရုဂြိုဟ် ဂေါစရ[\s\S]*စနေဂြိုဟ်[\s\S]*တွက်ချက်ထားသော အချိန်[\s\S]*Rahu Kalam[\s\S]*အလုပ်အကိုင်[\s\S]*ယနေ့ Panchanga[\s\S]*href=["']\/chart["']/],
     ["/chart", /သင့်မွေးဇာတာ[\s\S]*chart-cell[\s\S]*လဂ်[\s\S]*ဂြိုဟ်တည်နေရာများ[\s\S]*လက်ရှိ ဒဿာကာလ[\s\S]*ယနေ့ ဤဇာတာနှင့်[\s\S]*D9 · နဝံသ[\s\S]*D10 · ဒသံသ/],
-    ["/ask", /သုရိယကို မေးပါ[\s\S]*တစ်နေ့ ၃ ကြိမ် အခမဲ့[\s\S]*တွက်ချက်နည်းကို သင်ရွေးနိုင်သည်[\s\S]*tarot-upsell[\s\S]*အဖြေတွက်ချက်ပုံ/],
-    ["/profile", /သင့်ကောင်းကင် ကိုယ်ရေး[\s\S]*ChatGPT ဖြင့် ဝင်ရောက်မည်/],
+    ["/ask", /သုရိယကို မေးပါ[\s\S]*တစ်နေ့ ၃ ကြိမ် အခမဲ့[\s\S]*တွက်ချက်နည်းကို သင်ရွေးနိုင်သည်[\s\S]*ask-method-disclosure[\s\S]*အဖြေတွက်ချက်ပုံ/],
+    ["/profile", /သင့်ကောင်းကင် ကိုယ်ရေး[\s\S]*အကောင့်ဖွင့်\/ဝင်ရောက်မည် \(ChatGPT\)/],
     ["/tarot", /လူချင်းတွေ့ ဆွေးနွေးပါ[\s\S]*ဘယ်လို အလုပ်လုပ်သလဲ[\s\S]*သီရိလမင်း[\s\S]*href=["']\/tarot\/thiri#booking["'][\s\S]*ရက်ချိန်းယူရန်/],
     ["/tarot/thiri", /သီရိလမင်း[\s\S]*id="booking"[\s\S]*id="booking-phone"[\s\S]*ရက်ချိန်း တောင်းဆိုမည်/],
     ["/login", /ပြန်လည်ကြိုဆိုပါတယ်/],
@@ -81,6 +87,15 @@ test("server-renders the designed public product routes", async () => {
       assert.match(html, /tarot-upsell[\s\S]*href=["']\/tarot["']/, pathname);
       assert.doesNotMatch(html, /ယုံကြည်မှုအဆင့်/, pathname);
       assert.doesNotMatch(html, /href=["']\/daily["'][^>]*>အသေးစိတ်ဖတ်ရန်/, pathname);
+      assert.match(html, /<details class=["']daily-evidence-disclosure/, pathname);
+      assert.match(html, /<details class=["']daily-data-disclosure/, pathname);
+      assert.doesNotMatch(html, /class=["']metrics-grid["']/, pathname);
+      assert.doesNotMatch(html, /CAREER|RELATIONSHIPS|FOCUS|ENERGY|CAUTION/, pathname);
+      assert.match(html, /class=["']score-value["']>[၀-၉]+<small>\/၁၀၀<\/small>/, pathname);
+      assert.match(html, /၂၀–၉၅ အတွင်း/, pathname);
+      assert.doesNotMatch(html, /၀–၁၀၀ အတွင်း/, pathname);
+      assert.match(html, /class=["']primary-button["'] href=["']\/ask["']/, pathname);
+      assert.doesNotMatch(html, /identity-rail/, pathname);
     }
     if (pathname === "/chart") {
       assert.doesNotMatch(html, /hero-insight/, pathname);
@@ -88,11 +103,37 @@ test("server-renders the designed public product routes", async () => {
       for (const sign of burmeseSigns) assert.match(html, new RegExp(`chart-sign[^<]*>${sign}<`), `${pathname} ${sign}`);
       assert.doesNotMatch(html, /<span class="chart-cell"[^>]*>[^<]*—/, pathname);
       assert.match(html, /chart-cell" data-lagna="true"/, pathname);
-      assert.match(html, /aria-describedby="placement-list"/, pathname);
+      assert.match(html, /aria-describedby="chart-key-facts"/, pathname);
+      assert.match(html, /id="chart-key-facts"/, pathname);
       assert.match(html, /\d{1,2}°\d{2}′/, pathname);
+    }
+    if (pathname === "/ask") {
+      assert.match(html, /<details class=["']ask-method-disclosure/, pathname);
+      assert.doesNotMatch(html, /tarot-upsell/, pathname);
+      assert.doesNotMatch(html, /identity-rail/, pathname);
+      assert.match(html, /ရွေးထားသည်/, pathname);
+      assert.match(html, /ဝင်ရောက်ပြီး မေးမည်/, pathname);
     }
     if (pathname.startsWith("/tarot")) assert.doesNotMatch(html, /Preview|PREVIEW|မကြာမီ ရနိုင်မည်|booking မဖွင့်ရသေးပါ/, pathname);
     if (pathname === "/login") assert.doesNotMatch(html, /ChatGPT စကားဝိုင်း/, pathname);
+  }
+});
+
+test("progressively discloses reference detail and standardizes guest entry", async () => {
+  const chart = await (await render("/chart")).text();
+  assert.match(chart, /<details class=["']chart-data-disclosure/);
+  assert.match(chart, /class=["']primary-button["'] href=["']\/ask["']/);
+  assert.doesNotMatch(chart, /identity-rail/);
+
+  for (const path of ["/today", "/rasi/mesha", "/readings"]) {
+    const html = await (await render(path)).text();
+    assert.doesNotMatch(html, /tarot-upsell/, path);
+  }
+
+  const guestPattern = /သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်[\s\S]*အကောင့်ဖွင့်\/ဝင်ရောက်မည် \(ChatGPT\)[\s\S]*ယနေ့ဖတ်စာသို့ ပြန်သွားရန်/;
+  for (const path of ["/profile", "/readings", "/daily/week", "/daily/month"]) {
+    const html = await (await render(path)).text();
+    assert.match(html, guestPattern, path);
   }
 });
 
@@ -117,14 +158,15 @@ test("period reading routes render tabs, readings and guest gating", async () =>
     const html = await response.text();
     assert.match(html, new RegExp(`aria-current="page"[^>]*>${tab}<`), path);
     assert.match(html, /ဝင်ရောက်ပြီး အပတ်စဉ်နှင့် လစဉ်/, path);
-    assert.match(html, /tarot-upsell/, path);
+    assert.doesNotMatch(html, /tarot-upsell/, path);
   }
   const home = await (await render("/")).text();
-  assert.match(home, /href=["']\/daily\/week["'][\s\S]*href=["']\/daily\/month["']/);
+  assert.doesNotMatch(home, /href=["']\/daily\/(?:week|month)["']/);
   assert.equal((await render("/api/period-readings/yearly/stream")).status, 404);
   assert.equal((await render("/api/period-readings/weekly/stream")).status, 401);
   const dailyStream = await render("/api/period-readings/daily/stream");
   assert.equal(dailyStream.status, 200);
+  assert.ok(["deterministic", "model"].includes(dailyStream.headers.get("x-interpretation-mode") ?? ""));
   const text = await dailyStream.text();
   assert.match(text, /[က-႟]/);
   assert.match(text, /လက်တွေ့လုပ်ဆောင်ရန်/);

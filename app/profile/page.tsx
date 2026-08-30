@@ -47,7 +47,7 @@ export default async function ProfilePage() {
               <CosmicFingerprint numerology={numerology} connectedMethods={["Jyotish · Lahiri", "Numerology"]} />
             </div>
           ) : (
-            <aside className="profile-start-note"><ShieldCheck size={20} aria-hidden="true" /><div><strong>Cosmic fingerprint အတွက် အချက်အလက်ဖြည့်ပါ</strong><p>သိမ်းပြီးသည်နှင့် Lahiri sidereal Jyotish chart နှင့် numerology ကို သီးခြားတွက်ချက်ပေးပါမယ်။</p></div></aside>
+            <aside className="profile-start-note"><ShieldCheck size={20} aria-hidden="true" /><div><strong>ဇာတာအချက်အလက်အတွက် မွေးဖွားမှုကို ဖြည့်ပါ</strong><p>သိမ်းပြီးသည်နှင့် Lahiri sidereal Jyotish chart နှင့် numerology ကို သီးခြားတွက်ချက်ပေးပါမယ်။</p></div></aside>
           )}
           <section className="surface form-card profile-edit-card">
             <div className="section-title"><div><p className="eyebrow">ကိုယ်ရေး ပြင်ဆင်ရန်</p><h2>မွေးဖွားမှုအချက်အလက် ပြင်ဆင်ရန်</h2></div></div>
@@ -56,7 +56,7 @@ export default async function ProfilePage() {
           <div className="profile-account-row"><span>အကောင့်ပိုင်ရှင် — {user.displayName}</span><a className="ghost-button" href={chatGPTSignOutPath("/")}><LogOut size={16} aria-hidden="true" /> ထွက်မည်</a></div>
         </>
       ) : (
-        <section className="profile-signin"><span><LogIn size={28} aria-hidden="true" /></span><h2>သင့် Cosmic ID ကို ဖွင့်ပါ</h2><p>မွေးဖွားမှုအချက်အလက်နှင့် ဖတ်ကြားမှုများကို အကောင့်ပိုင်ရှင်တစ်ဦးတည်းအတွက် လုံခြုံစွာ သိမ်းထားပါမယ်။</p><a className="primary-button" href={chatGPTSignInPath("/profile")}>ChatGPT ဖြင့် ဝင်ရောက်မည်</a></section>
+        <section className="profile-signin"><span><LogIn size={28} aria-hidden="true" /></span><h2>သင့်ဇာတာ အချက်အလက်ကို ဖွင့်ပါ</h2><p><strong>သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်။</strong> မွေးဖွားမှုအချက်အလက်နှင့် ဖတ်ကြားမှုများကို အကောင့်ပိုင်ရှင်တစ်ဦးတည်းအတွက် လုံခြုံစွာ သိမ်းထားပါမယ်။</p><a className="primary-button" href={chatGPTSignInPath("/profile")}>အကောင့်ဖွင့်/ဝင်ရောက်မည် (ChatGPT)</a><a className="text-link" href="/daily">ယနေ့ဖတ်စာသို့ ပြန်သွားရန်</a></section>
       )}
     </AppShell>
   );

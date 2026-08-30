@@ -15,7 +15,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const reading = await getReading(user.userId, id).catch(() => null);
   if (!reading) return new Response("not found", { status: 404 });
   if (reading.status === "complete" && reading.responseText) {
-    return new Response(reading.responseText, { headers: streamHeaders() });
+    return new Response(reading.responseText, { headers: streamHeaders(reading.interpretationMode) });
   }
 
   const input = readingInterpretationSchema.safeParse({ kind: reading.kind, question: reading.question });
@@ -46,13 +46,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     }
   })();
 
-  return new Response(readable, { headers: streamHeaders() });
+  return new Response(readable, { headers: streamHeaders(mode) });
 }
 
-function streamHeaders() {
+function streamHeaders(mode?: "deterministic" | "model") {
   return {
     "content-type": "text/plain; charset=utf-8",
     "cache-control": "private, no-store, no-transform",
     "x-content-type-options": "nosniff",
+    ...(mode ? { "x-interpretation-mode": mode } : {}),
   };
 }

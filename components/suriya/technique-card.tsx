@@ -15,6 +15,7 @@ export function TechniqueCard({ technique, selected, onSelect }: {
       <span className="technique-icon"><Icon size={19} aria-hidden="true" /></span>
       <span><strong>{technique.title}</strong><small>{technique.description}</small></span>
       <span className="selection-dot" aria-hidden="true"><Check size={13} /></span>
+      {selected && <span className="sr-only">ရွေးထားသည်</span>}
     </label>
   );
 }

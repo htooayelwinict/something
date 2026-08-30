@@ -21,15 +21,15 @@ export function IdentityRail({
   const initial = name.trim().slice(0, 1).toUpperCase() || "S";
   return (
     <div className="identity-rail">
-      <section className="identity-card" aria-label="Cosmic ID">
+      <section className="identity-card" aria-label="သင့်ဇာတာ အချက်အလက်">
         <div className="identity-person">
           <span className="identity-avatar" aria-hidden="true">{initial}</span>
           <div><strong>{name}</strong><span>{birthLabel}</span></div>
         </div>
         <p className="identity-intro">
           {personalized
-            ? "သင့်မွေးဖွားမှုအချက်အလက်မှ တွက်ချက်ထားသော Cosmic ID"
-            : "နမူနာအချက်အလက်ဖြင့် ပြထားသော Cosmic ID"}
+            ? "သင့်မွေးဖွားမှုအချက်အလက်မှ တွက်ချက်ထားသော ဇာတာအချက်အလက်"
+            : "နမူနာအချက်အလက်ဖြင့် ပြထားသော ဇာတာအချက်အလက်"}
         </p>
         {ascendantSignIndex !== undefined && moonSignIndex !== undefined && (
           <div className="identity-signs">

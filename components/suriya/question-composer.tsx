@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { readingTechniques, type ReadingTechnique } from "@/lib/content/demo";
 import { TechniqueCard } from "./technique-card";
@@ -8,6 +8,46 @@ import type { MuhurtaEventTypeInput, ReadingRequestInput } from "@/lib/schemas/r
 import { localDateInTimezone } from "@/lib/astrology/time";
 
 const MAX_QUESTION_LENGTH = 500;
+const ASK_DRAFT_KEY = "suriya:ask-draft:v1";
+
+type AskDraft = {
+  question: string;
+  technique: ReadingTechnique["id"];
+  targetDate: string;
+  eventType: MuhurtaEventTypeInput;
+};
+
+type AskDraftStorage = Pick<Storage, "getItem" | "setItem">;
+
+export function saveAskDraft(storage: Pick<AskDraftStorage, "setItem">, draft: AskDraft) {
+  try {
+    storage.setItem(ASK_DRAFT_KEY, JSON.stringify(draft));
+  } catch {
+    // Storage can be unavailable in privacy-restricted browser contexts.
+  }
+}
+
+export function readAskDraft(storage: Pick<AskDraftStorage, "getItem">): AskDraft | null {
+  try {
+    const value = storage.getItem(ASK_DRAFT_KEY);
+    if (!value) return null;
+    const draft = JSON.parse(value) as Partial<AskDraft>;
+    const technique = readingTechniques.some((item) => item.id === draft.technique) ? draft.technique : null;
+    const eventType = ["general", "work", "relationship", "travel"].includes(draft.eventType ?? "") ? draft.eventType : null;
+    if (typeof draft.question !== "string" || !technique || typeof draft.targetDate !== "string" || !eventType) return null;
+    return { question: draft.question.slice(0, MAX_QUESTION_LENGTH), technique, targetDate: draft.targetDate, eventType } as AskDraft;
+  } catch {
+    return null;
+  }
+}
+
+function clearAskDraft(storage: Pick<Storage, "removeItem">) {
+  try {
+    storage.removeItem(ASK_DRAFT_KEY);
+  } catch {
+    // Storage can be unavailable in privacy-restricted browser contexts.
+  }
+}
 
 function addCalendarDays(localDate: string, days: number) {
   const date = new Date(`${localDate}T12:00:00.000Z`);
@@ -51,11 +91,30 @@ export function QuestionComposer({ initialQuestion = "", authenticated, timezone
   const [status, setStatus] = useState("");
   const [pending, setPending] = useState(false);
 
+  useEffect(() => {
+    if (initialQuestion) return;
+    const draft = readAskDraft(window.sessionStorage);
+    if (!draft) return;
+    const frame = window.requestAnimationFrame(() => {
+      setQuestion(draft.question);
+      setTechnique(draft.technique);
+      setTargetDate(draft.targetDate);
+      setEventType(draft.eventType);
+      setStatus("ဝင်ရောက်မတိုင်မီ ရေးထားသော မေးခွန်းကို ပြန်ဖြည့်ထားပါတယ်။");
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [initialQuestion]);
+
+  function preserveDraft() {
+    saveAskDraft(window.sessionStorage, { question, technique, targetDate, eventType });
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!question.trim() || pending) return;
     const signInTarget = unauthenticatedAskTarget(authenticated);
     if (signInTarget) {
+      preserveDraft();
       window.location.assign(signInTarget);
       return;
     }
@@ -68,6 +127,7 @@ export function QuestionComposer({ initialQuestion = "", authenticated, timezone
         body: JSON.stringify(buildReadingPayload(question, technique, targetDate, eventType)),
       });
       if (response.status === 401) {
+        preserveDraft();
         window.location.assign("/login?return_to=/ask");
         return;
       }
@@ -81,6 +141,7 @@ export function QuestionComposer({ initialQuestion = "", authenticated, timezone
       }
       const result = (await response.json()) as { id?: string; error?: string };
       if (!response.ok || !result.id) throw new Error(result.error ?? "reading_failed");
+      clearAskDraft(window.sessionStorage);
       window.location.assign(`/readings/${result.id}`);
     } catch {
       setStatus("လောလောဆယ် ဖတ်ကြားမှု မစတင်နိုင်သေးပါ။ နောက်တစ်ကြိမ် ပြန်စမ်းကြည့်ပါ။");
@@ -145,7 +206,7 @@ export function QuestionComposer({ initialQuestion = "", authenticated, timezone
         </div>
       )}
       <button className="primary-button" type="submit" disabled={!question.trim() || pending}>
-        {pending ? "တွက်ချက်နေပါတယ်…" : "သုရိယကို မေးမည်"}
+        {pending ? "တွက်ချက်နေပါတယ်…" : authenticated ? "သုရိယကို မေးမည်" : "ဝင်ရောက်ပြီး မေးမည်"}
         {!pending && <ArrowRight size={17} aria-hidden="true" />}
       </button>
       {status && <p className="form-message" role="status">{status}</p>}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildReadingPayload, defaultMuhurtaTargetDate, unauthenticatedAskTarget } from "@/components/suriya/question-composer";
+import { buildReadingPayload, defaultMuhurtaTargetDate, readAskDraft, saveAskDraft, unauthenticatedAskTarget } from "@/components/suriya/question-composer";
 
 describe("Ask authentication routing", () => {
   it("routes a known anonymous visitor to sign-in before starting a reading request", () => {
@@ -17,5 +17,24 @@ describe("Ask authentication routing", () => {
   it("does not leak Muhurta fields into Janma or Prashna requests", () => {
     expect(buildReadingPayload("အလုပ်ကို ဘယ်လို ဆက်သွားရမလဲ", "janma", "2026-08-29", "travel"))
       .toEqual({ kind: "janma", question: "အလုပ်ကို ဘယ်လို ဆက်သွားရမလဲ" });
+  });
+
+  it("keeps an anonymous question draft in tab-scoped storage across sign-in", () => {
+    const values = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => { values.set(key, value); },
+    };
+    const draft = {
+      question: "အလုပ်ကို ဘယ်လို ဆက်သွားရမလဲ",
+      technique: "muhurta" as const,
+      targetDate: "2026-09-05",
+      eventType: "work" as const,
+    };
+
+    saveAskDraft(storage, draft);
+
+    expect(readAskDraft(storage)).toEqual(draft);
+    expect([...values.values()].join(" ")).not.toContain("/login");
   });
 });

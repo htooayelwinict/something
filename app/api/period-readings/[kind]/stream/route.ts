@@ -1,5 +1,5 @@
 import { completePeriodReading, createPeriodReading, failPeriodReading, findPeriodReading, resetPeriodReading } from "@/db/repositories/period-readings";
-import { getAiProvider } from "@/lib/ai";
+import { getAiProvider, getConfiguredInterpretationMode, interpretationCacheVersion, shouldReuseCompletedPeriodInterpretation } from "@/lib/ai";
 import { PERIOD_PROMPT_VERSION } from "@/lib/ai/period-prompt";
 import { isPeriodKind } from "@/lib/readings/period";
 import { parseStoredTimestamp } from "@/lib/readings/quota";
@@ -9,11 +9,12 @@ export const dynamic = "force-dynamic";
 
 const GENERATING_GRACE_MS = 2 * 60_000;
 
-function textHeaders() {
+function textHeaders(mode?: "deterministic" | "model") {
   return {
     "content-type": "text/plain; charset=utf-8",
     "cache-control": "private, no-store, no-transform",
     "x-content-type-options": "nosniff",
+    ...(mode ? { "x-interpretation-mode": mode } : {}),
   };
 }
 
@@ -25,14 +26,22 @@ export async function GET(request: Request, { params }: { params: Promise<{ kind
 
   const now = new Date();
   const bundle = periodReadingFor(subject.profile, kind, now);
+  const configuredMode = getConfiguredInterpretationMode();
+  const cacheVersion = interpretationCacheVersion(PERIOD_PROMPT_VERSION, configuredMode);
 
   // Cache lookup. If the database is unavailable we still answer with the deterministic text.
   let rowId: string | null = null;
   try {
-    let row = await findPeriodReading(subject.userId, kind, bundle.period.key, PERIOD_PROMPT_VERSION);
-    if (row?.status === "complete" && row.responseText) return new Response(row.responseText, { headers: textHeaders() });
+    let row = await findPeriodReading(subject.userId, kind, bundle.period.key, cacheVersion);
+    if (
+      row?.status === "complete"
+      && row.responseText
+      && shouldReuseCompletedPeriodInterpretation(row.interpretationMode, configuredMode, row.updatedAt, now)
+    ) {
+      return new Response(row.responseText, { headers: textHeaders(row.interpretationMode) });
+    }
     if (row?.status === "generating" && now.valueOf() - parseStoredTimestamp(row.updatedAt).valueOf() < GENERATING_GRACE_MS) {
-      return Response.json({ error: "generating" }, { status: 409, headers: { "cache-control": "private, no-store" } });
+      return Response.json({ status: "generating" }, { status: 202, headers: { "cache-control": "private, no-store", "retry-after": "3" } });
     }
     if (row) {
       await resetPeriodReading(row.id);
@@ -46,7 +55,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ kind
         evidence: bundle.evidence as unknown as Record<string, unknown>,
         calculationVersion: bundle.evidence.calculationVersion,
         rulesetVersion: bundle.evidence.rulesetVersion,
-        promptVersion: PERIOD_PROMPT_VERSION,
+        promptVersion: cacheVersion,
       });
       if (row?.status === "complete" && row.responseText) return new Response(row.responseText, { headers: textHeaders() });
     }
@@ -55,7 +64,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ kind
     rowId = null;
   }
 
-  if (!rowId) return new Response(bundle.fallback, { headers: textHeaders() });
+  if (!rowId) return new Response(bundle.fallback, { headers: textHeaders("deterministic") });
 
   const { provider, mode } = getAiProvider(bundle.fallback);
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
@@ -75,25 +84,21 @@ export async function GET(request: Request, { params }: { params: Promise<{ kind
       if (finalText.trim()) {
         await completePeriodReading(id, finalText, mode);
       } else {
-        // Empty model answer: serve and cache the deterministic reading instead.
-        await writer.write(encoder.encode(bundle.fallback));
-        await completePeriodReading(id, bundle.fallback, "deterministic");
+        throw new Error("empty_provider_answer");
       }
       await writer.close();
     } catch (error) {
-      // The page must never stay empty: cache the deterministic text so the next load is complete.
       // Chunks already sent are not retracted; a refresh shows the stored fallback.
       const code = error instanceof Error ? error.message.slice(0, 40) : "provider_error";
-      try {
-        if (!finalText.trim() && !abortController.signal.aborted) await writer.write(encoder.encode(bundle.fallback));
-        await completePeriodReading(id, bundle.fallback, "deterministic");
-        await writer.close();
-      } catch {
+      if (abortController.signal.aborted) {
         await failPeriodReading(id, code).catch(() => undefined);
-        await writer.abort(error).catch(() => undefined);
+      } else {
+        await completePeriodReading(id, bundle.fallback, "deterministic")
+          .catch(() => failPeriodReading(id, code).catch(() => undefined));
       }
+      await writer.abort(error).catch(() => undefined);
     }
   })();
 
-  return new Response(readable, { headers: textHeaders() });
+  return new Response(readable, { headers: textHeaders(mode) });
 }

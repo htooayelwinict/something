@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/suriya/app-shell";
 import { JsonLd } from "@/components/suriya/json-ld";
-import { TarotUpsell } from "@/components/suriya/tarot-upsell";
 import { ZodiacGlyph } from "@/components/suriya/zodiac-glyph";
 import { zodiacSignsMyanmar } from "@/lib/astrology/types";
 import { toBurmeseDigits } from "@/lib/content/burmese-digits";
@@ -81,7 +80,6 @@ export default async function RasiPage({ params }: { params: Promise<{ slug: str
         </dl>
         <p className="panchanga-note">အိမ်နံပါတ်ကို {rasi.nameMy}ရာသီမှ ရေတွက်ထားပါသည်။ သင့်ကိုယ်ပိုင် မွေးဇာတာနှင့် တိုက်ဆိုင်တွက်ချက်ထားသော ယနေ့ဖတ်စာကို <a className="text-link" href="/daily">နေ့စဉ်ဖတ်စာ <ArrowRight size={14} aria-hidden="true" /></a> တွင် ဖတ်ပါ။ ယနေ့ Panchanga အပြည့်အစုံကို <a className="text-link" href="/today">ယနေ့ Panchanga</a> တွင် ကြည့်နိုင်ပါသည်။</p>
       </section>
-      <TarotUpsell variant="inline" />
       <nav className="rasi-others" aria-label="အခြားရာသီများ">
         {others.map((item) => <a key={item.slug} href={`/rasi/${item.slug}`}><span aria-hidden="true">{item.glyph}</span>{item.nameMy}</a>)}
       </nav>

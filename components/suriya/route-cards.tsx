@@ -1,10 +1,8 @@
 import { ArrowRight } from "lucide-react";
 
 const routes = [
-  { href: "/daily", glyph: "☉", title: "နေ့စဉ်ဖတ်စာ", description: "ယနေ့ · အပတ်စဉ် · လစဉ် ဖတ်စာ၊ အချက်များနှင့် သင့်လျော်ချိန်", tone: "green" },
-  { href: "/ask", glyph: "✶", title: "သုရိယကို မေးရန်", description: "မွေးဇာတာ၊ မေးချိန်ဇာတာ သို့မဟုတ် အချိန်ရွေးချယ်မှုဖြင့် ကိုယ်ပိုင်မေးခွန်း", tone: "plum" },
-  { href: "/tarot", glyph: "✦", title: "Tarot ဆွေးနွေးမှု", description: "လူသားအမြင် လိုအပ်ပါက Tarot ပညာရှင်နှင့် လူချင်းတွေ့ ဆွေးနွေးမှု ရက်ချိန်းယူရန်", tone: "gold" },
-  { href: "/chart", glyph: "☾", title: "မွေးဇာတာ", description: "လဂ်၊ ဂြိုဟ်တည်နေရာနှင့် ဒဿာကာလကို ဇာတာပုံဖြင့် ကြည့်ရန်", tone: "paper" },
+  { href: "/ask", glyph: "✶", title: "ကိုယ်ပိုင်မေးခွန်း မေးရန်", description: "မွေးဇာတာကို အခြေခံပြီး တစ်နေ့ ၃ ကြိမ် အခမဲ့ မေးနိုင်သည်", tone: "plum" },
+  { href: "/tarot", glyph: "✦", title: "လူချင်းတွေ့ Tarot ဆွေးနွေးမှု", description: "လူသားအမြင် လိုအပ်သည့်အခါ ပညာရှင်နှင့် အချိန်ယူ ဆွေးနွေးရန်", tone: "gold" },
 ] as const;
 
 export function RouteCards() {
