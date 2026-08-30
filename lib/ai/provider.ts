@@ -1,6 +1,7 @@
 export type AiStreamRequest = {
   prompt: string;
   signal?: AbortSignal;
+  maxTokens?: number;
 };
 
 export interface AiProvider {
@@ -8,7 +9,7 @@ export interface AiProvider {
 }
 
 export class AiProviderError extends Error {
-  constructor(public readonly code: "not_configured" | "timeout" | "quota" | "provider_error") {
+  constructor(public readonly code: "not_configured" | "timeout" | "quota" | "provider_error" | "truncated") {
     super(code);
   }
 }

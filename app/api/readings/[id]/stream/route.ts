@@ -33,7 +33,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   void (async () => {
     let finalText = "";
     try {
-      for await (const chunk of provider.stream({ prompt, signal: abortController.signal })) {
+      for await (const chunk of provider.stream({ prompt, signal: abortController.signal, maxTokens: 2_400 })) {
         finalText += chunk;
         await writer.write(encoder.encode(chunk));
       }

@@ -1,6 +1,22 @@
 import type { PeriodEvidence } from "@/lib/readings/period-evidence";
+import type { PeriodKind } from "@/lib/readings/period";
 
-export const PERIOD_PROMPT_VERSION = "suriya-period-1";
+export const PERIOD_PROMPT_VERSION = "suriya-period-2";
+
+const maxTokensByPeriod: Record<PeriodKind, number> = {
+  daily: 2_500,
+  weekly: 4_000,
+  monthly: 5_000,
+};
+
+export function periodMaxTokens(kind: PeriodKind) {
+  return maxTokensByPeriod[kind];
+}
+
+export function isCompletePeriodInterpretation(text: string) {
+  const trimmed = text.trim();
+  return trimmed.includes("လက်တွေ့လုပ်ဆောင်ရန် —") && /[။!?…](?:["'”’)\]]*)$/u.test(trimmed);
+}
 
 const structure = {
   daily: `- Begin with a concrete two-sentence overview of the day.

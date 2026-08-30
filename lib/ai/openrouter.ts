@@ -9,18 +9,24 @@ export function openRouterChatEndpoint(apiUrl = DEFAULT_OPENROUTER_URL) {
   return normalized.endsWith("/chat/completions") ? normalized : `${normalized}/chat/completions`;
 }
 
-function eventDelta(line: string): string | null {
+type StreamEvent = { content: string | null; finishReason: string | null };
+
+function parseEvent(line: string): StreamEvent | null {
   const trimmed = line.trim();
   if (!trimmed.startsWith("data:")) return null;
   const payload = trimmed.slice(5).trim();
   if (!payload || payload === "[DONE]") return null;
   const event = JSON.parse(payload) as {
-    choices?: Array<{ delta?: { content?: unknown } }>;
+    choices?: Array<{ delta?: { content?: unknown }; finish_reason?: unknown }>;
     error?: unknown;
   };
   if (event.error) throw new AiProviderError("provider_error");
-  const content = event.choices?.[0]?.delta?.content;
-  return typeof content === "string" ? content : null;
+  const choice = event.choices?.[0];
+  const content = choice?.delta?.content;
+  return {
+    content: typeof content === "string" ? content : null,
+    finishReason: typeof choice?.finish_reason === "string" ? choice.finish_reason : null,
+  };
 }
 
 export class OpenRouterProvider implements AiProvider {
@@ -31,7 +37,7 @@ export class OpenRouterProvider implements AiProvider {
     private readonly fetcher: Fetcher = fetch,
   ) {}
 
-  async *stream({ prompt, signal }: AiStreamRequest): AsyncIterable<string> {
+  async *stream({ prompt, signal, maxTokens }: AiStreamRequest): AsyncIterable<string> {
     try {
       const response = await this.fetcher(openRouterChatEndpoint(this.apiUrl), {
         method: "POST",
@@ -44,7 +50,7 @@ export class OpenRouterProvider implements AiProvider {
           messages: [{ role: "user", content: prompt }],
           stream: true,
           temperature: 0.35,
-          max_tokens: 1200,
+          max_tokens: maxTokens ?? 1200,
         }),
         signal,
       });
@@ -57,6 +63,7 @@ export class OpenRouterProvider implements AiProvider {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let finishReason: string | null = null;
       for (;;) {
         const { value, done } = await reader.read();
         buffer += decoder.decode(value, { stream: !done });
@@ -64,15 +71,18 @@ export class OpenRouterProvider implements AiProvider {
         while (newline >= 0) {
           const line = buffer.slice(0, newline);
           buffer = buffer.slice(newline + 1);
-          const delta = eventDelta(line);
-          if (delta) yield delta;
+          const event = parseEvent(line);
+          if (event?.finishReason) finishReason = event.finishReason;
+          if (event?.content) yield event.content;
           newline = buffer.indexOf("\n");
         }
         if (done) break;
         if (signal?.aborted) return;
       }
-      const finalDelta = eventDelta(buffer);
-      if (finalDelta) yield finalDelta;
+      const finalEvent = parseEvent(buffer);
+      if (finalEvent?.finishReason) finishReason = finalEvent.finishReason;
+      if (finalEvent?.content) yield finalEvent.content;
+      if (finishReason === "length") throw new AiProviderError("truncated");
     } catch (error) {
       if (error instanceof AiProviderError) throw error;
       if (signal?.aborted) throw new AiProviderError("timeout");

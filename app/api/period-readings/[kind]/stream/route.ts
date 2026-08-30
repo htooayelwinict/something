@@ -1,6 +1,7 @@
 import { completePeriodReading, createPeriodReading, failPeriodReading, findPeriodReading, resetPeriodReading } from "@/db/repositories/period-readings";
 import { getAiProvider, getConfiguredInterpretationMode, interpretationCacheVersion, shouldReuseCompletedPeriodInterpretation } from "@/lib/ai";
-import { PERIOD_PROMPT_VERSION } from "@/lib/ai/period-prompt";
+import { AiProviderError } from "@/lib/ai/provider";
+import { isCompletePeriodInterpretation, periodMaxTokens, PERIOD_PROMPT_VERSION } from "@/lib/ai/period-prompt";
 import { isPeriodKind } from "@/lib/readings/period";
 import { parseStoredTimestamp } from "@/lib/readings/quota";
 import { periodReadingFor, resolvePeriodSubject } from "@/lib/services/period-reading";
@@ -77,14 +78,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ kind
   void (async () => {
     let finalText = "";
     try {
-      for await (const chunk of provider.stream({ prompt: bundle.prompt, signal: abortController.signal })) {
+      for await (const chunk of provider.stream({ prompt: bundle.prompt, signal: abortController.signal, maxTokens: periodMaxTokens(kind) })) {
         finalText += chunk;
         await writer.write(encoder.encode(chunk));
       }
-      if (finalText.trim()) {
+      if (finalText.trim() && isCompletePeriodInterpretation(finalText)) {
         await completePeriodReading(id, finalText, mode);
       } else {
-        throw new Error("empty_provider_answer");
+        throw new AiProviderError("truncated");
       }
       await writer.close();
     } catch (error) {

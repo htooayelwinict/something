@@ -21,7 +21,7 @@ describe("OpenRouterProvider", () => {
     const body = new ReadableStream<Uint8Array>({
       start(controller) {
         controller.enqueue(encoder.encode('data: {"choices":[{"delta":{"content":"မင်္ဂ'));
-        controller.enqueue(encoder.encode('လာ"}}]}\n\ndata: {"choices":[{"delta":{"content":"ပါ"}}]}\n\ndata: [DONE]\n\n'));
+        controller.enqueue(encoder.encode('လာ"}}]}\n\ndata: {"choices":[{"delta":{"content":"ပါ"}}]}\n\ndata: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n'));
         controller.close();
       },
     });
@@ -33,7 +33,7 @@ describe("OpenRouterProvider", () => {
       fetcher,
     );
 
-    await expect(collect(provider.stream({ prompt: "မြန်မာလို ဖြေပါ" }))).resolves.toBe("မင်္ဂလာပါ");
+    await expect(collect(provider.stream({ prompt: "မြန်မာလို ဖြေပါ", maxTokens: 4_000 }))).resolves.toBe("မင်္ဂလာပါ");
     expect(fetcher).toHaveBeenCalledOnce();
     const [url, init] = fetcher.mock.calls[0];
     expect(url).toBe("https://openrouter.example/api/v1/chat/completions");
@@ -46,8 +46,22 @@ describe("OpenRouterProvider", () => {
       messages: [{ role: "user", content: "မြန်မာလို ဖြေပါ" }],
       stream: true,
       temperature: 0.35,
-      max_tokens: 1200,
+      max_tokens: 4000,
     });
+  });
+
+  it("rejects a stream that the model stopped at its output limit", async () => {
+    const encoder = new TextEncoder();
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(encoder.encode('data: {"choices":[{"delta":{"content":"မပြီးသေး"}}]}\n\n'));
+        controller.enqueue(encoder.encode('data: {"choices":[{"delta":{},"finish_reason":"length"}]}\n\ndata: [DONE]\n\n'));
+        controller.close();
+      },
+    });
+    const provider = new OpenRouterProvider("test-secret", "openai/gpt-5.6-luna", undefined, async () => new Response(body));
+
+    await expect(collect(provider.stream({ prompt: "အပြည့်အစုံ ဖြေပါ" }))).rejects.toEqual(new AiProviderError("truncated"));
   });
 
   it("accepts a full chat-completions URL without duplicating its suffix", () => {
