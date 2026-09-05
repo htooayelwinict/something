@@ -1,14 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-async function render(pathname = "/") {
+async function render(pathname = "/", init = {}) {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
     new Request(`http://localhost${pathname}`, {
-      headers: { accept: "text/html" },
+      ...init,
+      headers: { accept: "text/html", ...(init.headers ?? {}) },
     }),
     {
       ASSETS: {
@@ -189,6 +190,8 @@ test("public SEO pages carry structured data and crawl files", async () => {
   assert.equal(robots.status, 200);
   const robotsText = await robots.text();
   assert.match(robotsText, /Disallow: \/readings/);
+  assert.match(robotsText, /Disallow: \/studio/);
+  assert.match(robotsText, /Disallow: \/auth\//);
   assert.ok(robotsText.includes(`Sitemap: ${productionOrigin}/sitemap.xml`));
   const sitemap = await render("/sitemap.xml");
   assert.equal(sitemap.status, 200);
@@ -227,4 +230,19 @@ test("google sign-in routes redirect safely without configuration", async () => 
   assert.doesNotMatch(login, /signin-with-chatgpt|ChatGPT/);
   const loginError = await (await render("/login?error=unconfigured")).text();
   assert.match(loginError, /ဝင်ရောက်ခြင်းကို ခဏ ရပ်ထားပါသည်/);
+});
+
+test("studio pages and apis are gated for guests", async () => {
+  for (const path of ["/studio", "/studio/bookings", "/studio/tellers", "/studio/tellers/new", "/studio/tellers/thiri", "/studio/bookings/bkg_x"]) {
+    const response = await render(path);
+    assert.ok([302, 307, 308].includes(response.status), `${path} ${response.status}`);
+    assert.ok((response.headers.get("location") ?? "").endsWith(`/login?return_to=${encodeURIComponent(path)}`), `${path} ${response.headers.get("location")}`);
+  }
+  const json = { "content-type": "application/json", "sec-fetch-site": "same-origin" };
+  assert.equal((await render("/api/studio/bookings/bkg_x", { method: "PATCH", headers: json, body: JSON.stringify({ status: "confirmed" }) })).status, 401);
+  assert.equal((await render("/api/studio/tellers/thiri", { method: "PUT", headers: json, body: "{}" })).status, 401);
+  assert.equal((await render("/api/studio/tellers", { method: "POST", headers: json, body: "{}" })).status, 401);
+  const tarot = await (await render("/tarot")).text();
+  assert.match(tarot, /specialist-monogram/);
+  assert.doesNotMatch(tarot, /specialist-photo/);
 });
