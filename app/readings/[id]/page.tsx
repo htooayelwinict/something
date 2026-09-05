@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
-import { requireChatGPTUser } from "@/app/chatgpt-auth";
+import { requireUser } from "@/lib/auth/current-user";
 import { AppShell } from "@/components/suriya/app-shell";
 import { readingTechniques } from "@/lib/content/demo";
 import { DivisionalCharts } from "@/components/suriya/divisional-charts";
@@ -17,7 +17,7 @@ export const metadata: Metadata = { title: "ကိုယ်ပိုင် ဖ�
 export const dynamic = "force-dynamic";
 
 export default async function ReadingPage({ params }: { params: Promise<{ id: string }> }) {
-  const user = await requireChatGPTUser("/readings");
+  const user = await requireUser("/readings");
   const { id } = await params;
   const reading = await getReading(user.userId, id).catch(() => null);
   if (!reading) notFound();

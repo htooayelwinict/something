@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { requireChatGPTUser } from "@/app/chatgpt-auth";
+import { requireUser } from "@/lib/auth/current-user";
 import { AppShell } from "@/components/suriya/app-shell";
 import { BirthProfileForm } from "@/components/suriya/birth-profile-form";
 
 export const metadata: Metadata = { title: "မွေးဇာတာ စတင်ရန်", robots: { index: false, follow: false } };
 
 export default async function OnboardingPage() {
-  const user = await requireChatGPTUser("/onboarding");
+  const user = await requireUser("/onboarding");
   return (
     <AppShell>
       <ol className="onboarding-progress" aria-label="စတင်ခြင်း အဆင့်များ">

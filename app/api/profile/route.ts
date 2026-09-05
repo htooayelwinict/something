@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { deleteAccountData, getBirthProfile, saveBirthProfile, upsertProfile } from "@/db/repositories/profiles";
 import { birthProfileSchema } from "@/lib/schemas/profile";
 
@@ -10,7 +10,7 @@ function safeMessage(error: unknown) {
 }
 
 export async function GET() {
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   if (!user) return Response.json({ error: "unauthorized" }, { status: 401 });
   try {
     await upsertProfile(user);
@@ -21,7 +21,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   if (!user) return Response.json({ error: "unauthorized" }, { status: 401 });
   const parsed = birthProfileSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: parsed.error.issues[0]?.message ?? "invalid_profile", issues: parsed.error.flatten() }, { status: 400 });
@@ -35,7 +35,7 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE() {
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   if (!user) return Response.json({ error: "unauthorized" }, { status: 401 });
   try {
     await deleteAccountData(user.userId);

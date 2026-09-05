@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { countRecentBookings, createBooking } from "@/db/repositories/bookings";
 import { getSpecialist } from "@/db/repositories/specialists";
 import { findDemoSpecialist } from "@/lib/content/demo";
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   const known = findDemoSpecialist(input.specialistId) !== null || Boolean(await getSpecialist(input.specialistId).catch(() => null));
   if (!known) return Response.json({ error: "specialist_not_found" }, { status: 404 });
 
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   const ipHash = user ? null : await hashIp(request.headers.get("cf-connecting-ip") ?? "unknown");
   try {
     const since = new Date(Date.now() - 60 * 60_000).toISOString();

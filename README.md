@@ -5,7 +5,7 @@
 ## Included in this MVP
 
 - Five core screens from the supplied Pencil design: Home, Daily, Ask, Login, and Tarot preview
-- Sign in with ChatGPT through the Sites platform-owned identity flow
+- Sign in with Google (OAuth 2.0 authorization code + PKCE) backed by a signed, HttpOnly session cookie
 - Private D1 storage for profiles, birth details, and saved readings
 - Lahiri sidereal positions, whole-sign houses, Panchanga, Vimshottari Dasha, D1, D9, and D10 calculations
 - OpenRouter or Gemini streaming behind a server-only provider boundary
@@ -23,7 +23,7 @@ npm ci
 npm run dev
 ```
 
-The default local URL is `http://localhost:3000`. Public pages work without credentials. Platform authentication headers are supplied by the hosted Sites environment.
+The default local URL is `http://localhost:3000`. Public pages work without credentials. Sign-in requires the Google variables below; without them the login page shows a temporary notice and every page behaves as a guest.
 
 ## Environment
 
@@ -43,6 +43,17 @@ GEMINI_MODEL=gemini-2.5-flash
 ```
 
 Never expose either API key to browser code. When neither key is present, the provider returns a clearly bounded deterministic sample interpretation so the rest of the flow remains testable.
+
+Google sign-in (single sign-in for customers, readers, and the editor):
+
+```bash
+GOOGLE_CLIENT_ID=your_web_client_id
+GOOGLE_CLIENT_SECRET=your_server_only_secret
+SESSION_SECRET=long_random_string
+SITE_ADMIN_EMAILS=you@gmail.com
+```
+
+Register `https://<your-site-domain>/auth/google/callback` (and `http://localhost:3000/auth/google/callback` for development) as an authorized redirect URI on a Google Cloud *Web application* OAuth client. Only the `openid`, `email`, and `profile` scopes are requested. Existing ChatGPT-era profiles are adopted on the first Google sign-in with the same verified email.
 
 ## Database
 
@@ -81,4 +92,4 @@ Production builds must retain the `sites()` Vite plugin and the D1 declaration i
 npm run build
 ```
 
-The build packages `.openai/hosting.json` and `drizzle/` into `dist/` for Sites hosting. Configure `OPENROUTER_API_KEY`, `LLM_MODEL`, and optionally `OPENROUTER_API_URL` as server runtime values in the hosting environment. `GEMINI_API_KEY` and `GEMINI_MODEL` remain supported.
+The build packages `.openai/hosting.json` and `drizzle/` into `dist/` for Sites hosting. Configure `OPENROUTER_API_KEY`, `LLM_MODEL`, and optionally `OPENROUTER_API_URL` as server runtime values in the hosting environment. `GEMINI_API_KEY` and `GEMINI_MODEL` remain supported. `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `SESSION_SECRET`, and `SITE_ADMIN_EMAILS` must be set before a deploy, otherwise nobody can sign in.

@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { setReadingFeedback } from "@/db/repositories/readings";
 import { readingFeedbackSchema } from "@/lib/schemas/feedback";
 
@@ -8,7 +8,7 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   if (!user) return Response.json({ error: "unauthorized" }, { status: 401 });
 
   const parsed = readingFeedbackSchema.safeParse(await request.json().catch(() => null));
