@@ -23,7 +23,10 @@ export default async function ConsultantProfilePage({ params }: { params: Promis
       <a className="back-link" href="/tarot"><ArrowLeft size={15} aria-hidden="true" /> ပညာရှင်များသို့</a>
       <article className="consultant-profile">
         <header className="consultant-profile-hero">
-          <span className="consultant-profile-monogram" aria-hidden="true">{specialist.initials}</span>
+          {specialist.photoUrl
+            // eslint-disable-next-line @next/next/no-img-element -- remote photo URL; the image optimizer only serves local assets
+            ? <img className="consultant-profile-photo" src={specialist.photoUrl} alt="" loading="lazy" referrerPolicy="no-referrer" />
+            : <span className="consultant-profile-monogram" aria-hidden="true">{specialist.initials}</span>}
           <div><p className="eyebrow">Tarot · လူချင်းတွေ့ ဆွေးနွေးမှု</p><h1>{specialist.name}</h1><p>{specialist.specialty}</p></div>
           <span className="consultant-status"><CircleCheck size={13} aria-hidden="true" /> Profile စစ်ဆေးပြီး</span>
         </header>
@@ -31,7 +34,7 @@ export default async function ConsultantProfilePage({ params }: { params: Promis
           <section aria-labelledby="advisor-about">
             <p className="eyebrow">ပညာရှင်အကြောင်း</p>
             <h2 id="advisor-about">သင့်အခြေအနေကို လူသားအမြင်ဖြင့် နားထောင်ပေးမည့် ပညာရှင်</h2>
-            <p>{specialist.experience} ရှိပြီး {specialist.tags.join("၊ ")} ကိစ္စများကို အဓိကထား ဆွေးနွေးပေးသည်။</p>
+            <p>{specialist.bio || `${specialist.experience} ရှိပြီး ${specialist.tags.join("၊ ")} ကိစ္စများကို အဓိကထား ဆွေးနွေးပေးသည်။`}</p>
             <div className="tag-row">{specialist.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>
             <ul className="consultant-facts">
               <li><Star size={15} aria-hidden="true" /><span>အထူးပြု</span><strong>{specialist.specialty}</strong></li>
