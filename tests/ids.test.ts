@@ -14,6 +14,10 @@ describe("newId", () => {
     expect(newId("prd")).toMatch(/^prd_/);
   });
 
+  it("accepts the usr prefix for google-created profiles", () => {
+    expect(newId("usr")).toMatch(/^usr_[0-9a-z]{13}_[0-9a-f]{18}$/);
+  });
+
   it("rejects unknown prefixes at runtime", () => {
     expect(() => newId("user" as "rdg")).toThrow("Invalid ID prefix");
   });

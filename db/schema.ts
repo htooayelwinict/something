@@ -11,8 +11,13 @@ export const profiles = sqliteTable("profiles", {
   displayName: text("display_name").notNull(),
   email: text("email").notNull(),
   locale: text("locale").notNull().default("my"),
+  authProvider: text("auth_provider", { enum: ["chatgpt", "google"] }).notNull().default("chatgpt"),
+  authSubject: text("auth_subject"),
   ...timestamps,
-});
+}, (table) => [
+  uniqueIndex("profiles_auth_idx").on(table.authProvider, table.authSubject),
+  index("profiles_email_idx").on(table.email),
+]);
 
 export const birthProfiles = sqliteTable("birth_profiles", {
   id: text("id").primaryKey(),
@@ -108,6 +113,7 @@ export const periodReadings = sqliteTable("period_readings", {
   index("period_readings_user_idx").on(table.userId, table.createdAt),
 ]);
 
+export type ProfileRow = typeof profiles.$inferSelect;
 export type BirthProfileRow = typeof birthProfiles.$inferSelect;
 export type ReadingRow = typeof readings.$inferSelect;
 export type TarotSpecialistRow = typeof tarotSpecialists.$inferSelect;
