@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CalendarDays, Clock3, LogIn, LogOut, MapPin, ShieldCheck } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { loginPath, signOutPath } from "@/lib/auth/paths";
+import { getStaff } from "@/lib/auth/staff";
 import { AppShell } from "@/components/suriya/app-shell";
 import { BirthProfileForm } from "@/components/suriya/birth-profile-form";
 import { CosmicFingerprint } from "@/components/suriya/cosmic-fingerprint";
@@ -12,6 +13,7 @@ export const metadata: Metadata = { title: "ကိုယ်ရေးအချက
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
+  const staff = user ? await getStaff().catch(() => null) : null;
   const birthProfile = user ? await getBirthProfile(user.userId).catch(() => null) : null;
   const numerology = birthProfile ? calculateNumerology(birthProfile.birthDate) : null;
   return (
@@ -54,7 +56,7 @@ export default async function ProfilePage() {
             <div className="section-title"><div><p className="eyebrow">ကိုယ်ရေး ပြင်ဆင်ရန်</p><h2>မွေးဖွားမှုအချက်အလက် ပြင်ဆင်ရန်</h2></div></div>
             <BirthProfileForm initialName={birthProfile?.name ?? user.fullName ?? ""} />
           </section>
-          <div className="profile-account-row"><span>အကောင့်ပိုင်ရှင် — {user.displayName} · {user.email}</span><a className="ghost-button" href={signOutPath("/")}><LogOut size={16} aria-hidden="true" /> ထွက်မည်</a></div>
+          <div className="profile-account-row"><span>အကောင့်ပိုင်ရှင် — {user.displayName} · {user.email}</span><span className="profile-account-actions">{staff && <a className="secondary-button" href="/studio">Studio သို့ သွားရန်</a>}<a className="ghost-button" href={signOutPath("/")}><LogOut size={16} aria-hidden="true" /> ထွက်မည်</a></span></div>
         </>
       ) : (
         <section className="profile-signin"><span><LogIn size={28} aria-hidden="true" /></span><h2>သင့်ဇာတာ အချက်အလက်ကို ဖွင့်ပါ</h2><p><strong>သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်။</strong> မွေးဖွားမှုအချက်အလက်နှင့် ဖတ်ကြားမှုများကို အကောင့်ပိုင်ရှင်တစ်ဦးတည်းအတွက် လုံခြုံစွာ သိမ်းထားပါမယ်။</p><a className="primary-button" href={loginPath("/profile")}>အကောင့်ဖွင့်/ဝင်ရောက်မည် (Google)</a><a className="text-link" href="/daily">ယနေ့ဖတ်စာသို့ ပြန်သွားရန်</a></section>

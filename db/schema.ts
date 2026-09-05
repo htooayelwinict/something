@@ -67,8 +67,15 @@ export const tarotSpecialists = sqliteTable("tarot_specialists", {
   location: text("location").notNull().default(""),
   sessionMinutes: integer("session_minutes").notNull().default(30),
   sortOrder: integer("sort_order").notNull().default(0),
+  loginEmail: text("login_email"),
+  bio: text("bio").notNull().default(""),
+  photoUrl: text("photo_url"),
+  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
   ...timestamps,
-}, (table) => [index("tarot_specialists_sort_idx").on(table.sortOrder)]);
+}, (table) => [
+  index("tarot_specialists_sort_idx").on(table.sortOrder),
+  uniqueIndex("tarot_specialists_login_email_idx").on(table.loginEmail),
+]);
 
 export const tarotBookings = sqliteTable("tarot_bookings", {
   id: text("id").primaryKey(),
@@ -84,6 +91,7 @@ export const tarotBookings = sqliteTable("tarot_bookings", {
   topic: text("topic", { enum: ["love", "career", "direction", "other"] }).notNull(),
   note: text("note"),
   status: text("status", { enum: ["requested", "confirmed", "completed", "cancelled"] }).notNull().default("requested"),
+  staffNote: text("staff_note"),
   ...timestamps,
 }, (table) => [
   index("tarot_bookings_specialist_idx").on(table.specialistId, table.createdAt),

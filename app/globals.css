@@ -725,3 +725,45 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   .today-sky-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .rasi-today { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+.specialist-photo { width: 92px; height: 92px; border: 1px solid rgb(232 200 122 / 34%); border-radius: 50%; object-fit: cover; }
+.consultant-profile-photo { width: 72px; height: 72px; border: 1px solid rgb(232 200 122 / 30%); border-radius: 50%; object-fit: cover; }
+.profile-account-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Studio */
+.studio-shell { position: relative; min-height: 100dvh; }
+.studio-bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; border-bottom: 1px solid var(--hairline); background: rgb(11 15 30 / 84%); padding: 12px clamp(16px, 4vw, 32px); backdrop-filter: blur(12px); }
+.studio-word { color: var(--gold); font-family: var(--font-latin); font-size: .72rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.role-badge { border: 1px solid var(--gold-deep); border-radius: 999px; padding: 3px 10px; color: var(--gold); font-size: .75rem; }
+.studio-nav { display: flex; flex-wrap: wrap; gap: 4px; margin-inline-start: auto; }
+.studio-nav a { border-radius: 999px; padding: 8px 12px; color: var(--muted); font-size: .8rem; text-decoration: none; }
+.studio-nav a[aria-current="page"] { background: var(--raised); color: var(--text); }
+.studio-main { display: grid; width: min(100%, 1100px); gap: 26px; margin-inline: auto; padding: clamp(18px, 4vw, 32px) clamp(16px, 4vw, 32px) 80px; }
+.stat-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.stat-tile { display: grid; gap: 4px; border: 1px solid var(--hairline); border-radius: var(--radius-md); background: var(--surface); padding: 16px; }
+.stat-tile strong { color: var(--gold); font-family: var(--font-latin); font-size: 1.6rem; }
+.stat-tile span { color: var(--muted); font-size: .75rem; }
+.data-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+.data-table th, .data-table td { border-bottom: 1px solid var(--hairline); padding: 10px 12px; text-align: left; vertical-align: top; white-space: nowrap; }
+.data-table th { color: var(--muted); font-size: .75rem; font-weight: 600; }
+.data-table a { color: var(--gold); }
+.status-badge { display: inline-block; border: 1px solid var(--hairline); border-radius: 999px; padding: 3px 9px; color: var(--muted); font-size: .75rem; }
+.status-badge[data-status="requested"] { border-color: var(--gold-deep); color: var(--gold); }
+.status-badge[data-status="confirmed"] { border-color: var(--sage); color: var(--sage); }
+.status-badge[data-status="completed"] { color: var(--text); }
+.status-badge[data-status="cancelled"] { border-color: var(--lacquer); color: var(--lacquer); }
+.studio-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; }
+.studio-filters .field-group { min-width: 170px; }
+.studio-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.studio-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.studio-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--hairline); border-radius: var(--radius-sm); background: var(--surface); padding: 12px 14px; }
+.studio-list a { color: var(--text); font-weight: 600; text-decoration: none; }
+.studio-detail dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 20px; margin: 0; }
+.studio-detail dt { color: var(--muted); font-size: .75rem; }
+.studio-detail dd { margin: 0; font-weight: 600; }
+.studio-detail dd a { color: var(--gold); }
+.studio-note { color: var(--muted); font-size: .8rem; }
+.studio-no-access h1 { margin: 0; font-size: 1.3rem; }
+.checkbox-row { display: flex; align-items: center; gap: 10px; align-self: end; font-size: .8rem; }
+.checkbox-row input { width: 20px; height: 20px; accent-color: var(--gold); }
+.studio-main > *, .studio-main section { min-width: 0; }
+.table-scroll { max-width: 100%; }

@@ -13,6 +13,7 @@ export async function initializeDatabase() {
     db.prepare("CREATE INDEX IF NOT EXISTS period_readings_user_idx ON period_readings(user_id, created_at)"),
     db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS profiles_auth_idx ON profiles(auth_provider, auth_subject)"),
     db.prepare("CREATE INDEX IF NOT EXISTS profiles_email_idx ON profiles(email)"),
+    db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS tarot_specialists_login_email_idx ON tarot_specialists(login_email)"),
     db.prepare("PRAGMA optimize"),
   ]);
 }

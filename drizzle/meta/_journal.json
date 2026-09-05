@@ -36,6 +36,13 @@
       "when": 1788624262001,
       "tag": "0004_flowery_echo",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1788627160072,
+      "tag": "0005_dark_lyja",
+      "breakpoints": true
     }
   ]
 }

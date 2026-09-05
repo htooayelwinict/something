@@ -6,7 +6,10 @@ export function TarotSpecialistCard({ specialist }: { specialist: TarotSpecialis
     <article className="surface specialist-card">
       <div className="specialist-visual">
         <span className="availability">{specialist.availability}</span>
-        <span className="specialist-monogram" aria-hidden="true">{specialist.initials}</span>
+        {specialist.photoUrl
+          // eslint-disable-next-line @next/next/no-img-element -- remote photo URL; the image optimizer only serves local assets
+          ? <img className="specialist-photo" src={specialist.photoUrl} alt="" loading="lazy" referrerPolicy="no-referrer" />
+          : <span className="specialist-monogram" aria-hidden="true">{specialist.initials}</span>}
       </div>
       <div className="specialist-body">
         <h2>{specialist.name}</h2>
