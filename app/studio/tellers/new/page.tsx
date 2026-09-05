@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { StudioNoAccess } from "@/components/studio/studio-no-access";
 import { StudioShell } from "@/components/studio/studio-shell";
-import { emptyTeller, TellerForm } from "@/components/studio/teller-form";
+import { TellerForm } from "@/components/studio/teller-form";
 import { requireStaff } from "@/lib/auth/staff";
+import { emptyTeller } from "@/lib/studio/teller-form-values";
 
 export const metadata: Metadata = { title: "Studio · ပညာရှင် အသစ်", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";

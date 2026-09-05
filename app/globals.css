@@ -765,3 +765,5 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .studio-no-access h1 { margin: 0; font-size: 1.3rem; }
 .checkbox-row { display: flex; align-items: center; gap: 10px; align-self: end; font-size: .8rem; }
 .checkbox-row input { width: 20px; height: 20px; accent-color: var(--gold); }
+.studio-main > *, .studio-main section { min-width: 0; }
+.table-scroll { max-width: 100%; }

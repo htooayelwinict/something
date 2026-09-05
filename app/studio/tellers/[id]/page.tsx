@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { StudioNoAccess } from "@/components/studio/studio-no-access";
 import { StudioShell } from "@/components/studio/studio-shell";
-import { TellerForm, tellerFormValues } from "@/components/studio/teller-form";
+import { TellerForm } from "@/components/studio/teller-form";
 import { getSpecialist } from "@/db/repositories/specialists";
 import { requireStaff } from "@/lib/auth/staff";
+import { tellerFormValues } from "@/lib/studio/teller-form-values";
 
 export const metadata: Metadata = { title: "Studio · ပညာရှင် ပြင်ဆင်ရန်", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";

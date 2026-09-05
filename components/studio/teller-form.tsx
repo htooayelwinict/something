@@ -2,27 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
-import type { TarotSpecialistRow } from "@/db/schema";
 import { studioErrorMessage, studioMessages, tellerFieldLabels } from "@/lib/content/studio-copy";
-
-export type TellerFormMode = "create" | "editor" | "self";
-export type TellerFormValues = {
-  id: string; name: string; initials: string; specialty: string; experience: string; displayRate: string; availabilityLabel: string;
-  tags: string; location: string; sessionMinutes: number; bio: string; photoUrl: string; loginEmail: string; isActive: boolean; sortOrder: number;
-};
-
-export const emptyTeller: TellerFormValues = {
-  id: "", name: "", initials: "", specialty: "", experience: "", displayRate: "၃၀ မိနစ် · ၂၅,၀၀၀ ကျပ်", availabilityLabel: "",
-  tags: "", location: "ရန်ကုန်", sessionMinutes: 30, bio: "", photoUrl: "", loginEmail: "", isActive: true, sortOrder: 0,
-};
-
-export function tellerFormValues(row: TarotSpecialistRow): TellerFormValues {
-  return {
-    id: row.id, name: row.name, initials: row.initials, specialty: row.specialty, experience: row.experience, displayRate: row.displayRate,
-    availabilityLabel: row.availabilityLabel, tags: row.tags.join("၊ "), location: row.location, sessionMinutes: row.sessionMinutes,
-    bio: row.bio, photoUrl: row.photoUrl ?? "", loginEmail: row.loginEmail ?? "", isActive: row.isActive, sortOrder: row.sortOrder,
-  };
-}
+import type { TellerFormMode, TellerFormValues } from "@/lib/studio/teller-form-values";
 
 const textFields: Array<keyof Pick<TellerFormValues, "name" | "initials" | "specialty" | "experience" | "displayRate" | "availabilityLabel" | "tags" | "location">> =
   ["name", "initials", "specialty", "experience", "displayRate", "availabilityLabel", "tags", "location"];
@@ -71,7 +52,7 @@ export function TellerForm({ mode, initial }: { mode: TellerFormMode; initial: T
       {mode === "create" && (
         <div className="field-group">
           <label className="field-label" htmlFor="teller-id">{tellerFieldLabels.id}</label>
-          <input className="text-field" id="teller-id" value={values.id} onChange={(e) => update("id", e.target.value)} pattern="[a-z0-9][a-z0-9-]{1,39}" required />
+          <input className="text-field" id="teller-id" value={values.id} onChange={(e) => update("id", e.target.value)} pattern="[a-z0-9][a-z0-9_-]{1,39}" required />
         </div>
       )}
       <div className="form-grid-two">

@@ -2,6 +2,8 @@ import { isSameOriginRequest } from "@/lib/auth/csrf";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { staffForUser, type Staff } from "@/lib/auth/staff";
 
+export { firstIssueMessage, isUniqueViolation } from "./errors";
+
 export const noStore = { "cache-control": "private, no-store" };
 
 export function jsonError(error: string, status: number) {
@@ -16,13 +18,4 @@ export async function authorizeStudioRequest(request: Request): Promise<{ staff:
   if (!staff) return { response: jsonError("forbidden", 403) };
   if (!isSameOriginRequest(request.headers, request.url)) return { response: jsonError("forbidden", 403) };
   return { staff };
-}
-
-export function firstIssueMessage(error: { issues: Array<{ message: string }> }) {
-  const message = error.issues[0]?.message ?? "";
-  return /[က-႟]/.test(message) ? message : "invalid_input";
-}
-
-export function isUniqueViolation(error: unknown) {
-  return error instanceof Error && /UNIQUE constraint failed/i.test(error.message);
 }

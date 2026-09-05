@@ -31,6 +31,7 @@ describe("tellerEditorSchema / tellerCreateSchema", () => {
     expect(tellerEditorSchema.parse({ ...profile, loginEmail: "", isActive: false, sortOrder: 0 }).loginEmail).toBeNull();
     expect(tellerEditorSchema.safeParse({ ...profile, loginEmail: "nope", isActive: true, sortOrder: 0 }).success).toBe(false);
     expect(tellerCreateSchema.parse({ ...profile, id: "aye-aye-2", loginEmail: "", isActive: true, sortOrder: 0 }).id).toBe("aye-aye-2");
+    expect(tellerCreateSchema.parse({ ...profile, id: "tsp_thiri", loginEmail: "", isActive: true, sortOrder: 0 }).id).toBe("tsp_thiri");
     for (const id of ["Aye", "a", "-aye", "aye aye", "a".repeat(41)]) {
       expect(tellerCreateSchema.safeParse({ ...profile, id, loginEmail: "", isActive: true, sortOrder: 0 }).success, id).toBe(false);
     }

@@ -33,7 +33,7 @@ export const tellerEditorSchema = tellerProfileSchema.extend({
 }).strict();
 
 export const tellerCreateSchema = tellerEditorSchema.extend({
-  id: z.string().trim().regex(/^[a-z0-9][a-z0-9-]{1,39}$/, "ID တွင် စာလုံးသေး a-z၊ ဂဏန်းနှင့် - သာ ပါရပြီး ၂–၄၀ လုံး ဖြစ်ရပါမည်"),
+  id: z.string().trim().regex(/^[a-z0-9][a-z0-9_-]{1,39}$/, "ID တွင် စာလုံးသေး a-z၊ ဂဏန်း၊ - နှင့် _ သာ ပါရပြီး ၂–၄၀ လုံး ဖြစ်ရပါမည်"),
 }).strict();
 
 export type TellerProfileInput = z.infer<typeof tellerProfileSchema>;
