@@ -374,6 +374,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .login-card h1 { margin: 0; font-size: 1.55rem; }
 .login-card p, .login-foot { color: var(--muted); font-size: .75rem; }
 .login-card .primary-button { width: 100%; }
+.login-card .form-error { color: var(--danger); }
 .privacy-note { display: grid; grid-template-columns: auto 1fr; gap: 9px; text-align: left; }
 .login-foot { margin-top: 24px; text-align: center; }
 
