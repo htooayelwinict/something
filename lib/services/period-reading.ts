@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { getBirthProfile } from "@/db/repositories/profiles";
 import { buildPeriodPrompt } from "@/lib/ai/period-prompt";
 import { calculateChart } from "@/lib/astrology/calculate-chart";
@@ -15,7 +15,7 @@ export type PeriodSubject = { userId: string; profile: BirthProfileInput; person
 
 /** Resolve who the period reading is for. Guests may only read the demo daily reading. */
 export async function resolvePeriodSubject(kind: PeriodKind): Promise<PeriodSubject | null> {
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   if (user) {
     const stored = await getBirthProfile(user.userId).catch(() => null);
     const parsed = birthProfileSchema.safeParse(stored);

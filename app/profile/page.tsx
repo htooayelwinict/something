@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CalendarDays, Clock3, LogIn, LogOut, MapPin, ShieldCheck } from "lucide-react";
-import { chatGPTSignInPath, chatGPTSignOutPath, getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
+import { loginPath, signOutPath } from "@/lib/auth/paths";
 import { AppShell } from "@/components/suriya/app-shell";
 import { BirthProfileForm } from "@/components/suriya/birth-profile-form";
 import { CosmicFingerprint } from "@/components/suriya/cosmic-fingerprint";
@@ -10,7 +11,7 @@ import { calculateNumerology } from "@/lib/numerology/calculate";
 export const metadata: Metadata = { title: "ကိုယ်ရေးအချက်အလက်", robots: { index: false, follow: false } };
 
 export default async function ProfilePage() {
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   const birthProfile = user ? await getBirthProfile(user.userId).catch(() => null) : null;
   const numerology = birthProfile ? calculateNumerology(birthProfile.birthDate) : null;
   return (
@@ -53,10 +54,10 @@ export default async function ProfilePage() {
             <div className="section-title"><div><p className="eyebrow">ကိုယ်ရေး ပြင်ဆင်ရန်</p><h2>မွေးဖွားမှုအချက်အလက် ပြင်ဆင်ရန်</h2></div></div>
             <BirthProfileForm initialName={birthProfile?.name ?? user.fullName ?? ""} />
           </section>
-          <div className="profile-account-row"><span>အကောင့်ပိုင်ရှင် — {user.displayName}</span><a className="ghost-button" href={chatGPTSignOutPath("/")}><LogOut size={16} aria-hidden="true" /> ထွက်မည်</a></div>
+          <div className="profile-account-row"><span>အကောင့်ပိုင်ရှင် — {user.displayName} · {user.email}</span><a className="ghost-button" href={signOutPath("/")}><LogOut size={16} aria-hidden="true" /> ထွက်မည်</a></div>
         </>
       ) : (
-        <section className="profile-signin"><span><LogIn size={28} aria-hidden="true" /></span><h2>သင့်ဇာတာ အချက်အလက်ကို ဖွင့်ပါ</h2><p><strong>သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်။</strong> မွေးဖွားမှုအချက်အလက်နှင့် ဖတ်ကြားမှုများကို အကောင့်ပိုင်ရှင်တစ်ဦးတည်းအတွက် လုံခြုံစွာ သိမ်းထားပါမယ်။</p><a className="primary-button" href={chatGPTSignInPath("/profile")}>အကောင့်ဖွင့်/ဝင်ရောက်မည် (ChatGPT)</a><a className="text-link" href="/daily">ယနေ့ဖတ်စာသို့ ပြန်သွားရန်</a></section>
+        <section className="profile-signin"><span><LogIn size={28} aria-hidden="true" /></span><h2>သင့်ဇာတာ အချက်အလက်ကို ဖွင့်ပါ</h2><p><strong>သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်။</strong> မွေးဖွားမှုအချက်အလက်နှင့် ဖတ်ကြားမှုများကို အကောင့်ပိုင်ရှင်တစ်ဦးတည်းအတွက် လုံခြုံစွာ သိမ်းထားပါမယ်။</p><a className="primary-button" href={loginPath("/profile")}>အကောင့်ဖွင့်/ဝင်ရောက်မည် (Google)</a><a className="text-link" href="/daily">ယနေ့ဖတ်စာသို့ ပြန်သွားရန်</a></section>
       )}
     </AppShell>
   );

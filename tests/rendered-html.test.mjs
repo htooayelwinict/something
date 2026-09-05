@@ -69,10 +69,10 @@ test("serves an installable Burmese manifest", async () => {
 
 test("server-renders the designed public product routes", async () => {
   const expectations = [
-    ["/daily", /ယနေ့၏ မင်္ဂလာလမ်းညွှန်[\s\S]*လ၏နေ့စဉ်ရွေ့လျားမှု[\s\S]*ဂုရုဂြိုဟ် ဂေါစရ[\s\S]*စနေဂြိုဟ်[\s\S]*တွက်ချက်ထားသော အချိန်[\s\S]*Rahu Kalam[\s\S]*အလုပ်အကိုင်[\s\S]*ယနေ့ Panchanga[\s\S]*href=["']\/chart["']/],
+    ["/daily", /ယနေ့၏ မင်္ဂလာလမ်းညွှန်[\s\S]*လ၏နေ့စဉ်ရွေ့လျားမှု[\s\S]*ဂုရုဂြိုဟ် ဂေါစရ[\s\S]*စနေဂြိုဟ်[\s\S]*တွက်ချက်ထားသော အချိန်[\s\S]*အလုပ်စတင်ရန် တွက်ချက်ထားသောအချိန်[\s\S]*အလုပ်အကိုင်[\s\S]*ယနေ့ Panchanga[\s\S]*href=["']\/chart["']/],
     ["/chart", /သင့်မွေးဇာတာ[\s\S]*chart-cell[\s\S]*လဂ်[\s\S]*ဂြိုဟ်တည်နေရာများ[\s\S]*လက်ရှိ ဒဿာကာလ[\s\S]*ယနေ့ ဤဇာတာနှင့်[\s\S]*D9 · နဝံသ[\s\S]*D10 · ဒသံသ/],
     ["/ask", /သုရိယကို မေးပါ[\s\S]*တစ်နေ့ ၃ ကြိမ် အခမဲ့[\s\S]*တွက်ချက်နည်းကို သင်ရွေးနိုင်သည်[\s\S]*ask-method-disclosure[\s\S]*အဖြေတွက်ချက်ပုံ/],
-    ["/profile", /သင့်ကောင်းကင် ကိုယ်ရေး[\s\S]*အကောင့်ဖွင့်\/ဝင်ရောက်မည် \(ChatGPT\)/],
+    ["/profile", /သင့်ကောင်းကင် ကိုယ်ရေး[\s\S]*အကောင့်ဖွင့်\/ဝင်ရောက်မည် \(Google\)/],
     ["/tarot", /လူချင်းတွေ့ ဆွေးနွေးပါ[\s\S]*ဘယ်လို အလုပ်လုပ်သလဲ[\s\S]*သီရိလမင်း[\s\S]*href=["']\/tarot\/thiri#booking["'][\s\S]*ရက်ချိန်းယူရန်/],
     ["/tarot/thiri", /သီရိလမင်း[\s\S]*id="booking"[\s\S]*id="booking-phone"[\s\S]*ရက်ချိန်း တောင်းဆိုမည်/],
     ["/login", /ပြန်လည်ကြိုဆိုပါတယ်/],
@@ -130,7 +130,7 @@ test("progressively discloses reference detail and standardizes guest entry", as
     assert.doesNotMatch(html, /tarot-upsell/, path);
   }
 
-  const guestPattern = /သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်[\s\S]*အကောင့်ဖွင့်\/ဝင်ရောက်မည် \(ChatGPT\)[\s\S]*ယနေ့ဖတ်စာသို့ ပြန်သွားရန်/;
+  const guestPattern = /သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်[\s\S]*အကောင့်ဖွင့်\/ဝင်ရောက်မည် \(Google\)[\s\S]*ယနေ့ဖတ်စာသို့ ပြန်သွားရန်/;
   for (const path of ["/profile", "/readings", "/daily/week", "/daily/month"]) {
     const html = await (await render(path)).text();
     assert.match(html, guestPattern, path);
@@ -200,4 +200,31 @@ test("public SEO pages carry structured data and crawl files", async () => {
   assert.match(readings, /noindex/);
   const { readFileSync } = await import("node:fs");
   assert.ok(readFileSync(new URL("../public/llms.txt", import.meta.url), "utf8").includes(`${productionOrigin}/today`));
+});
+
+test("google sign-in routes redirect safely without configuration", async () => {
+  const start = await render("/auth/google/start?return_to=%2Fprofile");
+  assert.equal(start.status, 302);
+  assert.equal(start.headers.get("location"), "/login?error=unconfigured");
+  assert.match(start.headers.get("cache-control") ?? "", /no-store/);
+
+  const callback = await render("/auth/google/callback?code=x&state=y");
+  assert.equal(callback.status, 302);
+  assert.match(callback.headers.get("location") ?? "", /^\/login\?error=(?:google|unconfigured)$/);
+
+  const signout = await render("/auth/signout?return_to=%2F%2Fevil.example");
+  assert.equal(signout.status, 302);
+  assert.equal(signout.headers.get("location"), "/");
+  assert.match(signout.headers.get("set-cookie") ?? "", /suriya_session=;[^]*Max-Age=0/);
+
+  const onboarding = await render("/onboarding");
+  assert.ok([302, 307, 308].includes(onboarding.status), String(onboarding.status));
+  assert.match(onboarding.headers.get("location") ?? "", /\/login\?return_to=%2Fonboarding$/);
+
+  const login = await (await render("/login")).text();
+  assert.match(login, /href="\/auth\/google\/start\?return_to=%2Fonboarding"/);
+  assert.match(login, /Google ဖြင့် အကောင့်ဖွင့်\/ဝင်ရောက်မည်/);
+  assert.doesNotMatch(login, /signin-with-chatgpt|ChatGPT/);
+  const loginError = await (await render("/login?error=unconfigured")).text();
+  assert.match(loginError, /ဝင်ရောက်ခြင်းကို ခဏ ရပ်ထားပါသည်/);
 });

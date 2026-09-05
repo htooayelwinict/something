@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { getBirthProfile, upsertProfile } from "@/db/repositories/profiles";
 import { createReading, listReadings } from "@/db/repositories/readings";
 import { calculateReadingSnapshot, readingPeriod } from "@/lib/readings/calculate-reading";
@@ -11,7 +11,7 @@ import { dailyQuota } from "@/lib/readings/quota";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   if (!user) return Response.json({ error: "unauthorized" }, { status: 401 });
   const parsed = readingRequestSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: parsed.error.issues[0]?.message ?? "invalid_reading" }, { status: 400 });

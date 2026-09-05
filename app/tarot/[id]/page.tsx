@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowLeft, CalendarClock, CircleCheck, Clock3, Headphones, MapPin, Star } from "lucide-react";
 import { notFound } from "next/navigation";
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { AppShell } from "@/components/suriya/app-shell";
 import { BookingForm } from "@/components/suriya/booking-form";
 import { getSpecialist } from "@/db/repositories/specialists";
@@ -16,7 +16,7 @@ export default async function ConsultantProfilePage({ params }: { params: Promis
   const row = await getSpecialist(id).catch(() => null);
   const specialist = row ? specialistFromRow(row) : findDemoSpecialist(id);
   if (!specialist) notFound();
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
 
   return (
     <AppShell>

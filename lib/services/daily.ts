@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { getBirthProfile } from "@/db/repositories/profiles";
 import { calculateChart } from "@/lib/astrology/calculate-chart";
 import { calculateDailyInsight } from "@/lib/astrology/daily-score";
@@ -13,7 +13,7 @@ function calculateDaily(input: BirthProfileInput, now: Date) {
 
 export async function getDailyExperience() {
   const now = new Date();
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   let input = demoProfile;
   let personalized = false;
   let calculated: ReturnType<typeof calculateDaily> | null = null;

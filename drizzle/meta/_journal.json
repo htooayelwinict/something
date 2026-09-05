@@ -29,6 +29,13 @@
       "when": 1788034528452,
       "tag": "0003_dry_frank_castle",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1788624262001,
+      "tag": "0004_flowery_echo",
+      "breakpoints": true
     }
   ]
 }

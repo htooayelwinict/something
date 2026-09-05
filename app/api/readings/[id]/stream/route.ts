@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { completeReading, failReading, getReading } from "@/db/repositories/readings";
 import { getAiProvider } from "@/lib/ai";
 import { buildReadingPrompt } from "@/lib/ai/prompt";
@@ -9,7 +9,7 @@ import { readingInterpretationSchema } from "@/lib/schemas/reading";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const user = await getChatGPTUser();
+  const user = await getCurrentUser();
   if (!user) return new Response("unauthorized", { status: 401 });
   const { id } = await params;
   const reading = await getReading(user.userId, id).catch(() => null);

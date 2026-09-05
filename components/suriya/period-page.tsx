@@ -1,5 +1,5 @@
 import { LogIn } from "lucide-react";
-import { chatGPTSignInPath } from "@/app/chatgpt-auth";
+import { loginPath } from "@/lib/auth/paths";
 import { AppShell } from "@/components/suriya/app-shell";
 import { IdentityRail } from "@/components/suriya/identity-rail";
 import { MethodFootnote } from "@/components/suriya/method-footnote";
@@ -30,7 +30,7 @@ export async function PeriodPage({ kind, path }: { kind: "weekly" | "monthly"; p
           <LogIn size={34} aria-hidden="true" />
           <h2>ဝင်ရောက်ပြီး အပတ်စဉ်နှင့် လစဉ် ဖတ်စာကို အခမဲ့ ရယူပါ</h2>
           <p><strong>သင့်မွေးချိန်အတိုင်း တွက်ချက်ပေးမည်။</strong> {daily.user ? "မွေးဇာတာအချက်အလက် ထည့်သွင်းပြီးပါက သင့်ကိုယ်ပိုင် ဖတ်စာကို တွက်ချက်ပေးပါမည်။" : "အပတ်စဉ်နှင့် လစဉ် ဖတ်စာများကို သင့်မွေးဇာတာနှင့် တိုက်ဆိုင်တွက်ချက်ပြီး အကောင့်ထဲတွင် သိမ်းထားပါမည်။"}</p>
-          <a className="primary-button" href={daily.user ? "/onboarding" : chatGPTSignInPath(path)}>{daily.user ? "မွေးဇာတာ ထည့်သွင်းရန်" : "အကောင့်ဖွင့်/ဝင်ရောက်မည် (ChatGPT)"}</a>
+          <a className="primary-button" href={daily.user ? "/onboarding" : loginPath(path)}>{daily.user ? "မွေးဇာတာ ထည့်သွင်းရန်" : "အကောင့်ဖွင့်/ဝင်ရောက်မည် (Google)"}</a>
           <a className="text-link" href="/daily">ယနေ့ဖတ်စာသို့ ပြန်သွားရန်</a>
         </section>
       </AppShell>

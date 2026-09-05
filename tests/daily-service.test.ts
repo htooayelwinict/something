@@ -2,10 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   getBirthProfile: vi.fn(),
-  getChatGPTUser: vi.fn(),
+  getCurrentUser: vi.fn(),
 }));
 
-vi.mock("@/app/chatgpt-auth", () => ({ getChatGPTUser: mocks.getChatGPTUser }));
+vi.mock("@/lib/auth/current-user", () => ({ getCurrentUser: mocks.getCurrentUser }));
 vi.mock("@/db/repositories/profiles", () => ({ getBirthProfile: mocks.getBirthProfile }));
 
 import { getDailyExperience } from "@/lib/services/daily";
@@ -14,7 +14,7 @@ describe("getDailyExperience", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-08-28T00:00:00.000Z"));
-    mocks.getChatGPTUser.mockReset().mockResolvedValue({
+    mocks.getCurrentUser.mockReset().mockResolvedValue({
       userId: "user-1",
       displayName: "Daily Test",
       email: "daily@example.com",
